@@ -188,7 +188,7 @@ export default function Profile({ userId }: { userId: string | null}) {
  
 
     
-  }, [userId, session]);
+  }, [userId]);
 
 
   // useEffect(() => {
