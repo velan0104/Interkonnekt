@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document, model, models } from "mongoose";
 
 interface IUser extends Document {
+  id?: string;
   name: string;
-  username: string;
+  username?: string;
   email: string;
-  password: string;
-  interest: string;
+  password?: string;
+  interest?: string[];
   createdAt: Date;
+  image?: string;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -19,7 +21,7 @@ const UserSchema = new Schema<IUser>(
     },
     username: {
       type: String,
-      required: [true, "Username is required"],
+     // required: [true, "Username is required"],
       unique: true,
       minlength: [2, "Username must be at least 2 characters"],
       maxlength: [30, "Username must not exceed 30 characters"],
@@ -35,17 +37,23 @@ const UserSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+     // required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
     },
     interest:{
-      type: String,
-      required: [true, "interest is required"]
+      type: [String],
+      // required: [true, "interest is required"]
     },
     createdAt: {
       type: Date,
       default: Date.now,
     },
+    image: {
+      type: String,
+    },
+    id: {
+      type: String,
+    }
   },
   {
     collection: "users",

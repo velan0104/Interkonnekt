@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify the password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await password == user.password;
     if (!isPasswordValid) {
       return NextResponse.json(
         { message: "Invalid password" },
@@ -41,21 +41,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!SECRET_KEY) {
-        return NextResponse.json(
-          { message: "Server misconfiguration: Missing secret key" },
-          { status: 500 }
-        );
-      }
+    // if (!SECRET_KEY) {
+    //     return NextResponse.json(
+    //       { message: "Server misconfiguration: Missing secret key" },
+    //       { status: 500 }
+    //     );
+    //   }
 
       
-    const token = jwt.sign(
-        { id: user._id, email: user.email }, // Payload
-        SECRET_KEY, // Secret key
-        { expiresIn: "1d" } // Token expiry
-      );
+    // const token = jwt.sign(
+    //     { id: user._id, email: user.email }, // Payload
+    //     SECRET_KEY, // Secret key
+    //     { expiresIn: "1d" } // Token expiry
+    //   );
 
-      console.log("token: ",token)
+    //   console.log("token: ",token)
 
 
 
@@ -65,12 +65,12 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    response.cookies.set("token",token,{
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        maxAge: 3600
-    })
+    // response.cookies.set("token",token,{
+    //     httpOnly: true,
+    //     secure: true,
+    //     path: "/",
+    //     maxAge: 3600
+    // })
     return response;
 
   } catch (error: any) {

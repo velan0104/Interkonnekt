@@ -1,7 +1,13 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"
+import SessionWrapper from "@/components/SessionWrapper";
+import { store } from "@/app/Store/store";
+import { Provider } from "react-redux";
+import ReduxProvider from "@/components/ReduxProvider";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,8 +35,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+       
+          <ReduxProvider >
+        <SessionWrapper>
         {children}
+        </SessionWrapper>
         <Toaster />
+        </ReduxProvider>
+       
       </body>
     </html>
   );

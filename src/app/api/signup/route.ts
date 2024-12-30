@@ -7,6 +7,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {name, username, email, password, interest} = body;
+    console.log("interest at signup: ", interest)
 
     if (!name || !username || !email || !password || !interest) {
       return NextResponse.json(
@@ -25,13 +26,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+   // const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
+      id: username,
         name,
       username,
       email,
-      password: hashedPassword,
+      password,
       interest,
     });
 
