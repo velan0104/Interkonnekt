@@ -37,9 +37,9 @@ const MainPage:FC = () => {
 // const router = useRouter();
 // const { userId } = router.useSearchParams as { userId: string };
 
-const params = useSearchParams();
-const userId = params.get("userId");
-console.log("userId at profile: ",userId)
+// const params = useSearchParams();
+// const userId = params.get("userId");
+// console.log("userId at profile1: ",userId)
 //const userId =  null;
 
       
@@ -51,7 +51,7 @@ console.log("userId at profile: ",userId)
         <div className="grid grid-cols-4 top-20 absolute">
         <LeftSide />
         <div className="col-span-2">
-       <Profile userId={userId}/>
+       <Profile/>
         </div>
         <RightSide/>
         </div>

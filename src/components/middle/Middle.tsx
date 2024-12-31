@@ -66,6 +66,7 @@ export default function PostFeed() {
   if (postStatus === 'failed') return <p>Error: {error}</p>;
 
   const user_id = session?.user?.id;
+  const email = session?.user?.email;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(e.target.value); // Update local state

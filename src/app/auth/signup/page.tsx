@@ -144,7 +144,7 @@ export default function SignupForm() {
     setIsSigningIn(true);
     try {
       // Redirect to Google login
-      await signIn("google", { callbackUrl: `/profile` });
+      await signIn("google", { callbackUrl: `/main` });
     } catch (err) {
       console.error("Error during Google SignIn", err);
       

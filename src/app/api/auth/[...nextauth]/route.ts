@@ -151,6 +151,7 @@ const handler = NextAuth({
         const newUser = new User({
           id: user.id,
           name: user.name,
+          
           email: user.email,
           image: user.image,
           createdAt: new Date()
@@ -163,7 +164,8 @@ const handler = NextAuth({
           existingUser.image = existingUser.image ;
           existingUser.provider = account.provider;
           existingUser.interest =  existingUser.interest;
-           existingUser.id = account.providerAccountId;
+          // existingUser.id = account.providerAccountId;
+         // existingUser.id = existingUser.id;
            existingUser.username =  existingUser.username;
           await existingUser.save();
           console.log("Updated existing user with Google data.");
@@ -199,9 +201,12 @@ const handler = NextAuth({
       await dbConnect();
      
       
-      const existingUser = await User.updateOne({
-        id: token.id,
+     const existingUser = await User.findOne({
+        email: token.email,
       });
+      console.log("existing user in session: ",existingUser)
+       existingUser.id = token.id;
+      await existingUser.save();
 console.log("Id in session updated: ", token.id)
       return session;
     },
