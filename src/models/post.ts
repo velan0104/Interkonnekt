@@ -53,6 +53,8 @@ export interface PollOptions{
     options: [{type: string}]
 }
 
+
+
 export interface IPost  {
   _id: string;
   user_id: string;
@@ -67,6 +69,7 @@ export interface IPost  {
   comments: IComment[];
   likeCount: number;
   commentCount: number;
+ 
 }
 
 const PostSchema = new Schema<IPost>(

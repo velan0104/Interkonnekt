@@ -114,9 +114,9 @@ import { useRouter, usePathname } from "next/navigation";
     // };
 
     return (
-      <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4">
+      <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4 ">
         {/* Profile Section */}
-        <div className="flex items-center gap-3 w-20 h-16 mb-8 px-2 rounded-full">
+        <div className="flex items-center gap-3 w-20 h-16 mb-8 px-2 rounded-full ">
           {IscloudinaryImage ? (
             <CldImage
             src={cloudinaryImage}

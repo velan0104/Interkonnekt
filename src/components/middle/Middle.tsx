@@ -7,14 +7,17 @@ import {
   MoreHorizontal,
   X,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {  useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import { addCommentAsync, fetchPosts, toggleLikeAsync } from "@/Slice/postsSlice";
 import { useDispatch } from "@/hooks/useDispatch";
 import { useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+import { Suspense } from "react";
+import {use} from "react"
 
 // type LikeState = {
 //   [key: string]: {
@@ -32,19 +35,55 @@ type ModalState = {
   postId: string | null;
 };
 
-export default function PostFeed() {
+const SkeletonLoader: React.FC = () => (
+  <div className="space-y-6 bg-gray-800">
+    {[...Array(3)].map((_, index) => (
+      <div
+        key={index}
+        className="animate-pulse bg-gray-800 rounded-xl p-4 shadow-lg space-y-4"
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-1/3 bg-gray-700 rounded"></div>
+            <div className="h-3 w-1/4 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+        <div className="h-4 w-3/4 bg-gray-700 rounded"></div>
+        <div className="h-32 bg-gray-700 rounded"></div>
+        <div className="flex gap-4">
+          <div className="h-6 w-16 bg-gray-700 rounded-full"></div>
+          <div className="h-6 w-16 bg-gray-700 rounded-full"></div>
+          <div className="h-6 w-16 bg-gray-700 rounded-full"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+interface PostFeedProps {
+
+  userId: string;
+
+}
+
+
+const PostFeed:FC<PostFeedProps> = ({userId}) => {
   const dispatch = useDispatch();
   const {data: session} = useSession();
   const posts = useSelector((state: RootState) => (state.posts as any).posts);
   const postStatus = useSelector((state: RootState) => (state.posts as any).status);
   const error = useSelector((state: RootState) => (state.posts as any).error);
   const router = useRouter();
+  const pathname = usePathname();
+
+  console.log("userId at middle: ",userId)
   useEffect(() => {
     if (postStatus === 'idle') {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts({userId }));
     }
    // dispatch(fetchPosts());
-  }, [dispatch,postStatus]);
+  }, [dispatch,postStatus,pathname,userId]);
   console.log("posts at middle: ",posts)
   
  
@@ -62,8 +101,7 @@ export default function PostFeed() {
   const [newComment, setNewComment] = useState<string>("");
   const [likes, setLikes] = useState<{ [key: string]: { liked: boolean } }>({});
 
-  if (postStatus === 'loading') return <p>Loading...</p>;
-  if (postStatus === 'failed') return <p>Error: {error}</p>;
+ 
 
   const user_id = session?.user?.id;
   const email = session?.user?.email;
@@ -111,11 +149,16 @@ export default function PostFeed() {
     });
   };
 
+  const handleDelete = (postId) => {
+    console.log("delete called")
+    
+  }
+
   
 
   const Dropdown: React.FC<{ postId: string }> = ({ postId }) => (
     <div className="absolute right-0 top-8 bg-[#2A2A2A] rounded-lg shadow-lg py-2 min-w-[150px]">
-      <button className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]">
+      <button onClick={()=>{handleDelete(postId)}} className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]">
         Delete
       </button>
       <button className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]">
@@ -146,6 +189,10 @@ const comments = currentPost?.comments || [];
     return(
    // const [content, setContent] = useState('');
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      {/* {!posts.length && (
+        <h1>Posts not available</h1>
+      )} */}
+      
       <div className="bg-[#1E1E1E] rounded-xl p-6 max-w-[500px] w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-white text-xl font-bold">Comments</h2>
@@ -220,9 +267,16 @@ const comments = currentPost?.comments || [];
       </div>
     </div>
   );
+  if (postStatus == 'loading') return <SkeletonLoader />;
+  if (postStatus === "failed") return <p>Error: {error}</p>;
   return (
     <main className=" bg-gray-900  px-4">
-      <div className=" mx-auto space-y-4 h-[89vh] overflow-y-auto">
+      <div className=" mx-auto space-y-4 h-[89vh] overflow-y-auto ">
+      <Suspense fallback={<SkeletonLoader />}>
+          {postStatus === "loading" ? (
+            <SkeletonLoader />
+          ) : (
+            <>
       {posts.map((post:any,index:any) => (
   <article key={index} className="bg-gray-900 rounded-xl p-4 shadow-lg">
     <div className="flex items-start justify-between">
@@ -270,12 +324,12 @@ const comments = currentPost?.comments || [];
         <button
           aria-label="More options"
           onClick={() =>
-            setActiveDropdown(activeDropdown === post.id ? null : post.id)
+            setActiveDropdown(activeDropdown === post._id ? null : post._id)
           }
         >
           <MoreHorizontal className="w-5 h-5 text-gray-400" />
         </button>
-        {activeDropdown === post.id && <Dropdown postId={post.id} />}
+        {activeDropdown === post._id && <Dropdown postId={post._id} />}
       </div>
     </div>
     <p className="text-white mt-4">{post.content}</p>
@@ -343,8 +397,9 @@ const comments = currentPost?.comments || [];
     </div>
   </article>
 ))}
-
-
+</>
+)}
+        </Suspense>
        
       </div>
       {commentsModal.isOpen && <CommentsModal />}
@@ -352,3 +407,14 @@ const comments = currentPost?.comments || [];
     </main>
   );
 }
+
+export default PostFeed;
+// () {
+//   return (
+//     <main className="bg-gray-900 px-4">
+//       <Suspense fallback={<SkeletonLoader />}>
+//         <PostFeedContent />
+//       </Suspense>
+//     </main>
+//   );
+// }

@@ -27,7 +27,7 @@ export default function RightSide() {
     );
   }
   return (
-    <aside className="w-full md:w-96 h-screen grid grid-rows-2 gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
+    <aside className="w-full md:w-96 h-[89vh] grid grid-rows-2 gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
       {/* Activities Section */}
       <section className="space-y-4 overflow-x-hidden">
         <h2 className="text-lg font-semibold text-[#3b82f6]">Recent Activities</h2>

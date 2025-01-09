@@ -76,9 +76,9 @@ const MainPage:FC = () => {
         <SessionProvider>
         <div className="">
         <Navbar/>
-        <div className="grid grid-cols-4 top-20 absolute">
+        <div className="grid grid-cols-4 top-20 absolute ">
         <LeftSide />
-        <div className="col-span-2">
+        <div className="col-span-2 overflow-hidden">
         <Middle />
         </div>
         <RightSide/>

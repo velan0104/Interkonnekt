@@ -55,7 +55,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
           const response = await fetch("/api/getUnameInterest", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: session?.user?.email }),
+            body: JSON.stringify({ userId: session?.user?.id }),
           })
           const data = await response.json();
           if (data) {

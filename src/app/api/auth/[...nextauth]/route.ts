@@ -94,10 +94,10 @@ const handler = NextAuth({
         //   token.provider = account.provider;
         // }
 
-        console.log("token at custom: ",token)
+        //console.log("token at custom: ",token)
        
-        console.log("user at custom: ",user);
-        console.log("account at custom: ",account)
+        // console.log("user at custom: ",user);
+        // console.log("account at custom: ",account)
     
         if (user && account) {
           // Save user ID and email to token
@@ -119,14 +119,14 @@ const handler = NextAuth({
         //   maxAge: 24 * 60 * 60, // 24 hours
         // });
         //globalThis.myResponse?.setHeader("Set-Cookie", cookie);
-        console.log("JWT token:", token);
+        //console.log("JWT token:", token);
         return token;
       },
 
     async signIn({ user, account, profile }) {
-      console.log("User profile:", profile); // View Google profile data
-      console.log("user: ",user);
-      console.log("account: ",account)
+      // console.log("User profile:", profile); // View Google profile data
+      // console.log("user: ",user);
+      // console.log("account: ",account)
       try{
        await dbConnect();
      // const collection = db.collection("users");
@@ -197,14 +197,14 @@ const handler = NextAuth({
         image?: string;
         provider?: string;
       };
-      console.log("Session Token:", session);
+    //  console.log("Session Token:", session);
       await dbConnect();
      
       
      const existingUser = await User.findOne({
         email: token.email,
       });
-      console.log("existing user in session: ",existingUser)
+     // console.log("existing user in session: ",existingUser)
        existingUser.id = token.id;
       await existingUser.save();
 console.log("Id in session updated: ", token.id)
