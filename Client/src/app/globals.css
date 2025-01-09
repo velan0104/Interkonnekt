@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  /* overflow-y: hidden; */
+  margin:0;
+  padding:0;
+}
+
+.react-select__control {
+  background-color: #2d3748; /* Dark background */
+  border-color: #4a5568; /* Gray border */
+  color: #e2e8f0; /* Light text */
+}
+
+.react-select__menu {
+  background-color: #2d3748; /* Match the background */
+  color: #e2e8f0;
+}
+
+.react-select__option {
+  color: #e2e8f0;
+}
+
+.react-select__option--is-selected {
+  background-color: #009688; /* Highlight selected option */
+}
+
+.react-select__multi-value {
+  background-color: #512da8; /* Tag background */
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
