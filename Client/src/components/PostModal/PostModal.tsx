@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {gsap} from "gsap";
 import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 interface PostModalProps {
@@ -45,6 +45,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
   
       
       const pathname = usePathname();
+      const router = useRouter();
 
   
 
@@ -55,7 +56,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
           const response = await fetch("/api/getUnameInterest", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: session?.user?.email }),
+            body: JSON.stringify({ userId: session?.user?.id }),
           })
           const data = await response.json();
           if (data) {
@@ -137,8 +138,9 @@ console.log("newUsername at postmodal: ",newUsername)
         setIsSuccessVisible(true);
         setnewUsername("");
         setProfileImage("");
-
+       
         onClose();
+       
       }else{
         const error = await response.json();
         toast({title: "Post Uploading Failed", description: error.message, variant: "warning"})

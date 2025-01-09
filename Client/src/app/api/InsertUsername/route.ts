@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/mongodb";
+import Posts from "@/models/post";
 import User from "@/models/user";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -8,11 +9,14 @@ export async function POST(req: NextRequest) {
  
    
 console.log("api called");
-    const { username, interest, email ,profileImage} = await req.json();
+    const { id, interest, email ,profileImage, username} = await req.json();
     console.log("profileImage at insert: ",profileImage)
-    console.log("username at insert: ",username)
+    console.log("id at insert: ",id)
     console.log("interest at insert: ",interest)
     console.log("email at insertsss: ",email)
+    console.log("username at insert: ",username)
+
+    
    
 
 // if ( !username || !email ||!interest) {
@@ -26,8 +30,8 @@ if (!email) {
   return NextResponse.json({ message: "Email is required" }, { status: 400 });
 }
 
-if (!username) {
-  console.warn("Username is missing");
+if (!id) {
+  console.warn("id is missing");
  // return NextResponse.json({ message: "Username is missing" }, { status: 400 });
 }
 if (!profileImage) {
@@ -37,7 +41,9 @@ if (!profileImage) {
 
     await dbConnect();
 
-    const existingUsername = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUsername = await User.find({ $or: [{ email }, { id }] });
+    const existingUser2 = await Posts.find({user_id: id});
+    console.log("existing user2: ",existingUser2)
     // if (!existingUsername) {
     //   return NextResponse.json(
     //     { message: "Username does not exists" },
@@ -53,20 +59,46 @@ if (!profileImage) {
         { status: 400 }
       );
     }
-    if(profileImage){
-      existingUsername.image = profileImage;
-    }
-    if(username){
-      existingUsername.username = username;
-    }
-    if(interest){
-      const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
-      existingUsername.interest = interestsArray;
-    }
+    // if(profileImage){
+    //   existingUsername.image = profileImage;
+    //   existingUser2.profileImage = profileImage;
+    // }
+    // if(username){
+    //   existingUsername.username = username;
+    // }
+    // if(interest){
+    //   const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
+    //   existingUsername.interest = interestsArray;
+    // }
     
 
     
-    await existingUsername.save();
+    // await existingUsername.save();
+    // if(existingUser2){
+    // await existingUser2.save();
+    // }
+
+    for (const user of existingUsername) {
+      if (profileImage) {
+          user.image = profileImage;
+      }
+      if (username) {
+          user.username = username;
+      }
+      if (interest) {
+          const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
+          user.interest = interestsArray;
+      }
+      await user.save();
+  }
+
+  // Update and save each post
+  for (const post of existingUser2) {
+      if (profileImage) {
+          post.profileImage = profileImage;
+      }
+      await post.save();
+  }
 
     return NextResponse.json({message:"profile updated successfully",existingUsername}, { status: 200 });
    

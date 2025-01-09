@@ -3,11 +3,39 @@ import axios from 'axios';
 import Posts, { IPost } from '@/models/post';
 import { RootState } from '@/app/Store/store';
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await axios.get('/api/getPosts');
-  console.log("Slice called:",response.data.posts)
-  return response.data.posts;
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({userId}:{userId:string}) => {
+  const response = await fetch('/api/getPosts',{
+    method: 'POST',
+    body: JSON.stringify({userId:userId}),
+    headers: {'Content-Type': 'application/json'}
+  });
+  const data = await response.json();
+  console.log("Slice called:",data.posts)
+  return data.posts;
 });
+
+// export const fetchPosts = createAsyncThunk(
+//   'posts/fetchPosts',
+//   async (filter?: { userId?: string; postId?: string }) => {
+//     let url = '/api/getPosts';
+
+//     // Add filter parameters to the URL
+//     if (filter) {
+//       const { userId, postId } = filter;
+//       if (userId) {
+//         url += `?userId=${userId}`; // Fetch posts by a specific user
+//       }
+//       if (postId) {
+//         url += `${userId ? '&' : '?'}postId=${postId}`; // Fetch specific post by ID
+//       }
+//     }
+
+//     const response = await axios.get(url);
+//     console.log('Slice called:', response.data.posts);
+//     return response.data.posts;
+//   }
+// );
+
 
 export const toggleLikeAsync = createAsyncThunk('posts/toggleLike', async ({ postId, userId }: { postId: string, userId: string }) => {
   const response = await fetch(`/api/likes`, {

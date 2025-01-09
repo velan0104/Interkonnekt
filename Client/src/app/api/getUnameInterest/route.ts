@@ -29,7 +29,7 @@ export async function POST(req:NextRequest){
       await dbConnect();
     
       const existingUser = await User.findOne({ id: userId });
-      console.log("existing user: ",existingUser)
+     // console.log("existing user: ",existingUser)
     
       if (!existingUser) {
         return NextResponse.json(
@@ -38,5 +38,5 @@ export async function POST(req:NextRequest){
         );
       }
     
-      return NextResponse.json({message:"user found", username: existingUser.username, interest: existingUser.interest,image:existingUser.image, email: existingUser.email, createdAt: existingUser.createdAt}, { status: 200 });
+      return NextResponse.json({message:"user found", username: existingUser.username, interest: existingUser.interest,image:existingUser.image, email: existingUser.email, createdAt: existingUser.createdAt,followers:existingUser.followers,following:existingUser.following,name:existingUser.name}, { status: 200 });
 }

@@ -24,9 +24,16 @@ interface UploadImagesProps {
     try {
       const response = await fetch('/api/InsertUsername', {
         method: 'POST',
-        body: JSON.stringify({  profileImage: info?.public_id, email: session?.user?.email, username: session?.user?.username}),
+        body: JSON.stringify({  profileImage: info?.public_id, email: session?.user?.email, id: session?.user?.id}),
         headers: { 'Content-Type': 'application/json' },
       });
+      // const response2 = await fetch("/api/createPost",{
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(profileImage: info?.public_id)
+      // })
       if (!response.ok){
         console.log("response after error: ",response)
         alert("Error in uploading image")

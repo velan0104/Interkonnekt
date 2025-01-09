@@ -1,5 +1,27 @@
 import mongoose, { Schema, Document, model, models } from "mongoose";
 
+export interface IFollowers{
+  userId: string;
+}
+
+const FollowerSchema = new Schema<IFollowers>({
+  userId: {
+    type: String,
+    ref: "users",
+  },
+})
+
+const FollowingSchema = new Schema<IFollowing>({
+  userId: {
+    type: String,
+    ref: "users",
+    
+  },
+})
+
+export interface IFollowing{
+  userId: string;
+}
 interface IUser extends Document {
   id?: string;
   name: string;
@@ -9,7 +31,11 @@ interface IUser extends Document {
   interest?: string[];
   createdAt: Date;
   image?: string;
+  followers: IFollowers[];
+  following: IFollowing[];
 }
+
+
 
 const UserSchema = new Schema<IUser>(
   {
@@ -53,7 +79,9 @@ const UserSchema = new Schema<IUser>(
     },
     id: {
       type: String,
-    }
+    },
+    followers: { type: [FollowerSchema], default: [] },
+    following: { type: [FollowingSchema], default: [] },
   },
   {
     collection: "users",
