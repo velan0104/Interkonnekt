@@ -1,0 +1,27 @@
+# Ignore node_modules and dependencies
+node_modules/
+
+# Ignore logs
+npm-debug.log
+yarn-debug.log
+package-lock.json
+
+# Ignore environment variables file (if sensitive)
+.env
+
+# Ignore Git files
+.git/
+
+# Ignore IDE/editor configurations
+.vscode/
+.idea/
+
+# Ignore test or build folders (if not needed in production)
+tests/
+test/
+dist/
+build/
+
+# Ignore Dockerfile and README if not needed in image
+Dockerfile
+README.md

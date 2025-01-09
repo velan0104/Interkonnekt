@@ -1,0 +1,39 @@
+# Node modules (Dependencies)
+node_modules/
+
+# Logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment variables file
+.env
+
+# OS-specific files
+.DS_Store          # macOS Finder-specific file
+Thumbs.db          # Windows-specific file
+
+# IDE/editor configurations
+.vscode/            # VS Code settings
+.idea/              # JetBrains (e.g., WebStorm) IDE settings
+
+# Build and distribution folders
+dist/               # compiled code (e.g., Babel output, TypeScript)
+build/              # build output (e.g., Webpack, Parcel)
+
+# Test coverage reports
+coverage/           # test coverage output (e.g., Istanbul/NYC)
+
+# Docker files
+Dockerfile          # Typically, you may not need the Dockerfile in the versioned repo
+.dockerignore       # Docker ignore file (same reason as Dockerfile)
+
+# Optional files to ignore if you don’t want to include them in the repository
+README.md           # If you don’t want the README in version control
+*.log               # Exclude all log files
+
+# Cache and temporary files
+*.swp               # Vim swap files
+*.swo               # Vim overwrite files
+npm-debug.log*      # npm debug logs
+.yarn-integrity     # Yarn integrity file
