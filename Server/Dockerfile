@@ -13,8 +13,12 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+RUN npm run build
+
 # Expose the port the app runs on
 EXPOSE 8000
 
+ENV NODE_ENV=production
+
 # Command to run the server
-CMD ["node", "server.js"]
+CMD ["node", "dist/server.js"]
