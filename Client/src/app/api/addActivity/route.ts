@@ -15,7 +15,11 @@ export async function POST(req:NextRequest){
         console.log("type at get activity: ",type);
         console.log("user id at get activity: ",user);
         console.log("text id at get activity: ",text);
-        const postIdString = post_id.toString();
+
+        
+        
+        if(type == 'like'){
+            const postIdString = post_id.toString();
         const postIdObject = new mongoose.Types.ObjectId(postIdString);
 
         const post = await Posts.find(postIdObject);
@@ -30,8 +34,27 @@ export async function POST(req:NextRequest){
                }
             });
         })
-        // const newActivity = new Activity({id,post_id,type,user,text});
-        // await newActivity.save();
+    }
+    if(type == 'comment'){
+        const postIdString = post_id.toString();
+        const postIdObject = new mongoose.Types.ObjectId(postIdString);
+
+        const post = await Posts.find(postIdObject);
+        post.map(async(post) => {
+            
+                console.log("element userId: ",post.user_id)
+                console.log("element id: ",id)
+               if(post.user_id != id) {
+                const newActivity = new Activity({id,post_id,type,user,text});
+                console.log("comment new activity created")
+                await newActivity.save();
+               }
+            
+        })
+    }
+        const newActivity = new Activity({id,type,user,text});
+        console.log("activity in else: ",newActivity);
+        await newActivity.save();
         return NextResponse.json({message:"activity uploaded successfully"},{status:200})
     }catch(error){
         console.log("error: ",error);

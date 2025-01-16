@@ -45,6 +45,7 @@ import { IActivity } from "@/models/Activity";
 type ModalState = {
   isOpen: boolean;
   postId: string | null;
+  userId: string | null;
 };
 
 const SkeletonLoader: React.FC = () => (
@@ -107,10 +108,12 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
   const [commentsModal, setCommentsModal] = useState<ModalState>({
     isOpen: false,
     postId: null,
+    userId: null,
   });
   const [shareModal, setShareModal] = useState<ModalState>({
     isOpen: false,
     postId: null,
+    userId: null,
   });
  
   const [newComment, setNewComment] = useState<string>("");
@@ -138,6 +141,7 @@ console.log("Already Liked: ", alreadyLike);
     console.log("userId at handle like: ",userId2)
     const timestamp = new Date();
     //setIsLiked(false);
+    if(userId2 != session?.user?.id){
     let alreadyLiked = false;
     await posts.map((post : any) => {
       post.likes.map((like:any) => {
@@ -168,6 +172,7 @@ console.log("Already Liked: ", alreadyLike);
     console.log("new activity: ",newActivity)
     dispatch(addActivity(newActivity));
   }
+}
     setLikes((prevLikes) => ({
       ...prevLikes,
       [postId]: { liked: !prevLikes[postId]?.liked }
@@ -184,11 +189,27 @@ console.log("Already Liked: ", alreadyLike);
     router.push(`/profile/?userId=${userId}`);
   };
 
-  const handleComment = async (postId: string, content: string) => {
+  const handleComment = async (postId: string, content: string, userId: string) => {
+    console.log("userId at comment modal: ",userId)
     if (content.trim() !== '') {
       try {
         await dispatch(addCommentAsync({ postId, content, userId: user_id })).unwrap();
-        setCommentsModal({ isOpen: false, postId: null });
+        if(userId != session?.user?.id){
+        const newActivity: Activity = {
+          id: userId,
+          post_id: postId,
+          type: "comment",
+          user: {
+            name: session?.user?.name || '',
+            avatar: session?.user?.image || ''
+          },
+          text: 'commmented on your post',
+          timestamp: new Date().toISOString()
+        };
+        console.log("new activity: ",newActivity)
+        dispatch(addActivity(newActivity));
+      }
+        setCommentsModal({ isOpen: false, postId: null ,userId:null});
         dispatch(fetchPosts({ userId }));
       } catch (error) {
         console.log("Failed to post comment:", error);
@@ -201,6 +222,7 @@ console.log("Already Liked: ", alreadyLike);
     setShareModal({
       isOpen: true,
       postId,
+      userId: null,
     });
   };
 
@@ -250,7 +272,7 @@ const comments = currentPost?.comments || [];
   
     const postComment = async () => {
       if (commentInput.trim() !== "") {
-        await handleComment(commentsModal.postId || "", commentInput);
+        await handleComment(commentsModal.postId || "", commentInput, commentsModal.userId || "");
         setCommentInput(""); // Clear input
       }
     };
@@ -269,6 +291,7 @@ const comments = currentPost?.comments || [];
               setCommentsModal({
                 isOpen: false,
                 postId: null,
+                userId: null,
               })
             }
           >
@@ -315,6 +338,7 @@ const comments = currentPost?.comments || [];
               setShareModal({
                 isOpen: false,
                 postId: null,
+                userId: null,
               })
             }
           >
@@ -449,7 +473,7 @@ const comments = currentPost?.comments || [];
       <span>{post.likeCount || 0}</span>
       </button>
       <button
-        onClick={() => setCommentsModal({ isOpen: true, postId: post._id })}
+        onClick={() => setCommentsModal({ isOpen: true, postId: post._id , userId: post.user_id})}
         className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80"
       >
         <MessageCircle className="w-5 h-5" />

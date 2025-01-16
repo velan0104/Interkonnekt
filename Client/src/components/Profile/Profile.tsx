@@ -231,55 +231,7 @@ const mainContentRef = useRef(null);
   }, [params,session,pathname]);
 
 
-  // useEffect(() => {
-  //   if (!user?.email) return;
-  //  // console.log("useEffect called")
-  //  if(signedInUser){
-  //   const fetchUnameInterest = async () => {
-  //     const response = await fetch("/api/getUnameInterest", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userId: userId }),
-  //     })
-  //     const data = await response.json();
-  //     if (data) {
-  //       setUsername(data.username);
-  //       setInterest(Array.isArray(data.interest)
-  //       ? data.interest
-  //       : data.interest
-  //       ? data.interest.split(",")
-  //       : []);
-  //       setCreatedAt2(data.createdAt);
-  //       setEmail(data.email);
-  //       if ( data.image && data.image.includes("https://lh3.googleusercontent.com")) {
-  //         setProfileImage(data.image);
-  //       } else {
-  //         setCloudinaryImage(data.image)
-  //       }
-  //     }
-
-
-  //     setEditing(!data.username || !data.interest);
-
-  //   }
-  //   fetchUnameInterest();
-  // }
-  // }, [session, pathname]);
-
-  // useEffect(() => {
-  //   const fetchFollow = async () => {
-  //     const session = await getSession();
-  //     if (session) {
-  //       // Fetch user details
-  //       const response = await fetch(`/api/getUserDetails?email=${session?.user?.email}`);
-  // const data = await response.json();
-  // // setUser(data.user);
-  // setFollowing(data.following);
-  //     }
-  //   };
-  //   fetchFollow();
-   
-  // }, []);
+  
 
   const saveUsername = async () => {
     if (username.trim()) {
