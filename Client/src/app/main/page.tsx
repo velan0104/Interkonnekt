@@ -24,6 +24,7 @@ interface user {
 const MainPage:FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
+
   useEffect(() => {
     const getToken = async () => {
       try {

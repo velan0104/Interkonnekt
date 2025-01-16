@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
+  
   return (
     <div className="h-[100vh] w-[100vw] flex justify-center items-center ">
       <div className="flex flex-col gap-y-10 justify-center items-center">
