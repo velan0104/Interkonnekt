@@ -52,7 +52,18 @@ const MainPage:FC = () => {
     getToken();
   }, []); 
 
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    // Ensure code runs only in the client-side environment
+    if (typeof window !== 'undefined') {
+      if (session) {
+        localStorage.setItem('auth_token', JSON.stringify(session?.user?.id));
+      } else {
+        localStorage.setItem('auth_token', '');
+      }
+    }
+  }, [session]);
 
   // if (!session) return <p>Loading...</p>;
 

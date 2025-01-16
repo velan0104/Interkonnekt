@@ -18,6 +18,18 @@ import { useParams, usePathname, useRouter, useSearchParams } from "next/navigat
 
 import { Suspense } from "react";
 import {use} from "react"
+import { Activity, addActivity,  } from "@/Slice/activitiesSlice";
+import { IActivity } from "@/models/Activity";
+
+// type Activity = {
+//   type: "follow" | "like" | "comment" | "unfollow";
+//   user: {
+//     name: string ;
+//     avatar: string ;
+//   };
+//   text: string;
+//   timestamp: string;
+// };
 
 // type LikeState = {
 //   [key: string]: {
@@ -77,6 +89,7 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   
 
   console.log("userId at middle: ",userId)
@@ -112,9 +125,49 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
     setNewComment(e.target.value); // Update local state
   };
 
-  const handleLike = (postId: string) => {
+  const handleLike = async(postId: string,userId2:string) => {
     console.log("handleLike called")
-    dispatch(toggleLikeAsync({ postId, userId: user_id }));
+    await dispatch(toggleLikeAsync({ postId, userId: user_id }));
+    const targetPost = posts.find((post: any) => post._id === postId);
+const alreadyLike = targetPost?.likes.some((like: any) => like.userId === userId2) || false;
+
+console.log("Target Post: ", targetPost);
+console.log("Already Liked: ", alreadyLike);
+
+   
+    console.log("userId at handle like: ",userId2)
+    const timestamp = new Date();
+    //setIsLiked(false);
+    let alreadyLiked = false;
+    await posts.map((post : any) => {
+      post.likes.map((like:any) => {
+        if( like.userId == userId2){
+          console.log("userId at map: ",like.userId)
+         // setIsLiked(true);
+         alreadyLiked = true;
+          console.log("post liked")
+        }
+       
+      })
+    })
+    console.log("Already liked: ", alreadyLiked);
+   
+    if(alreadyLiked){
+      console.log("new activity called")
+    const newActivity: Activity = {
+      id: userId2,
+      post_id: postId,
+      type: "like",
+      user: {
+        name: session?.user?.name || '',
+        avatar: session?.user?.image || ''
+      },
+      text: 'liked your post',
+      timestamp: new Date().toISOString()
+    };
+    console.log("new activity: ",newActivity)
+    dispatch(addActivity(newActivity));
+  }
     setLikes((prevLikes) => ({
       ...prevLikes,
       [postId]: { liked: !prevLikes[postId]?.liked }
@@ -385,7 +438,7 @@ const comments = currentPost?.comments || [];
     )}
     <div className="flex gap-6 mt-4">
       <button
-       onClick={() => handleLike(post._id)}
+       onClick={() => handleLike(post._id,post.user_id)}
        className={`flex items-center gap-2 ${
         post.likes.some(like => like.userId === session?.user?.id) ? "text-red-500" : "text-[#1DA1F2]"
       } hover:opacity-80`}

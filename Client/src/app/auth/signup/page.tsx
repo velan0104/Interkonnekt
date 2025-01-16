@@ -116,6 +116,15 @@ export default function SignupForm() {
     );
   }, []);
 
+  useEffect(() => {
+    // Ensure code runs only in the client-side environment
+   
+      if (!session) {
+        localStorage.setItem('auth_token', '');
+      } 
+    
+  }, []);
+
   // Initialize the form with react-hook-form and Zod resolver
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),

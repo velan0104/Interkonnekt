@@ -1,4 +1,15 @@
-export default function FollowerModal({ followers, onClose }) {
+interface Follower {
+  _id: string;
+  name: string;
+  username: string;
+}
+
+interface FollowerModalProps {
+  followers: Follower[];
+  onClose: () => void;
+}
+
+export default function FollowerModal({ followers, onClose }: FollowerModalProps) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <div className="bg-gray-800 text-white p-6 rounded-lg w-80">

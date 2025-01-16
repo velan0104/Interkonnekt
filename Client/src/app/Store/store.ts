@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import postsReducer from '@/Slice/postsSlice';
 import followReducer from '@/Slice/FolllowSlice';
+import  activitiesReducer  from '@/Slice/activitiesSlice';
 
 export const store = configureStore({
   reducer: {
     posts: postsReducer,
     follow: followReducer,
+    activities: activitiesReducer,
   },
 });
 

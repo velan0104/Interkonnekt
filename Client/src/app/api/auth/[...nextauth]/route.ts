@@ -7,6 +7,7 @@ import User from "@/models/user";
 import { serialize } from "cookie";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { useSession } from "next-auth/react";
+import { NextRequest, NextResponse } from "next/server";
 // import clientPromise from "@/lib/mongodb";
 // import client from "@/lib/mongodb";
 
@@ -109,7 +110,13 @@ const handler = NextAuth({
           token.image = user.image;
           token.provider = account.provider;
           token.accessToken = account.access_token; 
+
+          
+           
+          
         }
+
+        
 
         // const cookie = serialize("auth_token", JSON.stringify(token), {
         //   httpOnly: true,
@@ -118,8 +125,11 @@ const handler = NextAuth({
         //   path: "/",
         //   maxAge: 24 * 60 * 60, // 24 hours
         // });
-        //globalThis.myResponse?.setHeader("Set-Cookie", cookie);
-        //console.log("JWT token:", token);
+    
+        // // Attach the cookie to the response (globalThis is used in the NextAuth handler)
+        // if (globalThis.myResponse) {
+        //   globalThis.myResponse.setHeader("Set-Cookie", cookie);
+        // }
         return token;
       },
 
@@ -221,11 +231,7 @@ console.log("Id in session updated: ", token.id)
   },
 });
 
-export { handler as GET, handler as POST };
-// export default function authHandler(req: any, res: any) {
-//   // Directly pass `res` to the handler, no need for global variables
-//   return handler(req, res);
-// }
+ export { handler as GET, handler as POST };
 
 
 
