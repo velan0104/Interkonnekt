@@ -91,7 +91,7 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
   const pathname = usePathname();
   const params = useSearchParams();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  
+  const [image,setImage] = useState("");
 
   console.log("userId at middle: ",userId)
   useEffect(() => {
@@ -128,56 +128,107 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
     setNewComment(e.target.value); // Update local state
   };
 
-  const handleLike = async(postId: string,userId2:string) => {
-    console.log("handleLike called")
-    await dispatch(toggleLikeAsync({ postId, userId: user_id }));
-    const targetPost = posts.find((post: any) => post._id === postId);
-const alreadyLike = targetPost?.likes.some((like: any) => like.userId === userId2) || false;
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/getUnameInterest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session?.user?.id }),
+      });
+      const data = await response.json();
+      setImage(data.image);
+    };
+   
+    fetchData();
+  },[dispatch,pathname,session])
 
-console.log("Target Post: ", targetPost);
-console.log("Already Liked: ", alreadyLike);
+  // let PI : string;
+  //   const avatar = posts.map((post:any) => {
+  //     if(post.user_id == session?.user?.id){
+  //       PI = post.profileImage;
+  //     }
+  //   })
+
+//   const handleLike = async(postId: string,userId2:string) => {
+//     console.log("handleLike called")
+//     await dispatch(toggleLikeAsync({ postId, userId: user_id }));
+//     const targetPost = posts.find((post: any) => post._id === postId);
+// const alreadyLike = targetPost?.likes.some((like: any) => like.userId === userId2) || false;
+
+// console.log("Target Post: ", targetPost);
+// console.log("Already Liked: ", alreadyLike);
 
    
-    console.log("userId at handle like: ",userId2)
-    const timestamp = new Date();
-    //setIsLiked(false);
-    if(userId2 != session?.user?.id){
-    let alreadyLiked = false;
-    await posts.map((post : any) => {
-      post.likes.map((like:any) => {
-        if( like.userId == userId2){
-          console.log("userId at map: ",like.userId)
-         // setIsLiked(true);
-         alreadyLiked = true;
-          console.log("post liked")
-        }
+//     console.log("userId at handle like: ",userId2)
+//     const timestamp = new Date();
+//     //setIsLiked(false);
+//     if(userId2 != session?.user?.id){
+//     let alreadyLiked = false;
+//     await posts.map((post : any) => {
+//       post.likes.map((like:any) => {
+//         if( like.userId == userId2){
+//           console.log("userId at map: ",like.userId)
+//          // setIsLiked(true);
+//          alreadyLiked = true;
+//           console.log("post liked")
+//         }
        
-      })
-    })
-    console.log("Already liked: ", alreadyLiked);
+//       })
+//     })
+//     console.log("Already liked: ", alreadyLiked);
    
-    if(alreadyLiked){
-      console.log("new activity called")
-    const newActivity: Activity = {
+//     if(alreadyLiked){
+//       console.log("new activity called")
+//     const newActivity: Activity = {
+//       likedById: session?.user?.id,
+//       id: userId2,
+//       post_id: postId,
+//       type: "like",
+//       user: {
+//         name: session?.user?.name || '',
+//         avatar: image || session?.user?.image || ''
+//       },
+//       text: 'liked your post',
+//       timestamp: new Date().toISOString()
+//     };
+//     console.log("new activity: ",newActivity)
+//     dispatch(addActivity(newActivity));
+//   }
+// }
+//     setLikes((prevLikes) => ({
+//       ...prevLikes,
+//       [postId]: { liked: !prevLikes[postId]?.liked }
+//     }));
+//   }; 
+
+const handleLike = async (postId: string, userId2: string) => {
+  console.log("handleLike called");
+
+  // Step 1: Toggle the like in the store
+  await dispatch(toggleLikeAsync({ postId, userId: session?.user?.id }));
+  console.log("Like toggled in the store");
+
+  // Step 2: Add activity if the user is not the owner
+  if (userId2 !== session?.user?.id) {
+    const newActivity:Activity = {
+      likedById: session?.user?.id,
       id: userId2,
       post_id: postId,
       type: "like",
       user: {
         name: session?.user?.name || '',
-        avatar: session?.user?.image || ''
+        avatar: image || session?.user?.image || '',
       },
-      text: 'liked your post',
-      timestamp: new Date().toISOString()
+      text: "liked your post",
+      timestamp: new Date().toISOString(),
     };
-    console.log("new activity: ",newActivity)
+console.log("api calling")
     dispatch(addActivity(newActivity));
   }
-}
-    setLikes((prevLikes) => ({
-      ...prevLikes,
-      [postId]: { liked: !prevLikes[postId]?.liked }
-    }));
-  }; 
+};
+
+
+
 
   // const handleAddComment = (postId: string, content: string) => {
   //   const userId = 'user-id'; // Get userId from state or context
@@ -196,12 +247,13 @@ console.log("Already Liked: ", alreadyLike);
         await dispatch(addCommentAsync({ postId, content, userId: user_id })).unwrap();
         if(userId != session?.user?.id){
         const newActivity: Activity = {
+          likedById: "",
           id: userId,
           post_id: postId,
           type: "comment",
           user: {
             name: session?.user?.name || '',
-            avatar: session?.user?.image || ''
+            avatar: image || session?.user?.image || ''
           },
           text: 'commmented on your post',
           timestamp: new Date().toISOString()

@@ -59,57 +59,18 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("posts");
 const router = useRouter();
 
-// const dispatch: AppDispatch = useDispatch();
-// const posts = useSelector((state: RootState) => (state.posts as any).posts);
-// const postStatus = useSelector((state: RootState) => (state.posts as any).status);
-// const error = useSelector((state: RootState) => (state.posts as any).error);
+
 
 const profileRef = useRef(null);
 const statsRef = useRef(null);
 const mainContentRef = useRef(null);
 
-// useEffect(() => {
-//   // Profile Section remains static, no animation needed.
-
-//   // Stats Section animation
-//   gsap.fromTo(
-//     statsRef.current,
-//     { y: "100%" },
-//     {
-//       y: "0%",
-//       scrollTrigger: {
-//         trigger: statsRef.current,
-//         start: "top bottom", // When the stats section enters the viewport
-//         end: "top center",  // When it reaches the center of the viewport
-//         scrub: true,        // Smooth animation with scroll
-//       },
-//     }
-//   );
-
-//   // Main Content animation
-//   gsap.fromTo(
-//     mainContentRef.current,
-//     { y: "100%" },
-//     {
-//       y: "0%",
-//       scrollTrigger: {
-//         trigger: mainContentRef.current,
-//         start: "top bottom", // When the main content enters the viewport
-//         end: "top center",   // When it reaches the center of the viewport
-//         scrub: true,         // Smooth animation with scroll
-//       },
-//     }
-//   );
-// }, []);
 
 
-  // useEffect(() => {
-  //    if (postStatus === 'idle') {
-  //      dispatch(fetchPosts());
-  //    }
-  //   // dispatch(fetchPosts());
-  //  }, [dispatch,postStatus,pathname]);
-  //  console.log("posts at middle: ",posts)
+
+
+
+ 
 
   const fetchUserData = async (userId:string) => {
     //const sessionData = await getSession();

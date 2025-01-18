@@ -115,31 +115,14 @@ const handler = NextAuth({
            
           
         }
-
-        
-
-        // const cookie = serialize("auth_token", JSON.stringify(token), {
-        //   httpOnly: true,
-        //   secure: process.env.NODE_ENV === "production",
-        //   sameSite: "strict",
-        //   path: "/",
-        //   maxAge: 24 * 60 * 60, // 24 hours
-        // });
-    
-        // // Attach the cookie to the response (globalThis is used in the NextAuth handler)
-        // if (globalThis.myResponse) {
-        //   globalThis.myResponse.setHeader("Set-Cookie", cookie);
-        // }
         return token;
       },
 
     async signIn({ user, account, profile }) {
-      // console.log("User profile:", profile); // View Google profile data
-      // console.log("user: ",user);
-      // console.log("account: ",account)
+      
       try{
        await dbConnect();
-     // const collection = db.collection("users");
+    
       const existingUser = await User.findOne({ email: user.email });
     //   const newUser = new User({
     //     name,

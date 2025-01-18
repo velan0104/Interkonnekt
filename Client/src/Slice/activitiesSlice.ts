@@ -8,6 +8,7 @@ interface User {
 }
 
 export interface Activity {
+  likedById: string,
   id?: string;
 post_id?: string;
   type: "like" | "comment" | "follow" | "unfollow";

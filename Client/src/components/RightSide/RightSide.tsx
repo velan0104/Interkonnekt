@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Store/store";
 import { fetchActivities } from "@/Slice/activitiesSlice";
 import { useSession } from "next-auth/react";
+import { CldImage } from "next-cloudinary";
 const RightSide:FC = () => {
 
   interface user {
@@ -48,85 +49,9 @@ const { activities, loading, error } = useSelector((state: RootState) => state.a
     return () => clearInterval(intervalId); // Cleanup the interval on unmount
   }, [dispatch, session]);
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      const data: Activity[] = [
-        {
-          id: 1,
-          type: "like",
-          user: {
-            name: "Sarah Wilson",
-            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-          },
-          text: "mentioned you in a comment",
-          timestamp: "2m ago",
-        },
-        {
-          id: 2,
-          type: "like",
-          user: {
-            name: "Sahil Cooper",
-            avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-          },
-          text: "liked your post",
-          timestamp: "5m ago",
-        },
-        {
-          id: 3,
-          type: "follow",
-          user: {
-            name: "Emma Thompson",
-            avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-          },
-          text: "started following you",
-          timestamp: "10m ago",
-        },
-        {
-          id: 4,
-          type: "comment",
-          user: {
-            name: "Michael Scott",
-            avatar: "https://randomuser.me/api/portraits/men/4.jpg",
-          },
-          text: "commented on your post",
-          timestamp: "15m ago",
-        },
-      ];
-     // setActivities(activity);
-    };
-
-    fetchActivities();
-  }, []);
-
-  // const getActivityText = (activity: Activity) => {
-  //   switch (activity.type) {
-  //     case "like":
-  //       return `${activity.user} liked your post "${activity.text}"`;
-  //     case "comment":
-  //       return `${activity.user} commented on your post "${activity.text}"`;
-  //     case "follow":
-  //       return `${activity.user} started following you`;
-  //     case "unfollow":
-  //       return `${activity.user} unfollowed you`;
-  //     default:
-  //       return "";
-  //   }
-  // };
   
-  // if (loading) {
-  //   return (
-  //     <aside className="w-full md:w-80 h-screen p-4 border-l border-gray-200 bg-gray-900">
-  //       <div className="animate-pulse space-y-4">
-  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //       </div>
-  //     </aside>
-  //   );
-  // }
+
+  
  
 
   if (error) {
@@ -151,11 +76,22 @@ const { activities, loading, error } = useSelector((state: RootState) => state.a
           key={index}
           className="flex items-start space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
         >
-          <img
-            src={activity.user.avatar}
-            alt={activity.user.name}
-            className="w-10 h-10 rounded-full border border-gray-700"
-          />
+          <div className="w-14 h-14 rounded-full overflow-hidden  border-white shadow-md">
+        {activity.user.avatar.includes("https://lh3.googleusercontent.com") ? 
+        <img
+        src={activity.user.avatar}
+        alt={activity.user.name}
+        className="w-14 h-14 rounded-full border border-gray-700"
+      /> :
+      <CldImage
+      src={activity.user.avatar}
+      alt={activity.user.name}
+      width={50}
+      height={50}
+       className="w-full h-full object-cover rounded-full"
+      />
+        }
+          </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm text-white">
               <span className="font-medium">{activity.user.name}</span>{" "}
