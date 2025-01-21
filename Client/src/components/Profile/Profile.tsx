@@ -59,57 +59,18 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("posts");
 const router = useRouter();
 
-// const dispatch: AppDispatch = useDispatch();
-// const posts = useSelector((state: RootState) => (state.posts as any).posts);
-// const postStatus = useSelector((state: RootState) => (state.posts as any).status);
-// const error = useSelector((state: RootState) => (state.posts as any).error);
+
 
 const profileRef = useRef(null);
 const statsRef = useRef(null);
 const mainContentRef = useRef(null);
 
-// useEffect(() => {
-//   // Profile Section remains static, no animation needed.
-
-//   // Stats Section animation
-//   gsap.fromTo(
-//     statsRef.current,
-//     { y: "100%" },
-//     {
-//       y: "0%",
-//       scrollTrigger: {
-//         trigger: statsRef.current,
-//         start: "top bottom", // When the stats section enters the viewport
-//         end: "top center",  // When it reaches the center of the viewport
-//         scrub: true,        // Smooth animation with scroll
-//       },
-//     }
-//   );
-
-//   // Main Content animation
-//   gsap.fromTo(
-//     mainContentRef.current,
-//     { y: "100%" },
-//     {
-//       y: "0%",
-//       scrollTrigger: {
-//         trigger: mainContentRef.current,
-//         start: "top bottom", // When the main content enters the viewport
-//         end: "top center",   // When it reaches the center of the viewport
-//         scrub: true,         // Smooth animation with scroll
-//       },
-//     }
-//   );
-// }, []);
 
 
-  // useEffect(() => {
-  //    if (postStatus === 'idle') {
-  //      dispatch(fetchPosts());
-  //    }
-  //   // dispatch(fetchPosts());
-  //  }, [dispatch,postStatus,pathname]);
-  //  console.log("posts at middle: ",posts)
+
+
+
+ 
 
   const fetchUserData = async (userId:string) => {
     //const sessionData = await getSession();
@@ -231,55 +192,7 @@ const mainContentRef = useRef(null);
   }, [params,session,pathname]);
 
 
-  // useEffect(() => {
-  //   if (!user?.email) return;
-  //  // console.log("useEffect called")
-  //  if(signedInUser){
-  //   const fetchUnameInterest = async () => {
-  //     const response = await fetch("/api/getUnameInterest", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ userId: userId }),
-  //     })
-  //     const data = await response.json();
-  //     if (data) {
-  //       setUsername(data.username);
-  //       setInterest(Array.isArray(data.interest)
-  //       ? data.interest
-  //       : data.interest
-  //       ? data.interest.split(",")
-  //       : []);
-  //       setCreatedAt2(data.createdAt);
-  //       setEmail(data.email);
-  //       if ( data.image && data.image.includes("https://lh3.googleusercontent.com")) {
-  //         setProfileImage(data.image);
-  //       } else {
-  //         setCloudinaryImage(data.image)
-  //       }
-  //     }
-
-
-  //     setEditing(!data.username || !data.interest);
-
-  //   }
-  //   fetchUnameInterest();
-  // }
-  // }, [session, pathname]);
-
-  // useEffect(() => {
-  //   const fetchFollow = async () => {
-  //     const session = await getSession();
-  //     if (session) {
-  //       // Fetch user details
-  //       const response = await fetch(`/api/getUserDetails?email=${session?.user?.email}`);
-  // const data = await response.json();
-  // // setUser(data.user);
-  // setFollowing(data.following);
-  //     }
-  //   };
-  //   fetchFollow();
-   
-  // }, []);
+  
 
   const saveUsername = async () => {
     if (username.trim()) {

@@ -6,6 +6,7 @@ interface IUser {
 }
 
 export interface IActivity extends Document {
+  likedById?: string,
     id?: string;
     post_id?: string;
   type: "like" | "comment" | "follow" | "unfollow";
@@ -20,6 +21,7 @@ const UserSchema: Schema = new Schema({
 });
 
 const ActivitySchema: Schema = new Schema({
+  likedById: {type:String},
     id:{type:String},
 post_id: {type:String},
   type: { 

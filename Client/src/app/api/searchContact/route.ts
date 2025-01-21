@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     $and: [
       { _id: { $ne: user?._id } }, // Replace "userId" with the actual ID
       {
-        $or: [{ name: regex }, { username: regex }, { email: regex }],
+        $or: [{ name: regex }, { username: regex }],
       },
     ],
   });
