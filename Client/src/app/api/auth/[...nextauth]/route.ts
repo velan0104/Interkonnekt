@@ -8,8 +8,7 @@ import { serialize } from "cookie";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { useSession } from "next-auth/react";
 import { NextRequest, NextResponse } from "next/server";
-// import clientPromise from "@/lib/mongodb";
-// import client from "@/lib/mongodb";
+
 
 interface Credentials {
   //name: string;
@@ -81,27 +80,18 @@ const handler = NextAuth({
         clientSecret: process.env.GITHUB_SECRET as string
     })
   ],
-  // adapter: MongoDBAdapter(client),
+ 
   session: {
     strategy: "jwt",
-    maxAge: 3600,  // JWT token expires after 1 hour
-    updateAge: 1800,  // The session is refreshed every 30 minutes
+    maxAge: 3600,  
+    updateAge: 1800,  
   },
   callbacks: {
       async jwt({ token, user ,account}) {
-        // if (account) {
-        //   // Save details to the token if it's a new login
-        //   token.accessToken = account.access_token; // Use the account's access token
-        //   token.provider = account.provider;
-        // }
-
-        //console.log("token at custom: ",token)
-       
-        // console.log("user at custom: ",user);
-        // console.log("account at custom: ",account)
+        
     
         if (user && account) {
-          // Save user ID and email to token
+         
           token.id = user.id;
           token.email = user.email;
           token.name = user.name;
@@ -124,23 +114,10 @@ const handler = NextAuth({
        await dbConnect();
     
       const existingUser = await User.findOne({ email: user.email });
-    //   const newUser = new User({
-    //     name,
-    //   username,
-    //   email,
-    //   password: hashedPassword,
-    //   interest,
-    // });
-
-    // await newUser.save();
+   
 
       if (!existingUser) {
-        // await User.insertOne({
-        //   name: profile?.name,
-        //   email: user.email,
-        //   image: profile,
-        //   createdAt: new Date(),
-        // });
+        
         const newUser = new User({
           id: user.id,
           name: user.name,
@@ -157,8 +134,7 @@ const handler = NextAuth({
           existingUser.image = existingUser.image ;
           existingUser.provider = account.provider;
           existingUser.interest =  existingUser.interest;
-          // existingUser.id = account.providerAccountId;
-         // existingUser.id = existingUser.id;
+         
            existingUser.username =  existingUser.username;
           await existingUser.save();
           console.log("Updated existing user with Google data.");
@@ -203,13 +179,7 @@ const handler = NextAuth({
 console.log("Id in session updated: ", token.id)
       return session;
     },
-    // async jwt({ token, user }) {
-    //   console.log("token: ",token);
-    //   if (user) {
-    //     token.id = user.id;
-    //   }
-    //   return token;
-    // },
+    
    
   },
 });
@@ -218,5 +188,4 @@ console.log("Id in session updated: ", token.id)
 
 
 
-// import { handlers } from "@/auth"
-// export const { GET, POST } = handlers
+

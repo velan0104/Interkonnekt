@@ -291,7 +291,7 @@ console.log("api calling")
     // alert(data.message);
   }
 
-  
+  if(!session) return <SkeletonLoader/>;
 
   const Dropdown: React.FC<{ postId: string }> = ({ postId, userId }) => (
     <div className="absolute right-0 top-8 bg-[#2A2A2A] rounded-lg shadow-lg py-2 min-w-[150px]">

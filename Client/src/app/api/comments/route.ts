@@ -1,4 +1,4 @@
-// /pages/api/posts/comment.ts
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,10 +16,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid input" }, { status: 400 });
       }
 
-    // if (!content?.userId || !content?.content || !content?.createdAt) {
-    //     return NextResponse.json({ error: "Invalid comment structure" }, { status: 400 });
-    //   }
-
+   
     try {
      await dbConnect();
       const result = await Posts.findById(postId)
@@ -29,20 +26,10 @@ export async function POST(req: NextRequest) {
       }
 
       result.comments.push({  post_id: postId,userId:userId,content:content });
-      result.commentCount += 1; // Increment like count
+      result.commentCount += 1; 
       await result.save();
 
-      //   { _id: postId },
-      //   { 
-      //       $push: { comments: {post_id:postId, content:content,userId:userId} },   // Add the new comment
-      //       $inc: { commentCount: 1 }       // Increment the comment count
-      //     },
-      //     { new: true } 
-      // );
-      // if (!result) {
-      //   return NextResponse.json({ error: "Post not found" }, { status: 404 });
-      // }
-      // console.log("result at comment route: ",result)
+      
      
       const formattedComments = result.comments.map(comment => ({
         post_id: comment.post_id.toString(),

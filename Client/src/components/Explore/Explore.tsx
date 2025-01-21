@@ -80,6 +80,26 @@ const router = useRouter();
 
   return (
     <div className="bg-gray-900 text-gray-100 h-[89vh] p-6 overflow-y-auto">
+ <div className="mb-8 flex justify-center">
+      <div className="relative w-full max-w-md">
+        <input
+          type="text"
+          placeholder="Search for communities, interests, or people..."
+          className="w-full pl-10 pr-4 py-3 rounded-full bg-gray-800 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700 shadow-lg transition"
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11 19a8 8 0 100-16 8 8 0 000 16zm10-2.5l-3-3" />
+        </svg>
+      </div>
+    </div>
+
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0 }}

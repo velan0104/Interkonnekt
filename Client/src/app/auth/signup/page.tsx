@@ -28,7 +28,7 @@ import { twMerge } from "tailwind-merge";
 import { Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
 
-// Define the Zod schema for validation
+
 const signupSchema = z.object({
   name: z
     .string()
@@ -49,52 +49,52 @@ const signupSchema = z.object({
     interest: z.array(z.string()).min(1, { message: "Enter at least one interest." }),
 });
 
-// Define the type for the form inputs
+
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 const customStyles = {
   control: (base:any) => ({
     ...base,
-    backgroundColor: "#f3f4f6", // Tailwind `bg-gray-100`
-    border: "1px solid #d1d5db", // Tailwind `border-gray-300`
-    borderRadius: "0.375rem", // Tailwind `rounded-md`
-    padding: "0.25rem", // Tailwind `p-1`
+    backgroundColor: "#f3f4f6", 
+    border: "1px solid #d1d5db", 
+    borderRadius: "0.375rem", 
+    padding: "0.25rem", 
     boxShadow: "none",
     "&:hover": {
-      borderColor: "#9ca3af", // Tailwind `hover:border-gray-400`
+      borderColor: "#9ca3af", 
     },
   }),
   menu: (base:any) => ({
     ...base,
-    backgroundColor: "#f9fafb", // Tailwind `bg-gray-50`
-    borderRadius: "0.375rem", // Tailwind `rounded-md`
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Tailwind `shadow-md`
+    backgroundColor: "#f9fafb", 
+    borderRadius: "0.375rem", 
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", 
   }),
   option: (base:any, state:any) => ({
     ...base,
-    backgroundColor: state.isFocused ? "#e5e7eb" : "#f9fafb", // Tailwind `bg-gray-200`
-    color: state.isFocused ? "#000000" : "#374151", // Tailwind `text-gray-700`
-    padding: "0.5rem 0.75rem", // Tailwind `p-2`
-    borderRadius: "0.25rem", // Tailwind `rounded`
+    backgroundColor: state.isFocused ? "#e5e7eb" : "#f9fafb", 
+    color: state.isFocused ? "#000000" : "#374151", 
+    padding: "0.5rem 0.75rem", 
+    borderRadius: "0.25rem", 
   }),
   multiValue: (base:any) => ({
     ...base,
-    backgroundColor: "#dbeafe", // Tailwind `bg-blue-100`
-    borderRadius: "0.375rem", // Tailwind `rounded-md`
-    padding: "0 0.5rem", // Tailwind `px-2`
+    backgroundColor: "#dbeafe", 
+    borderRadius: "0.375rem", 
+    padding: "0 0.5rem", 
     display: "flex",
     alignItems: "center",
   }),
   multiValueLabel: (base:any) => ({
     ...base,
-    color: "#1e40af", // Tailwind `text-blue-900`
+    color: "#1e40af", 
   }),
   multiValueRemove: (base:any) => ({
     ...base,
-    color: "#1e40af", // Tailwind `text-blue-900`
+    color: "#1e40af", 
     "&:hover": {
-      backgroundColor: "#1e40af", // Tailwind `hover:bg-blue-900`
-      color: "#ffffff", // Tailwind `hover:text-white`
+      backgroundColor: "#1e40af", 
+      color: "#ffffff", 
     },
   }),
 };
@@ -104,11 +104,11 @@ export default function SignupForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session, status } = useSession();
- // console.log("session: ",session)
+ 
   const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
-    // GSAP Animation for Left Section
+   
     gsap.fromTo(
       ".left-section",
       { x: "-100%", opacity: 0 },
@@ -117,7 +117,7 @@ export default function SignupForm() {
   }, []);
 
   useEffect(() => {
-    // Ensure code runs only in the client-side environment
+   
    
       if (!session) {
         localStorage.setItem('auth_token', '');
@@ -125,7 +125,7 @@ export default function SignupForm() {
     
   }, []);
 
-  // Initialize the form with react-hook-form and Zod resolver
+ 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -152,7 +152,7 @@ export default function SignupForm() {
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
     try {
-      // Redirect to Google login
+      
       await signIn("google", { callbackUrl: `/main` });
     } catch (err) {
       console.error("Error during Google SignIn", err);
@@ -163,7 +163,7 @@ export default function SignupForm() {
   };
 
   console.log("updated interests: ", interests);
-  // Handle form submission
+  
   const onSubmit = async (data: SignupFormValues) => {
     setIsSubmitting(true);
     try {
@@ -226,7 +226,7 @@ export default function SignupForm() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: "easeInOut" }}
-          className="relative w-full lg:w-1/2 bg-gray-800 p-8 lg:p-16 bottom-10"
+          className="relative w-full lg:w-1/2 h-64 lg:h-auto bg-gray-800 p-8 lg:px-20  "
         >
           <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">
             Sign Up
@@ -250,7 +250,7 @@ export default function SignupForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500"/>
                   </FormItem>
                 )}
               />
@@ -269,7 +269,7 @@ export default function SignupForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500"/>
                   </FormItem>
                 )}
               />
@@ -289,7 +289,7 @@ export default function SignupForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500"/>
                   </FormItem>
                 )}
               />
@@ -309,7 +309,7 @@ export default function SignupForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500"/>
                   </FormItem>
                 )}
               />
@@ -322,12 +322,7 @@ export default function SignupForm() {
                   <FormItem>
                     <FormLabel className="text-gray-400">Interest</FormLabel>
                     <FormControl>
-                      {/* <Input
-                        className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
-                        placeholder="Your interest"
-                       // {...field}
-                       onKeyDown={handleAddInterest}
-                      /> */}
+                     
                         <Controller
           name="interest"
           control={form.control}
@@ -361,7 +356,7 @@ export default function SignupForm() {
         />
                     </FormControl>
                    
-                    <FormMessage />
+                    <FormMessage className="text-red-500"/>
                   </FormItem>
                 )}
               />
@@ -384,16 +379,24 @@ export default function SignupForm() {
                 </Link>
               </p>
 
-              <Button
+              {/* <Button
                 onClick={handleGoogleSignIn}
                 className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300"
               >
                 {isSigningIn
                   ? "Signing in with Google..."
                   : "Sign in with Google"}
-              </Button>
+              </Button> */}
             </form>
           </Form>
+            <Button
+                onClick={handleGoogleSignIn}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300 mt-5"
+              >
+                {isSigningIn
+                  ? "Signing in with Google..."
+                  : "Sign in with Google"}
+              </Button>
         </motion.div>
       </div>
     </div>
