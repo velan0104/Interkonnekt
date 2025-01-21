@@ -2,8 +2,6 @@ import dbConnect from "@/lib/mongodb";
 import Activity from "@/models/Activity";
 import { NextRequest, NextResponse } from "next/server";
 
-
-
 export async function POST(req:NextRequest){
     try{
         await dbConnect();
