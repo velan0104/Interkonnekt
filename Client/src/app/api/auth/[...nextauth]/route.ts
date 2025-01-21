@@ -216,18 +216,8 @@ const handler = NextAuth({
       console.log("Id in session updated: ", token.id);
       return session;
     },
-<<<<<<< HEAD
     
    
-=======
-    // async jwt({ token, user }) {
-    //   console.log("token: ",token);
-    //   if (user) {
-    //     token.id = user.id;
-    //   }
-    //   return token;
-    // },
->>>>>>> 8faed9b603a6fcb150070487a21119f69b078f2f
   },
   events: {
     async signIn({ user, account, profile }) {
