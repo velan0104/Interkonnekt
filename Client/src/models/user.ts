@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, model, models } from "mongoose";
 
-export interface IFollowers{
+export interface IFollowers {
   userId: string;
 }
 
@@ -9,17 +9,16 @@ const FollowerSchema = new Schema<IFollowers>({
     type: String,
     ref: "users",
   },
-})
+});
 
 const FollowingSchema = new Schema<IFollowing>({
   userId: {
     type: String,
     ref: "users",
-    
   },
-})
+});
 
-export interface IFollowing{
+export interface IFollowing {
   userId: string;
 }
 interface IUser extends Document {
@@ -35,11 +34,9 @@ interface IUser extends Document {
   following: IFollowing[];
 }
 
-
-
 const UserSchema = new Schema<IUser>(
   {
-    name:{
+    name: {
       type: String,
       required: [true, "name is required"],
       minlength: [5, "Username must be at least 2 characters"],
@@ -47,7 +44,7 @@ const UserSchema = new Schema<IUser>(
     },
     username: {
       type: String,
-     // required: [true, "Username is required"],
+      // required: [true, "Username is required"],
       unique: true,
       minlength: [2, "Username must be at least 2 characters"],
       maxlength: [30, "Username must not exceed 30 characters"],
@@ -56,17 +53,14 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: [true, "Email is required"],
       unique: true,
-      match: [
-        /^\S+@\S+\.\S+$/,
-        "Please provide a valid email address",
-      ],
+      match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"],
     },
     password: {
       type: String,
-     // required: [true, "Password is required"],
+      // required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
     },
-    interest:{
+    interest: {
       type: [String],
       // required: [true, "interest is required"]
     },
