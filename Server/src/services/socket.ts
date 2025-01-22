@@ -2,6 +2,7 @@ import { Socket, Server as SocketIoServer } from "socket.io";
 import Channel from "../models/Channel.models.js";
 import Message from "../models/Message.model.js";
 import { IMessage } from "../models/Message.model.js";
+import User from "../models/User.model.js";
 
 const setUpSocket = (server: any) => {
   const io = new SocketIoServer(server, {
@@ -35,12 +36,17 @@ const setUpSocket = (server: any) => {
       createdMessage = await Message.create(message);
       console.log("CREATED MESSAGE: ", createdMessage);
     } catch (error) {
-      console.log("Failed to create message db");
+      console.log("Failed to create message db: ", error);
     }
 
-    const messageData = await Message.findById(createdMessage?._id)
-      .populate("sender", "id email name image")
-      .populate("recipient", "id email name image");
+    let messageData = null;
+    try {
+      messageData = await Message.findById(createdMessage?._id)
+        .populate("sender", "_id email name image")
+        .populate("recipient", "_id email name image");
+    } catch (error) {
+      console.log("MESSAGE DATA: ", error);
+    }
 
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("receiveMessage", messageData); // IN place of message messageData come from above

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import  dbConnect  from "@/lib/mongodb"
+import dbConnect from "@/lib/mongodb";
 import User from "@/models/user";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const {name, username, email, password, interest} = body;
-    console.log("interest at signup: ", interest)
+    const { name, username, email, password, interest } = body;
+    console.log("interest at signup: ", interest);
 
     if (!name || !username || !email || !password || !interest) {
       return NextResponse.json(
@@ -26,16 +26,18 @@ export async function POST(req: Request) {
       );
     }
 
-   // const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       id: username,
-        name,
+      name,
       username,
       email,
       password,
       interest,
     });
+
+    console.log(newUser);
 
     await newUser.save();
 
