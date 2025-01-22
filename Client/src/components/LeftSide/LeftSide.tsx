@@ -13,54 +13,6 @@ import { set } from "mongoose";
 import { signOut, useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
 import { useRouter, usePathname } from "next/navigation";
-<<<<<<< HEAD
- 
-  import React, { FC, useEffect, useState } from "react";
-
-  const SidebarSkeleton = () => {
- 
-
-    return (
-      <aside className="animate-pulse  relative flex flex-col h-[86vh] w-96 bg-gray-800 text-white p-4 top-[6rem] rounded-xl">
-        {/* Profile Section */}
-        <div className="flex items-center gap-3 w-full mb-8">
-          <div  className="h-16 w-16 rounded-full bg-gray-700"></div>
-          <div  className="flex-1 h-6 rounded-full bg-gray-700"></div>
-        </div>
-  
-        {/* Navigation Links */}
-        <div className="flex-1 space-y-4">
-          <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-          <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-          <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-          <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-          <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-        </div>
-  
-        {/* Video Call Button */}
-        <div  className="h-12 w-full rounded-full mb-10 bg-gray-700"></div>
-  
-        {/* Logout Button */}
-        <div  className="h-12 w-full rounded-full bg-gray-700"></div>
-      </aside>
-    );
-  };
-  
-  
-  
-
-  const LeftSide:FC = () => {
-    const [activeLink, setActiveLink] = useState("home");
-    const { data: session } = useSession();
-    const [username, setUsername] = useState("");
-    console.log("session answer: ",session)
-    const [signInMethod, setSignInMethod] = useState("");
-    const router = useRouter();
-    const [profileImage, setProfileImage] = useState("");
-    const [cloudinaryImage, setCloudinaryImage] = useState("");
-    const [IscloudinaryImage,setIsCloudinaryImage] = useState(false)
-=======
->>>>>>> velan
 
 import React, { FC, useEffect, useState } from "react";
 const LeftSide: FC = () => {
@@ -161,23 +113,12 @@ const LeftSide: FC = () => {
   //   }
   // };
 
-<<<<<<< HEAD
-   // if(!session) return <SidebarSkeleton/>;
-
-    return (
-      <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4 ">
-        {/* Profile Section */}
-        <div className="flex items-center gap-3 w-20 h-16 mb-8 px-2 rounded-full ">
-          {IscloudinaryImage ? (
-            <CldImage
-=======
   return (
     <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4 ">
       {/* Profile Section */}
       <div className="flex items-center gap-3 w-20 h-16 mb-8 px-2 rounded-full ">
         {IscloudinaryImage ? (
           <CldImage
->>>>>>> velan
             src={cloudinaryImage}
             alt="Profile Image"
             width={80}
