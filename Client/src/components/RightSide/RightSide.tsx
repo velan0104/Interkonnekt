@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import NewDM from "../ChatComponent/NewDM";
 import ContactList from "../ChatComponent/ContactList";
 import { contact } from "@/seeders/seeders";
+import { CldImage } from "next-cloudinary";
 
 const RightSide: FC = () => {
   interface user {
@@ -169,14 +170,16 @@ const RightSide: FC = () => {
                 <div
                   key={index}
                   className="flex items-start space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
-                >
+                >{activity.user.avatar.includes("https://lh3.googleusercontent.com") ? 
                   <img
-                    src={activity.user.avatar}
-                    alt={activity.user.name}
-                    className="w-10 h-10 rounded-full border border-gray-700"
-                  />
+                  src={activity.user.avatar}
+                  alt={activity.user.name}
+                  className="w-10 h-10 rounded-full border border-gray-700"
+                /> : <CldImage src={activity.user.avatar} width={50} height={80} alt={activity.user.name}  className="rounded-full w-14 h-14"/>
+                }
+                 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-white mt-2">
                       <span className="font-medium">{activity.user.name}</span>{" "}
                       {activity.text}
                     </p>
@@ -185,13 +188,13 @@ const RightSide: FC = () => {
                     </p>
                   </div>
                   {activity.type === "like" && (
-                    <Heart className="w-4 h-4 text-red-500" />
+                    <Heart className="w-4 h-4 text-red-500 mt-3" />
                   )}
                   {activity.type === "follow" && (
-                    <UserPlus2 className="w-4 h-4 text-green-500" />
+                    <UserPlus2 className="w-4 h-4 text-green-500 mt-3" />
                   )}
                   {activity.type === "comment" && (
-                    <MessageSquare className="w-4 h-4 text-purple-500" />
+                    <MessageSquare className="w-4 h-4 text-purple-500 mt-3" />
                   )}
                 </div>
               ))

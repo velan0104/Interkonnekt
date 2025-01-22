@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       userId = body.userId || null;
     }
 
-    console.log("userId at get posts:", userId);
+   // console.log("userId at get posts:", userId);
 
     // Connect to the database
     await dbConnect();
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const query = userId ? { user_id: userId } : {};
     const posts = await Posts.find(query).lean();
 
-    console.log("Posts fetched successfully: ", posts);
+   // console.log("Posts fetched successfully: ", posts);
 
     return NextResponse.json(
       { message: "Posts fetched successfully", posts },

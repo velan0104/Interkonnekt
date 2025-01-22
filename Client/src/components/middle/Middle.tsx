@@ -99,7 +99,7 @@ const PostFeed:FC<PostFeedProps> = ({userId}) => {
       dispatch(fetchPosts({userId }));
     
    // dispatch(fetchPosts());
-  }, [pathname]);
+  }, [pathname,dispatch]);
   console.log("posts at middle: ",posts)
   
  

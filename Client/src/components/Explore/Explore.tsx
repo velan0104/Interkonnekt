@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { CldImage } from "next-cloudinary";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import axios from "axios";
 
 interface Details {
     id: string;
@@ -18,6 +19,37 @@ const pathname = usePathname();
 const router = useRouter();
     const [userData,setUserData] = useState<Details[]>([]);
 
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [results, setResults] = useState([]);
+  
+    useEffect(() => {
+      const fetchResults = async () => {
+        if (searchTerm.length > 0) {
+          try {
+            const  data  = await fetch(`/api/searchAll`, {
+              method: "POST",
+              body: JSON.stringify({searchTerm}),
+              headers: { "Content-Type": "application/json" },
+            });
+            const response = await data.json();
+            setResults(response.message);
+           
+          } catch (error) {
+            console.error("Error fetching search results:", error);
+          }
+        } else {
+          setResults([]); // Clear results if no input
+        }
+      };
+  
+      // Fetch results after a short delay to reduce API calls
+      const delayDebounce = setTimeout(() => {
+        fetchResults();
+      }, 300);
+  
+      return () => clearTimeout(delayDebounce);
+    }, [searchTerm]);
+    console.log("results at explore: ",results)
     useEffect(() => {
         const fetchAllUsers = async () => {
             const response = await fetch('/api/allUserData',
@@ -82,11 +114,13 @@ const router = useRouter();
     <div className="bg-gray-900 text-gray-100 h-[89vh] p-6 overflow-y-auto">
  <div className="mb-8 flex justify-center">
       <div className="relative w-full max-w-md">
-        <input
-          type="text"
-          placeholder="Search for communities, interests, or people..."
-          className="w-full pl-10 pr-4 py-3 rounded-full bg-gray-800 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700 shadow-lg transition"
-        />
+      <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search for people, communities, or interests..."
+            className="w-full pl-12 pr-4 py-3 rounded-full bg-gray-800 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition"
+          />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -99,6 +133,19 @@ const router = useRouter();
         </svg>
       </div>
     </div>
+    <div className="max-w-xl mx-auto">
+    {Array.isArray(results) && results.length > 0 ? (
+        results.map((result, index) => (
+          <div key={index}>
+            {/* Render your result here */}
+            <h3>{result.username}</h3>
+            <p>{result.interest}</p>
+          </div>
+        ))
+      ) : (
+        <p>No results found</p>
+      )}
+      </div>
 
       {/* Hero Section */}
       <motion.div

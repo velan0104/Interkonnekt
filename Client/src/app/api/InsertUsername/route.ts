@@ -41,9 +41,22 @@ if (!profileImage) {
 
     await dbConnect();
 
-    const existingUsername = await User.find({ $or: [{ email }, { id }] });
+    // const isDuplicateUsername = await User.findOne({ 
+    //   username, 
+    //   id: { $ne: id } // Exclude the current user
+    // });
+    
+    // if (isDuplicateUsername) {
+    //   return NextResponse.json(
+    //     { message: `Username "${username}" is already taken` },
+    //     { status: 400 }
+    //   );
+    // }
+
+    const existingUsername = await User.findOne({ $or: [{ email }, { id }] });
     const existingUser2 = await Posts.find({user_id: id});
     console.log("existing user2: ",existingUser2)
+    console.log("existing user: ",existingUsername)
     // if (!existingUsername) {
     //   return NextResponse.json(
     //     { message: "Username does not exists" },
@@ -59,18 +72,18 @@ if (!profileImage) {
         { status: 400 }
       );
     }
-    // if(profileImage){
-    //   existingUsername.image = profileImage;
-    //   existingUser2.profileImage = profileImage;
-    // }
-    // if(username){
-    //   existingUsername.username = username;
-    // }
-    // if(interest){
-    //   const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
-    //   existingUsername.interest = interestsArray;
-    // }
-    
+    if(profileImage){
+      existingUsername.image = profileImage;
+      existingUser2.profileImage = profileImage;
+    }
+    if(username){
+      existingUsername.username = username;
+    }
+    if(interest){
+      const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
+      existingUsername.interest = interestsArray;
+    }
+    await existingUsername.save();
 
     
     // await existingUsername.save();
@@ -78,19 +91,20 @@ if (!profileImage) {
     // await existingUser2.save();
     // }
 
-    for (const user of existingUsername) {
-      if (profileImage) {
-          user.image = profileImage;
-      }
-      if (username) {
-          user.username = username;
-      }
-      if (interest) {
-          const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
-          user.interest = interestsArray;
-      }
-      await user.save();
-  }
+  //   for (const user of existingUsername) {
+  //     if (profileImage) {
+  //         user.image = profileImage;
+  //     }
+  //     if (username) {
+  //       console.log("changing username ")
+  //         user.username = username;
+  //     }
+  //     if (interest) {
+  //         const interestsArray = typeof interest === "string" ? interest.split(",") : interest;
+  //         user.interest = interestsArray;
+  //     }
+  //     await user.save();
+  // }
 
   // Update and save each post
   for (const post of existingUser2) {
