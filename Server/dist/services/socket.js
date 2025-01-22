@@ -39,11 +39,17 @@ const setUpSocket = (server) => {
             console.log("CREATED MESSAGE: ", createdMessage);
         }
         catch (error) {
-            console.log("Failed to create message db");
+            console.log("Failed to create message db: ", error);
         }
-        const messageData = yield Message.findById(createdMessage === null || createdMessage === void 0 ? void 0 : createdMessage._id)
-            .populate("sender", "id email name image")
-            .populate("recipient", "id email name image");
+        let messageData = null;
+        try {
+            messageData = yield Message.findById(createdMessage === null || createdMessage === void 0 ? void 0 : createdMessage._id)
+                .populate("sender", "_id email name image")
+                .populate("recipient", "_id email name image");
+        }
+        catch (error) {
+            console.log("MESSAGE DATA: ", error);
+        }
         if (recipientSocketId) {
             io.to(recipientSocketId).emit("receiveMessage", messageData); // IN place of message messageData come from above
         }

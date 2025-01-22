@@ -60,10 +60,11 @@ const handler = NextAuth({
         if (!isPasswordValid) {
           throw new Error("Invalid password.");
         }
+        console.log("Existing User: ", existingUser);
 
         // If credentials are valid, return the user object
         return {
-          id: existingUser.id,
+          id: existingUser._id,
           name: existingUser.name,
           email: existingUser.email,
           username: existingUser.username,
@@ -102,7 +103,7 @@ const handler = NextAuth({
 
       if (user && account) {
         // Save user ID and email to token
-        token.id = user.id;
+        token.id = user?.id;
         token.email = user.email;
         token.name = user.name;
         token.username = user.username;
@@ -112,7 +113,8 @@ const handler = NextAuth({
         token.accessToken = account.access_token;
       }
 
-      console.log("Hello from jwt ");
+      console.log("Hello from jwt USER: ", user);
+      console.log("Hello from jwt TOKEN: ", token);
 
       if (user) {
         const cookie = serialize("auth_token", JSON.stringify(token), {
@@ -188,8 +190,15 @@ const handler = NextAuth({
       }
     },
     async session({ session, token }) {
+      const existingUser = await User.findOne({
+        email: token.email,
+      });
+      // console.log("existing user in session: ",existingUser)
+      existingUser.id = existingUser._id;
+      await existingUser.save();
+
       session.user = {
-        id: token?.id,
+        id: existingUser?._id,
         email: token?.email ?? undefined,
         name: token?.name ?? undefined,
         username: token?.username ?? undefined,
@@ -208,12 +217,6 @@ const handler = NextAuth({
       //  console.log("Session Token:", session);
       await dbConnect();
 
-      const existingUser = await User.findOne({
-        email: token.email,
-      });
-      // console.log("existing user in session: ",existingUser)
-      existingUser.id = token.id;
-      await existingUser.save();
       console.log("Id in session updated: ", token.id);
       return session;
     },

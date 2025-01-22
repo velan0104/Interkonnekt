@@ -1,12 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 const MessageSchema = new Schema({
     sender: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         required: true,
     },
     recipient: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         required: false,
     },
@@ -31,10 +31,6 @@ const MessageSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-}
-// {
-//   collection: "messages",
-// }
-);
+});
 const Message = mongoose.model("Message", MessageSchema);
 export default Message;
