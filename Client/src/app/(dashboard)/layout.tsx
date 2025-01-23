@@ -7,30 +7,28 @@ import { SessionProvider, useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 
 const NavbarSkeleton = () => {
- 
-
   return (
     <nav className="animate-pulse fixed top-0 left-0 right-0 h-20 bg-gray-800 border-b border-gray-800 z-50">
       <div className="max-w-screen-xl mx-auto px-6 h-full flex items-center justify-between">
         {/* Logo Section */}
-        <div  className="h-8 w-28 rounded-full bg-gray-700"></div>
+        <div className="h-8 w-28 rounded-full bg-gray-700"></div>
 
         {/* Search Bar */}
-        <div  className="hidden md:block h-10 w-80 rounded-full bg-gray-700"></div>
+        <div className="hidden md:block h-10 w-80 rounded-full bg-gray-700"></div>
 
         {/* Right Section */}
         <div className="flex items-center space-x-6">
           {/* Add Post Button */}
-          <div  className="h-10 w-36 rounded-full bg-gray-700"></div>
+          <div className="h-10 w-36 rounded-full bg-gray-700"></div>
 
           {/* Notification Icon */}
-          <div  className="h-10 w-10 rounded-full bg-gray-700"></div>
+          <div className="h-10 w-10 rounded-full bg-gray-700"></div>
 
           {/* Messages Icon */}
-          <div  className="h-10 w-10 rounded-full bg-gray-700"></div>
+          <div className="h-10 w-10 rounded-full bg-gray-700"></div>
 
           {/* Profile Picture */}
-          <div  className="h-10 w-10 rounded-full bg-gray-700"></div>
+          <div className="h-10 w-10 rounded-full bg-gray-700"></div>
         </div>
       </div>
     </nav>
@@ -38,30 +36,28 @@ const NavbarSkeleton = () => {
 };
 
 const SidebarSkeleton = () => {
- 
-
   return (
     <aside className="animate-pulse  relative flex flex-col h-[86vh] w-96 bg-gray-800 text-white p-4 top-[6rem] rounded-xl">
       {/* Profile Section */}
       <div className="flex items-center gap-3 w-full mb-8">
-        <div  className="h-16 w-16 rounded-full bg-gray-700"></div>
-        <div  className="flex-1 h-6 rounded-full bg-gray-700"></div>
+        <div className="h-16 w-16 rounded-full bg-gray-700"></div>
+        <div className="flex-1 h-6 rounded-full bg-gray-700"></div>
       </div>
 
       {/* Navigation Links */}
       <div className="flex-1 space-y-4">
-        <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-        <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-        <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-        <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
-        <div  className="h-10 w-[70%] rounded-full bg-gray-700"></div>
+        <div className="h-10 w-[70%] rounded-full bg-gray-700"></div>
+        <div className="h-10 w-[70%] rounded-full bg-gray-700"></div>
+        <div className="h-10 w-[70%] rounded-full bg-gray-700"></div>
+        <div className="h-10 w-[70%] rounded-full bg-gray-700"></div>
+        <div className="h-10 w-[70%] rounded-full bg-gray-700"></div>
       </div>
 
       {/* Video Call Button */}
-      <div  className="h-12 w-full rounded-full mb-10 bg-gray-700"></div>
+      <div className="h-12 w-full rounded-full mb-10 bg-gray-700"></div>
 
       {/* Logout Button */}
-      <div  className="h-12 w-full rounded-full bg-gray-700"></div>
+      <div className="h-12 w-full rounded-full bg-gray-700"></div>
     </aside>
   );
 };
@@ -111,20 +107,19 @@ const SkeletonLoader = () => {
   );
 };
 
-
 const layout = ({ children }: { children: ReactNode }) => {
   const { data: session } = useSession();
 
-  if(!session){
-    return (
-      <div className="bg-gray-900 h-screen w-screen">
-       <NavbarSkeleton />
-       <SidebarSkeleton />
-       <SkeletonLoader />
-       
-      </div>
-    );
-   }
+  // if(!session){
+  //   return (
+  //     <div className="bg-gray-900 h-screen w-screen">
+  //      <NavbarSkeleton />
+  //      <SidebarSkeleton />
+  //      <SkeletonLoader />
+
+  //     </div>
+  //   );
+  //  }
   return (
     <ProtectedRoute>
       <SessionProvider>

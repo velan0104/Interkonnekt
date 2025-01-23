@@ -1,8 +1,9 @@
 import { Socket, Server as SocketIoServer } from "socket.io";
 import Channel from "../models/Channel.models.js";
-import Message from "../models/Message.model.js";
+import { Message } from "../models/Message.model.js";
 import { IMessage } from "../models/Message.model.js";
 import User from "../models/User.model.js";
+import mongoose, { Schema } from "mongoose";
 
 const setUpSocket = (server: any) => {
   const io = new SocketIoServer(server, {
@@ -43,7 +44,8 @@ const setUpSocket = (server: any) => {
     try {
       messageData = await Message.findById(createdMessage?._id)
         .populate("sender", "_id email name image")
-        .populate("recipient", "_id email name image");
+        .populate("recipient", "_id email name image")
+        .exec();
     } catch (error) {
       console.log("MESSAGE DATA: ", error);
     }

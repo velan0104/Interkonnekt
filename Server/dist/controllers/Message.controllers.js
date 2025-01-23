@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import Message from "../models/Message.model.js";
+import { Message } from "../models/Message.model.js";
 export const getMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(req.userId);

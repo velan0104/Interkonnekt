@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Server as SocketIoServer } from "socket.io";
 import Channel from "../models/Channel.models.js";
-import Message from "../models/Message.model.js";
+import { Message } from "../models/Message.model.js";
 const setUpSocket = (server) => {
     const io = new SocketIoServer(server, {
         cors: {
@@ -45,7 +45,8 @@ const setUpSocket = (server) => {
         try {
             messageData = yield Message.findById(createdMessage === null || createdMessage === void 0 ? void 0 : createdMessage._id)
                 .populate("sender", "_id email name image")
-                .populate("recipient", "_id email name image");
+                .populate("recipient", "_id email name image")
+                .exec();
         }
         catch (error) {
             console.log("MESSAGE DATA: ", error);
