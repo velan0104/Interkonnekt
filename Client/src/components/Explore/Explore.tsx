@@ -135,10 +135,12 @@ const router = useRouter();
     </div>
     <div className="max-w-xl mx-auto p-4">
   {Array.isArray(results) && results.length > 0 ? (
-    results.map((result, index) => (
+    results.map((result, index) => result.id !== session?.user?.id && (
+      
       <div
         key={index}
         className="flex items-center gap-4 mb-6 bg-gray-800 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300"
+        onClick={() => router.push(`/profile/?userId=${result.id}`)}
       >
          { result.image && result.image.includes("https://lh3.googleusercontent.com") ? 
         <img
@@ -161,7 +163,7 @@ const router = useRouter();
       </div>
     ))
   ) : (
-    <p className="text-center text-gray-500 text-sm">No results found</p>
+    <p className="text-center text-gray-500 text-sm"></p>
   )}
 </div>
 

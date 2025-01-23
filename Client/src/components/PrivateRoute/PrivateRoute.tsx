@@ -13,9 +13,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [status, router]);
 
-  if (status === "loading") {
-    return <p>Loading...</p>; // Show a loading indicator while checking the session
-  }
+  // if (status === "loading") {
+  //   return <p>Loading...</p>; // Show a loading indicator while checking the session
+  // }
 
   if (status === "authenticated") {
     console.log("Authenticated user:", session?.user);

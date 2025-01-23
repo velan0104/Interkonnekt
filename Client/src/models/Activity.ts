@@ -7,8 +7,8 @@ interface IUser {
 
 export interface IActivity extends Document {
   likedById?: string,
-    id?: string;
-    post_id?: string;
+  id?: string;
+  post_id?: string;
   type: "like" | "comment" | "follow" | "unfollow";
   user: IUser;
   text?: string;

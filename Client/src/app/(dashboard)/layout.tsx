@@ -113,9 +113,9 @@ const SkeletonLoader = () => {
 
 
 const layout = ({ children }: { children: ReactNode }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  if(!session){
+  if(!session && status === "unauthenticated"){
     return (
       <div className="bg-gray-900 h-screen w-screen">
        <NavbarSkeleton />
