@@ -14,6 +14,7 @@ interface FollowButtonProps {
 const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId }) => {
   console.log("FollowButton called");
   console.log("Current user ID at FollowButton:", currentUserId);
+  console.log("Target user ID at FollowButton:", targetUserId);
   const { data: session } = useSession();
   
   const dispatch: AppDispatch = useDispatch();
@@ -21,7 +22,11 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
   const { following, status } = useSelector((state: RootState) => state.follow);
   const [image,setImage] = useState("");
   console.log("Following at FollowButton:", following);
-  const isFollowing = following.includes(targetUserId);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  useEffect(() => {
+    setIsFollowing(following.includes(targetUserId));
+  }, [following]);
+  console.log("isFollowing at FollowButton:", isFollowing);
   
   useEffect(() => {
     const fetchData = async () => {
