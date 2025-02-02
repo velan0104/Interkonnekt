@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/mongodb";
+import Activity from "@/models/Activity";
 import Posts from "@/models/post";
 import User from "@/models/user";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -55,6 +56,7 @@ if (!profileImage) {
 
     const existingUsername = await User.findOne({ $or: [{ email }, { id }] });
     const existingUser2 = await Posts.find({user_id: id});
+    const existingUser3 = await Activity.find({id: id});
     console.log("existing user2: ",existingUser2)
     console.log("existing user: ",existingUsername)
     // if (!existingUsername) {

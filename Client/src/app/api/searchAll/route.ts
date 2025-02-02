@@ -17,7 +17,7 @@ console.log("query at search all: ",searchTerm)
         ? {
             $or: [
               { username: { $regex: searchTerm, $options: "i" } },
-              { interests: { $regex: searchTerm, $options: "i" } },
+              { interest: { $regex: searchTerm, $options: "i" } },
             ],
           }
         : {};

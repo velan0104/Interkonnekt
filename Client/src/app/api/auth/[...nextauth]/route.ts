@@ -141,6 +141,7 @@ const handler = NextAuth({
         await dbConnect();
         // const collection = db.collection("users");
         const existingUser = await User.findOne({ email: user.email });
+         console.log("existing user: ",existingUser)
         //   const newUser = new User({
         //     name,
         //   username,
@@ -167,7 +168,7 @@ const handler = NextAuth({
             createdAt: new Date(),
           });
           await newUser.save();
-          console.log("data inserted successfully");
+          console.log("data inserted successfully: ",existingUser);
         } else {
           console.log("user already exists");
           if (account?.provider === "google") {
@@ -216,7 +217,7 @@ const handler = NextAuth({
       //  console.log("Session Token:", session);
       await dbConnect();
 
-      console.log("Id in session updated: ", token.id);
+     // console.log("Id in session updated: ", token.id);
       return session;
     },
     

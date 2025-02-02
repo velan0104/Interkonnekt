@@ -21,6 +21,7 @@ if (!cached) {
     cached.promise = new Promise((resolve, reject) => {
       mongoose.connect(mongoUri, {
         // No need to include useNewUrlParser or useUnifiedTopology anymore
+        dbName: "social_media"
       })
       .then((mongooseInstance) => resolve(mongooseInstance))
       .catch((err) => reject(err));

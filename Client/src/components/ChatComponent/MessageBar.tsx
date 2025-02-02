@@ -79,7 +79,7 @@ const MessageBar = () => {
       <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
         <input
           type="text"
-          className=" flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none text-lg"
+          className=" flex-1 p-5 text-white bg-transparent rounded-md focus:border-none focus:outline-none text-lg"
           placeholder="Enter Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -94,7 +94,7 @@ const MessageBar = () => {
           type="file"
           className="hidden"
           ref={fileInputRef}
-          onChange={handleAttachmentChange}
+          onChange={handleAttachmentChange} 
         />
         <div className="relative">
           <button

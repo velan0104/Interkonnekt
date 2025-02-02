@@ -26,6 +26,7 @@ const LeftSide: FC = () => {
   const [profileImage, setProfileImage] = useState("");
   const [cloudinaryImage, setCloudinaryImage] = useState("");
   const [IscloudinaryImage, setIsCloudinaryImage] = useState(false);
+  const [interest, setInterest] = useState("");
 
   const pathname = usePathname();
   console.log("SESSION USER: ", session?.user);
@@ -67,9 +68,10 @@ const LeftSide: FC = () => {
         body: JSON.stringify({ userId: session?.user?.id }),
       });
       const data = await response.json();
+      console.log("data at LeftSide: ", data);
       if (data) {
         setUsername(data.username);
-        //setInterest(data.interest);
+        setInterest(data.interest);
         if (!data.image) {
           setIsCloudinaryImage(false);
           setCloudinaryImage("");
@@ -80,8 +82,9 @@ const LeftSide: FC = () => {
           data.image &&
           data.image.includes("https://lh3.googleusercontent.com")
         ) {
-          setProfileImage(data.image);
           setIsCloudinaryImage(false);
+          setProfileImage(data.image);
+          
           setCloudinaryImage("");
         } else {
           setIsCloudinaryImage(true);
@@ -97,22 +100,7 @@ const LeftSide: FC = () => {
   console.log("cloudinary image: ", cloudinaryImage);
   console.log("profile image: ", profileImage);
 
-  // const { name, email, image, username } = session?.user;
-  // const handleLogout = async () => {
-  //   console.log("handlelogout called")
-  //   if (signInMethod == "google") {
-  //     console.log("Logging out Google user");
-  //     signOut({ callbackUrl: "/auth/signup" });
-  //   }
-  //   // else if (signInMethod === "github") {
-  //   //   console.log("Logging out GitHub user");
-  //   //   signOut({ callbackUrl: "/auth/signup" });
-  //   // }
-  //    else {
-  //     console.log("Logging out normal user");
-  //     await fetch('/api/logout', { method: 'POST' });
-  //   }
-  // };
+  
 
   return (
     <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4 ">
@@ -142,6 +130,7 @@ const LeftSide: FC = () => {
         <ul className="space-y-2">
           <li onClick={() => setActiveLink("home")}>
             <button
+            
               onClick={() => router.push("/main")}
               className={`w-[70%] flex items-center gap-3 px-3 py-2 rounded transition-colors ${
                 activeLink === "home"
