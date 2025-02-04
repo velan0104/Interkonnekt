@@ -2,8 +2,6 @@ import { Socket, Server as SocketIoServer } from "socket.io";
 import Channel from "../models/Channel.models.js";
 import { Message } from "../models/Message.model.js";
 import { IMessage } from "../models/Message.model.js";
-import User from "../models/User.model.js";
-import mongoose, { Schema } from "mongoose";
 
 const setUpSocket = (server: any) => {
   const io = new SocketIoServer(server, {

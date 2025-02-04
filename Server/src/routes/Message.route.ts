@@ -6,6 +6,6 @@ const app = express.Router();
 
 app.use(verifyToken);
 
-app.post("/getMessage", getMessage);
+app.post("/getMessages", getMessage);
 
 export default app;

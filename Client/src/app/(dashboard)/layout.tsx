@@ -122,7 +122,7 @@ const layout = ({ children }: { children: ReactNode }) => {
   return (
     <ProtectedRoute>
       <SessionProvider>
-        <div className="bg-gray-900">
+        <div className="bg-gray-900 h-[100vh] overflow-hidden">
           <Navbar />
           <div className="grid grid-cols-4 top-20 absolute">
             <LeftSide />

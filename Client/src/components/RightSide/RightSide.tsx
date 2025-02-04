@@ -10,6 +10,8 @@ import NewDM from "../ChatComponent/NewDM";
 import ContactList from "../ChatComponent/ContactList";
 import { contact } from "@/seeders/seeders";
 import { CldImage } from "next-cloudinary";
+import apiClient from "@/lib/api-client";
+import { GET_CONTACT } from "@/lib/constant";
 
 const RightSide: FC = () => {
   interface user {
@@ -26,10 +28,12 @@ const RightSide: FC = () => {
   }
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
+  // const [contact, setContact] = useState([]);
   const { activities, loading, error } = useSelector(
     (state: RootState) => state.activities
   );
   const params = usePathname();
+  const [contacts, setContacts] = useState<any[]>([]);
   console.log("Params: " + params);
   // const [loading, setLoading] = useState(false);
   // const [error, setError] = useState(null);
@@ -43,7 +47,10 @@ const RightSide: FC = () => {
   // }, [dispatch,session]);
 
   useEffect(() => {
-    if (params === "/messages") return;
+    if (params === "/messages") {
+      console.log(session?.user);
+      return;
+    }
 
     const userId = session?.user?.id;
     console.log("userid at rightside: ", userId);
@@ -59,7 +66,24 @@ const RightSide: FC = () => {
   }, [dispatch, session]);
 
   useEffect(() => {
-    if (params === "/messages") return;
+    if (params === "/messages") {
+      const getContact = async () => {
+        try {
+          const response = await apiClient.get(GET_CONTACT, {
+            withCredentials: true,
+          });
+          if (response.status === 200 && response.data) {
+            setContacts(response.data.contacts);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getContact();
+
+      return;
+    }
 
     const fetchActivities = async () => {
       const data: Activity[] = [
@@ -151,7 +175,7 @@ const RightSide: FC = () => {
   if (params === "/messages") {
     return (
       <div className="w-full md:w-96 h-[89vh] gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
-        <ContactList contacts={contact} isChannel={false} />;
+        <ContactList contacts={contacts} isChannel={false} />;
       </div>
     );
   }
@@ -170,14 +194,25 @@ const RightSide: FC = () => {
                 <div
                   key={index}
                   className="flex items-start space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
-                >{activity.user.avatar.includes("https://lh3.googleusercontent.com") ? 
-                  <img
-                  src={activity.user.avatar}
-                  alt={activity.user.name}
-                  className="w-10 h-10 rounded-full border border-gray-700"
-                /> : <CldImage src={activity.user.avatar} width={50} height={80} alt={activity.user.name}  className="rounded-full w-14 h-14"/>
-                }
-                 
+                >
+                  {activity.user.avatar.includes(
+                    "https://lh3.googleusercontent.com"
+                  ) ? (
+                    <img
+                      src={activity.user.avatar}
+                      alt={activity.user.name}
+                      className="w-10 h-10 rounded-full border border-gray-700"
+                    />
+                  ) : (
+                    <CldImage
+                      src={activity.user.avatar}
+                      width={50}
+                      height={80}
+                      alt={activity.user.name}
+                      className="rounded-full w-14 h-14"
+                    />
+                  )}
+
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white mt-2">
                       <span className="font-medium">{activity.user.name}</span>{" "}

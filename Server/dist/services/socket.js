@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { Server as SocketIoServer } from "socket.io";
 import Channel from "../models/Channel.models.js";
 import { Message } from "../models/Message.model.js";
@@ -28,14 +19,14 @@ const setUpSocket = (server) => {
             }
         }
     };
-    const sendMessage = (message) => __awaiter(void 0, void 0, void 0, function* () {
+    const sendMessage = async (message) => {
         console.log("Message: ", message);
         const senderSocketId = userSocketMap.get(message.sender);
         const recipientSocketId = userSocketMap.get(message.recipient);
         console.log("Sender: " + senderSocketId + " Receiver: " + recipientSocketId);
         let createdMessage = null;
         try {
-            createdMessage = yield Message.create(message);
+            createdMessage = await Message.create(message);
             console.log("CREATED MESSAGE: ", createdMessage);
         }
         catch (error) {
@@ -43,7 +34,7 @@ const setUpSocket = (server) => {
         }
         let messageData = null;
         try {
-            messageData = yield Message.findById(createdMessage === null || createdMessage === void 0 ? void 0 : createdMessage._id)
+            messageData = await Message.findById(createdMessage?._id)
                 .populate("sender", "_id email name image")
                 .populate("recipient", "_id email name image")
                 .exec();
@@ -57,10 +48,10 @@ const setUpSocket = (server) => {
         if (senderSocketId) {
             io.to(senderSocketId).emit("receiveMessage", messageData); // IN place of message messageData come from above
         }
-    });
-    const sendChannelMessage = (message) => __awaiter(void 0, void 0, void 0, function* () {
+    };
+    const sendChannelMessage = async (message) => {
         const { channelId, sender, content, messageType, fileUrl } = message;
-        const createdMessage = yield Message.create({
+        const createdMessage = await Message.create({
             sender,
             recipient: null,
             content,
@@ -68,16 +59,16 @@ const setUpSocket = (server) => {
             timestamp: new Date(),
             fileUrl,
         });
-        const messageData = yield Message.findById(createdMessage._id)
+        const messageData = await Message.findById(createdMessage._id)
             .populate("sender", "id email name image")
             .exec();
-        const updatedChannelChat = yield Channel.findByIdAndUpdate(channelId, {
+        const updatedChannelChat = await Channel.findByIdAndUpdate(channelId, {
             $push: { messages: createdMessage._id },
         }, { new: true });
         console.log("Updated chat: ", updatedChannelChat);
-        const channel = yield Channel.findById(channelId).populate("members");
+        const channel = await Channel.findById(channelId).populate("members");
         if (channel) {
-            const finalData = Object.assign(Object.assign({}, messageData === null || messageData === void 0 ? void 0 : messageData.toObject()), { channelId: channel._id });
+            const finalData = { ...messageData?.toObject(), channelId: channel._id };
             if (channel.members) {
                 channel.members.forEach((member) => {
                     const memberSocketId = userSocketMap.get(member._id.toString());
@@ -91,7 +82,7 @@ const setUpSocket = (server) => {
                 }
             }
         }
-    });
+    };
     io.on("connection", (socket) => {
         const userId = socket.handshake.query.userId;
         if (userId) {

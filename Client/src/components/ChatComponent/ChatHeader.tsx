@@ -66,9 +66,9 @@ const ChatHeader = () => {
           </div>
           <div>
             {selectedChatType === "channel" && selectedChatData.name}
-            {selectedChatType === "contact" && selectedChatData.firstName
-              ? `${selectedChatData.firstName} ${selectedChatData.lastName}`
-              : selectedChatData.email}
+            {selectedChatType === "contact" && selectedChatData.username
+              ? `${selectedChatData.username}`
+              : selectedChatData.name}
           </div>
         </div>
         <div className="flex items-center justify-center gap-5 absolute right-5 text-white">

@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextApiResponse) {
   const { searchTerm, userId } = await req.json();
-  console.log("Search Term", searchTerm);
   if (searchTerm === undefined || searchTerm === null)
     return res.status(200).send("Search Term is required");
 
