@@ -53,7 +53,7 @@ const LikeSchema = new Schema(
 
 export interface PollOptions {
   question: string;
-  options: [{ type: string }];
+  options: { option: string; votes: string[] }[];
 }
 
 export interface IPost {
@@ -106,7 +106,12 @@ const PostSchema = new Schema<IPost>({
     type: [
       {
         question: { type: String },
-        options: [{ type: String }],
+        options: [
+          {
+            optionValue: { type: String, required: true },
+            votes: { type: [String], default: [] },
+          },
+        ],
       },
     ],
   },

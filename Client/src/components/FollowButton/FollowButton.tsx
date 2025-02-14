@@ -12,21 +12,19 @@ interface FollowButtonProps {
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId }) => {
-  console.log("FollowButton called");
-  console.log("Current user ID at FollowButton:", currentUserId);
-  console.log("Target user ID at FollowButton:", targetUserId);
+  
   const { data: session } = useSession();
   
   const dispatch: AppDispatch = useDispatch();
   const posts = useSelector((state: RootState) => (state.posts as any).posts);
   const { following, status } = useSelector((state: RootState) => state.follow);
   const [image,setImage] = useState("");
-  console.log("Following at FollowButton:", following);
+  
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   useEffect(() => {
     setIsFollowing(following.includes(targetUserId));
   }, [following]);
-  console.log("isFollowing at FollowButton:", isFollowing);
+  console.log("following: ", following);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +46,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
       dispatch(unfollowUser({ currentUserId, targetUserId }));
     } else {
       
-    console.log("image valie: ",image);
-    console.log("activity creating")
+    
        const newActivity: Activity = {
                 id: targetUserId,
                 //post_id: postId,
@@ -61,7 +58,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
                 text: 'followed you',
                 timestamp: new Date().toISOString()
               };
-              console.log("new activity at follow button: ",newActivity)
+              
               dispatch(addActivity(newActivity));
       dispatch(followUser({ currentUserId, targetUserId }));
     }
@@ -70,7 +67,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
   return (
     <button
       onClick={handleFollow}
-      className={`px-4 py-2 text-white rounded ${
+      className={`px-4 py-2 w-24 text-white rounded ${
         isFollowing ? "bg-red-500" : "bg-blue-500"
       }`}  
     >

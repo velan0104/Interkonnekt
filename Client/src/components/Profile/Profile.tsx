@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import { fetchPosts } from "@/Slice/postsSlice";
 import PostFeed from "../middle/Middle";
+import Posts from "@/models/post";
 
 interface UserProfile {
   name: string;
@@ -37,7 +38,7 @@ export default function Profile() {
   const [editingUsername, setEditingUsername] = useState(false);
   const [editingInterest, setEditingInterest] = useState(false);
   const [editingProfileImage, setEditingProfileImage] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState<string | undefined>();
   const [cloudinaryImage, setCloudinaryImage] = useState<string>();
   const pathname = usePathname();
   const [IscloudinaryImage, setIsCloudinaryImage] = useState(false);
@@ -59,11 +60,12 @@ export default function Profile() {
     useState<string>();
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
-
+ const posts = useSelector((state: RootState) => (state.posts as any).posts);
   const profileRef = useRef(null);
   const statsRef = useRef(null);
+  const [followed,setFollowed] = useState<boolean>(false);
   const mainContentRef = useRef(null);
-
+console.log("posts at profile: ",posts)
   const fetchUserData = async (userId: string) => {
     //const sessionData = await getSession();
     if (!session) return;
@@ -80,27 +82,10 @@ export default function Profile() {
       setCreatedAt2(data.createdAt);
       setEmail(data.email);
       setProfileImage(data.image);
-      if (
-        data.image &&
-        data.image.includes("https://lh3.googleusercontent.com")
-      ) {
-        setIsCloudinaryImage(false);
-        setCloudinaryImage("");
-        setProfileImage(data.image);
-      } else {
-        setIsCloudinaryImage(true);
-        setCloudinaryImage(data.image);
-        setProfileImage("");
-      }
+      
       setFollowers(data.followers);
       setFollowing(data.following);
-      console.log("followers at profile2: ", data.followers);
-      console.log("following at profile2: ", data.following);
-      console.log("image at profile2: ", data.image);
-      console.log("username at profile2: ", data.username);
-      console.log("interest at profile2: ", data.interest);
-      console.log("email at profile2: ", data.email);
-      console.log("createdAt at profile2: ", data.createdAt);
+      
     }
 
     if (session) {
@@ -120,6 +105,9 @@ export default function Profile() {
     }
   };
 
+  console.log("profileimage at profile: ",profileImage)
+  console.log("cloudinary at profile: ",cloudinaryImage)
+
   const fetchUnameInterest = async (userId: string) => {
     if (!userId || userId == "") return;
     if (!session || !pathname) return;
@@ -137,23 +125,8 @@ export default function Profile() {
       setProfileImage(data.image);
       setFollowers(data.followers);
       setFollowing(data.following);
-      if (
-        data.image &&
-        data.image.includes("https://lh3.googleusercontent.com")
-      ) {
-        setIsCloudinaryImage(false);
-        setProfileImage(data.image);
-      } else {
-        setIsCloudinaryImage(true);
-        setCloudinaryImage(data.image);
-      }
-      console.log("followers at profile2: ", data.followers);
-      console.log("following at profile2: ", data.following);
-      console.log("image at profile2: ", data.image);
-      console.log("username at profile2: ", data.username);
-      console.log("interest at profile2: ", data.interest);
-      console.log("email at profile2: ", data.email);
-      console.log("createdAt at profile2: ", data.createdAt);
+     
+      
     }
   };
   const params = useSearchParams();
@@ -168,14 +141,13 @@ export default function Profile() {
       fetchUserData(params.get("userId"));
     } else {
       if (params.get("userId") || session?.user?.provider == "google") {
-        console.log("userId at profile2 at else: ", params.get("userId"));
-        console.log("username at profile2: ", username);
+        
         fetchUnameInterest(params.get("userId") || session?.user?.id);
         setIsSignedInUser(false);
         // Fetch other user data logic here
       }
     }
-  }, [params, session, pathname]);
+  }, [params, session, pathname,FollowButton]);
 
   const saveUsername = async () => {
     if (username.trim()) {
@@ -239,32 +211,26 @@ export default function Profile() {
     title: string;
     data: { userId: string }[];
   }) {
-    console.log("data at modal: ", data);
+    
     if (!isOpen) return null;
 
     const [userDetails, setUserDetails] = useState<
       Record<string, { username: string; name: string; image: string }>
     >({});
 
-    // const[modalData,setModalData] = useState(data);
-    // console.log("modalData: ",modalData)
-
-    // {followers.map((user,index) => {
-    //   <div>
-    //  <p className="text-black" key={index}>{user}</p>
-    //   </div>
-    // })}
+    
 
     useEffect(() => {
       if (isOpen) {
-        console.log("Modal opened with data: ", data);
+       
 
         data.forEach(async (item) => {
           if (!userDetails[item.userId]) {
-            console.log("Fetching details for userId: ", item.userId);
+           
             await fetchForModal(item.userId);
           }
         });
+        console.log("userDetails at modal: ", userDetails);
       }
     }, [isOpen, data, userDetails]);
 
@@ -292,7 +258,9 @@ export default function Profile() {
         console.error(`Failed to fetch details for userId: ${userId}`, error);
       }
     };
-    console.log("userDetails at modal: ", userDetails);
+
+   
+    
 
     return (
       <div className="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
@@ -331,7 +299,16 @@ export default function Profile() {
                   }}
                   className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow hover:bg-gray-700"
                 >
-                  {userDetail?.image &&
+                  {!userDetail?.image ? (
+                   <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                   alt={userDetail?.name}
+                   width={40}
+                   height={40}
+                   className="rounded-full"
+                   />
+                ) : (
+                 
+                 
                   userDetail.image.includes(
                     "https://lh3.googleusercontent.com"
                   ) ? (
@@ -354,6 +331,7 @@ export default function Profile() {
                     className="rounded-full w-14 h-14"
                   />
                   )
+                )
                   }
                   <div>
                     <p className="text-sm font-medium text-gray-300">
@@ -385,30 +363,27 @@ export default function Profile() {
             {/* Profile Image */}
             <div className="relative">
               <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white shadow-md">
-                {IscloudinaryImage ? (
-                  <CldImage
-                    src={
-                      cloudinaryImage ||
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                    }
-                    alt="Profile Image"
-                    width={128}
-                    height={128}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  (profileImage || user?.image) && (
-                    <img
-                      src={
-                        profileImage ||
-                        user?.image ||
-                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                      }
-                      alt="Profile"
-                      className="w-full h-full rounded-full object-cover border-4 border-[gradient-to-r from-blue-400 to-purple-400 ]"
-                    />
-                  )
-                )}
+                {!profileImage ?
+                                      <img
+                                      src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                      alt={username}
+                                      className="w-full h-full rounded-full border border-gray-700"
+                                    /> : 
+                                    ( profileImage && profileImage.includes("https://lh3.googleusercontent.com") ? 
+                                      <img
+                                      src={profileImage }
+                                      alt={username}
+                                      className="w-full h-full rounded-full  border border-gray-700"
+                                    /> :
+                                    <CldImage
+                                    src={profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                    alt={username}
+                                    width={128}
+                                    height={128}
+                                     className="w-full h-full object-cover rounded-full"
+                                    />
+                                    )
+                                      }
               </div>
               {signedInUser && (
                 <div
@@ -529,10 +504,13 @@ export default function Profile() {
                 </button>
               )}
               {!signedInUser && (
+                <div onClick={() => setFollowed(true)}>
                 <FollowButton
                   currentUserId={session.user?.id}
                   targetUserId={params.get("userId") || ""}
+                  
                 />
+                </div>
               )}
             </div>
           </div>
@@ -557,9 +535,10 @@ export default function Profile() {
             </div>
             <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
               <h2 className="text-2xl font-bold">
-                {new Date(
+                {/* {new Date(
                   createdAt2 || user?.createdAt || "empty"
-                ).toLocaleDateString()}
+                ).toLocaleDateString()} */}
+                {posts.length}
               </h2>
               <p className="text-gray-400">Posts</p>
             </div>

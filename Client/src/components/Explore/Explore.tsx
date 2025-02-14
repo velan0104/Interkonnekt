@@ -49,7 +49,7 @@ const router = useRouter();
   
       return () => clearTimeout(delayDebounce);
     }, [searchTerm]);
-    console.log("results at explore: ",results)
+    
 
     useEffect(() => {
         const fetchAllUsers = async () => {
@@ -61,9 +61,9 @@ const router = useRouter();
                }
             )
             const data = await response.json();
-            console.log("data.users: ",data.users)
+           
             setUserData(data.users);
-            console.log("user details at explore: ",userData)
+            
         }
         
         fetchAllUsers();

@@ -10,9 +10,9 @@ export default function Home() {
         <h1 className="text-5xl font-bold text-indigo-700"> INTERKONNEKT </h1>
         <button
           className="bg-indigo-700 w-fit px-5 py-3 rounded-xl text-white font-xl font-semibold"
-          onClick={() => router.push("/profile")}
+          onClick={() => router.push("/auth/signup")}
         >
-          {" "}
+         
           Move to Dashboard →
         </button>
       </div>

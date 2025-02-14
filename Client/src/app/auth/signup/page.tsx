@@ -162,7 +162,7 @@ export default function SignupForm() {
     }
   };
 
-  console.log("updated interests: ", interests);
+  
   
   const onSubmit = async (data: SignupFormValues) => {
     setIsSubmitting(true);
@@ -395,7 +395,7 @@ export default function SignupForm() {
               >
                 {isSigningIn
                   ? "Signing in with Google..."
-                  : "Sign in with Google"}
+                  : "Sign up with Google"}
               </Button>
         </motion.div>
       </div>
