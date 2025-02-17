@@ -1,24 +1,60 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import axios from "axios";
-export const searchContact = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import mongoose from "mongoose";
+import { Message } from "../models/Message.model.js";
+export const getContactForDMList = async (req, res) => {
     try {
-        const { searchTerm } = req.body;
-        console.log("SEARCH CONTACTS");
-        const contacts = axios.post("http://localhost:3000/api/user/query", {
-            searchTerm,
-            userId: req.user.id,
-        });
-        return res.status(200).json({ contacts });
+        let userId = req.user?.id;
+        userId = new mongoose.Types.ObjectId(userId);
+        const contacts = await Message.aggregate([
+            {
+                $match: {
+                    $or: [{ sender: userId }, { recipient: userId }],
+                },
+            },
+            {
+                $sort: { timestamp: -1 },
+            },
+            {
+                $group: {
+                    _id: {
+                        $cond: {
+                            if: { $eq: ["sender", userId] },
+                            then: "$recipient",
+                            else: "$sender",
+                        },
+                    },
+                    lastMessageTime: { $first: "$timestamp" },
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "contactInfo",
+                },
+            },
+            {
+                $unwind: "$contactInfo",
+            },
+            {
+                $project: {
+                    _id: 1,
+                    lastMessageTime: 1,
+                    email: "$contactInfo.email",
+                    name: "$contactInfo.name",
+                    image: "$contactInfo.image",
+                    username: "$contactInfo.username",
+                },
+            },
+            {
+                $sort: { lastMessageTime: -1 },
+            },
+        ]);
+        res.status(200).json({ contacts });
+        return;
     }
     catch (error) {
-        return res.status(500).send("Internal server error");
+        res.status(500).send("Internal server error");
+        return;
     }
-});
+};

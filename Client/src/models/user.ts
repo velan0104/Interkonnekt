@@ -76,10 +76,10 @@ const UserSchema = new Schema<IUser>(
     },
     followers: { type: [FollowerSchema], default: [] },
     following: { type: [FollowingSchema], default: [] },
-  },
-  {
-    collection: "users",
   }
+  // {
+  //   collection: "users",
+  // }
 );
 
 const User = models.User || model<IUser>("User", UserSchema);

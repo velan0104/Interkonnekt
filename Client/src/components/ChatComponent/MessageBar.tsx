@@ -58,7 +58,7 @@ const MessageBar = () => {
       socket?.emit("sendMessage", {
         sender: session?.user?.id,
         content: message,
-        recipient: selectedChatData.id,
+        recipient: selectedChatData._id,
         messageType: "text",
         fileUrl: undefined,
       });

@@ -11,6 +11,8 @@ import ContactList from "../ChatComponent/ContactList";
 import { contact } from "@/seeders/seeders";
 import { CldImage } from "next-cloudinary";
 import FollowButton from "../FollowButton/FollowButton";
+import apiClient from "@/lib/api-client";
+import { GET_CONTACT } from "@/lib/constant";
 
 const RightSide: FC = () => {
   interface user {
@@ -35,10 +37,12 @@ const RightSide: FC = () => {
   }
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
+  // const [contact, setContact] = useState([]);
   const { activities, loading, error } = useSelector(
     (state: RootState) => state.activities
   );
   const params = usePathname();
+  const [contacts, setContacts] = useState<any[]>([]);
   const router = useRouter();
   const [userData, setUserData] = useState<Details[]>([{
     id: "",
@@ -53,7 +57,10 @@ const RightSide: FC = () => {
 
   
   useEffect(() => {
-    if (params === "/messages") return;
+    if (params === "/messages") {
+      console.log(session?.user);
+      return;
+    }
 
     const userId = session?.user?.id;
     console.log("userid at rightside: ", userId);
@@ -70,6 +77,111 @@ const RightSide: FC = () => {
 
   
   useEffect(() => {
+    if (params === "/messages") {
+      const getContact = async () => {
+        try {
+          const response = await apiClient.get(GET_CONTACT, {
+            withCredentials: true,
+          });
+          if (response.status === 200 && response.data) {
+            setContacts(response.data.contacts);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getContact();
+
+      return;
+    }
+
+    const fetchActivities = async () => {
+      const data: Activity[] = [
+        {
+          id: 1,
+          type: "like",
+          user: {
+            name: "Sarah Wilson",
+            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
+          },
+          text: "mentioned you in a comment",
+          timestamp: "2m ago",
+        },
+        {
+          id: 2,
+          type: "like",
+          user: {
+            name: "Sahil Cooper",
+            avatar: "https://randomuser.me/api/portraits/men/2.jpg",
+          },
+          text: "liked your post",
+          timestamp: "5m ago",
+        },
+        {
+          id: 3,
+          type: "follow",
+          user: {
+            name: "Emma Thompson",
+            avatar: "https://randomuser.me/api/portraits/women/3.jpg",
+          },
+          text: "started following you",
+          timestamp: "10m ago",
+        },
+        {
+          id: 4,
+          type: "comment",
+          user: {
+            name: "Michael Scott",
+            avatar: "https://randomuser.me/api/portraits/men/4.jpg",
+          },
+          text: "commented on your post",
+          timestamp: "15m ago",
+        },
+      ];
+      // setActivities(activity);
+    };
+
+    fetchActivities();
+  }, []);
+
+  // const getActivityText = (activity: Activity) => {
+  //   switch (activity.type) {
+  //     case "like":
+  //       return `${activity.user} liked your post "${activity.text}"`;
+  //     case "comment":
+  //       return `${activity.user} commented on your post "${activity.text}"`;
+  //     case "follow":
+  //       return `${activity.user} started following you`;
+  //     case "unfollow":
+  //       return `${activity.user} unfollowed you`;
+  //     default:
+  //       return "";
+  //   }
+  // };
+
+  // if (loading) {
+  //   return (
+  //     <aside className="w-full md:w-80 h-screen p-4 border-l border-gray-200 bg-gray-900">
+  //       <div className="animate-pulse space-y-4">
+  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
+  //         <div className="h-20 bg-gray-800 rounded"></div>
+  //         <div className="h-20 bg-gray-800 rounded"></div>
+  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
+  //         <div className="h-20 bg-gray-800 rounded"></div>
+  //         <div className="h-20 bg-gray-800 rounded"></div>
+  //       </div>
+  //     </aside>
+  //   );
+  // }
+
+  // if (error) {
+  //   return (
+  //     <aside className="w-full md:w-80 h-screen p-4 border-l bg-gray-900">
+  //       <div className="text-red-500">Error: {error}</div>
+  //     </aside>
+  //   );
+  // }
     const fetchAllUsers = async () => {
         const response = await fetch('/api/allUserData',
            {
@@ -93,7 +205,7 @@ console.log("User images in Suggested Users:", userData.map(u => u.image));
   if (params === "/messages") {
     return (
       <div className="w-full md:w-96 h-[89vh] gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
-        <ContactList contacts={contact} isChannel={false} />;
+        <ContactList contacts={contacts} isChannel={false} />;
       </div>
     );
   }
@@ -112,14 +224,25 @@ console.log("User images in Suggested Users:", userData.map(u => u.image));
                 <div
                   key={index}
                   className="flex items-start space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
-                >{activity.user.avatar.includes("https://lh3.googleusercontent.com") ? 
-                  <img
-                  src={activity.user.avatar}
-                  alt={activity.user.name}
-                  className="w-10 h-10 rounded-full border border-gray-700"
-                /> : <CldImage src={activity.user.avatar} width={50} height={80} alt={activity.user.name}  className="rounded-full w-14 h-14"/>
-                }
-                 
+                >
+                  {activity.user.avatar.includes(
+                    "https://lh3.googleusercontent.com"
+                  ) ? (
+                    <img
+                      src={activity.user.avatar}
+                      alt={activity.user.name}
+                      className="w-10 h-10 rounded-full border border-gray-700"
+                    />
+                  ) : (
+                    <CldImage
+                      src={activity.user.avatar}
+                      width={50}
+                      height={80}
+                      alt={activity.user.name}
+                      className="rounded-full w-14 h-14"
+                    />
+                  )}
+
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white mt-2">
                       <span className="font-medium">{activity.user.name}</span>{" "}
