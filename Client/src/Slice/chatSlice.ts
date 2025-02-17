@@ -23,7 +23,7 @@ interface ChatData {
 
 interface ChatState {
   selectedChatType: string | undefined;
-  selectedChatData: ChatData;
+  selectedChatData: ChatData | undefined;
   selectedChatMessages: IMessage[];
   directMessagesContacts: Contact[];
   isUploading: boolean;

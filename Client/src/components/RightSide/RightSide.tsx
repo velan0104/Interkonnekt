@@ -13,6 +13,7 @@ import { CldImage } from "next-cloudinary";
 import FollowButton from "../FollowButton/FollowButton";
 import apiClient from "@/lib/api-client";
 import { GET_CONTACT } from "@/lib/constant";
+import ExploreCommunity from "../Communities/ExploreCommunity";
 
 const RightSide: FC = () => {
   interface user {
@@ -22,40 +23,41 @@ const RightSide: FC = () => {
 
   interface Details {
     id: string;
-    image: string,
-    name: string,
-    username: string,
-    interest: string,
-}
+    image: string;
+    name: string;
+    username: string;
+    interest: string;
+  }
 
   interface Activity {
     id: number;
     type: "like" | "comment" | "follow" | "unfollow";
     user: user;
-    text?: string; 
+    text?: string;
     timestamp: string;
   }
   const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
-  // const [contact, setContact] = useState([]);
   const { activities, loading, error } = useSelector(
     (state: RootState) => state.activities
   );
   const params = usePathname();
   const [contacts, setContacts] = useState<any[]>([]);
   const router = useRouter();
-  const [userData, setUserData] = useState<Details[]>([{
-    id: "",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU",
-    name: "Default User",
-    username: "defaultuser",
-    interest: "default interest"
-  }]);
-  console.log("Params: " + params);
-  
-  console.log("activity at rightSide: ", activities);
+  const [userData, setUserData] = useState<Details[]>([
+    {
+      id: "",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU",
+      name: "Default User",
+      username: "defaultuser",
+      interest: "default interest",
+    },
+  ]);
+  // console.log("Params: " + params);
 
-  
+  // console.log("activity at rightSide: ", activities);
+
   useEffect(() => {
     if (params === "/messages") {
       console.log(session?.user);
@@ -63,19 +65,18 @@ const RightSide: FC = () => {
     }
 
     const userId = session?.user?.id;
-    console.log("userid at rightside: ", userId);
+    // console.log("userid at rightside: ", userId);
 
     const intervalId = setInterval(() => {
       if (userId) {
         dispatch(fetchActivities({ userId }));
-        console.log("Fetched activities for user:", userId);
+        // console.log("Fetched activities for user:", userId);
       }
     }, 5000); // Fetch every 5 seconds
 
     return () => clearInterval(intervalId); // Cleanup the interval on unmount
   }, [dispatch, session]);
 
-  
   useEffect(() => {
     if (params === "/messages") {
       const getContact = async () => {
@@ -95,112 +96,23 @@ const RightSide: FC = () => {
 
       return;
     }
-
-    const fetchActivities = async () => {
-      const data: Activity[] = [
-        {
-          id: 1,
-          type: "like",
-          user: {
-            name: "Sarah Wilson",
-            avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-          },
-          text: "mentioned you in a comment",
-          timestamp: "2m ago",
-        },
-        {
-          id: 2,
-          type: "like",
-          user: {
-            name: "Sahil Cooper",
-            avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-          },
-          text: "liked your post",
-          timestamp: "5m ago",
-        },
-        {
-          id: 3,
-          type: "follow",
-          user: {
-            name: "Emma Thompson",
-            avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-          },
-          text: "started following you",
-          timestamp: "10m ago",
-        },
-        {
-          id: 4,
-          type: "comment",
-          user: {
-            name: "Michael Scott",
-            avatar: "https://randomuser.me/api/portraits/men/4.jpg",
-          },
-          text: "commented on your post",
-          timestamp: "15m ago",
-        },
-      ];
-      // setActivities(activity);
-    };
-
-    fetchActivities();
   }, []);
 
-  // const getActivityText = (activity: Activity) => {
-  //   switch (activity.type) {
-  //     case "like":
-  //       return `${activity.user} liked your post "${activity.text}"`;
-  //     case "comment":
-  //       return `${activity.user} commented on your post "${activity.text}"`;
-  //     case "follow":
-  //       return `${activity.user} started following you`;
-  //     case "unfollow":
-  //       return `${activity.user} unfollowed you`;
-  //     default:
-  //       return "";
-  //   }
-  // };
-
-  // if (loading) {
-  //   return (
-  //     <aside className="w-full md:w-80 h-screen p-4 border-l border-gray-200 bg-gray-900">
-  //       <div className="animate-pulse space-y-4">
-  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-4 bg-gray-800 rounded w-1/2"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //         <div className="h-20 bg-gray-800 rounded"></div>
-  //       </div>
-  //     </aside>
-  //   );
-  // }
-
-  // if (error) {
-  //   return (
-  //     <aside className="w-full md:w-80 h-screen p-4 border-l bg-gray-900">
-  //       <div className="text-red-500">Error: {error}</div>
-  //     </aside>
-  //   );
-  // }
+  useEffect(() => {
     const fetchAllUsers = async () => {
-        const response = await fetch('/api/allUserData',
-           {
-            method : 'POST',
-           
-            headers: { 'Content-Type': 'application/json' }
-           }
-        )
-        const data = await response.json();
-        console.log("data.users at rightside: ",data.users)
-        setUserData(data.users);
-        console.log("user details at rightside: ",userData)
-    }
-    
-    fetchAllUsers();
-},[params,session])
- 
-console.log("User images in Suggested Users:", userData.map(u => u.image));
+      const response = await fetch("/api/allUserData", {
+        method: "POST",
 
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      // console.log("data.users at rightside: ", data.users);
+      setUserData(data.users);
+      // console.log("user details at rightside: ", userData);
+    };
+
+    fetchAllUsers();
+  }, [params, session]);
 
   if (params === "/messages") {
     return (
@@ -209,6 +121,15 @@ console.log("User images in Suggested Users:", userData.map(u => u.image));
       </div>
     );
   }
+
+  if (params === "/communities" || params.startsWith("/communities")) {
+    return (
+      <div className="w-full md:w-96 h-[89vh] gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
+        <ExploreCommunity />
+      </div>
+    );
+  }
+
   return (
     <aside className="w-full md:w-96 h-[89vh] grid grid-rows-2 gap-6 p-4 border-l overflow-hidden border-gray-800 bg-gray-900">
       {/* Activities Section */}
@@ -275,48 +196,67 @@ console.log("User images in Suggested Users:", userData.map(u => u.image));
           Suggested Users
         </h2>
         <div className="bg-gray-900 rounded-lg p-4 space-y-4 max-h-[400px] overflow-y-auto shadow-lg">
-          {userData.filter((data)=> data.id !== session?.user?.id).map((user) => (
-            <div onClick={() => {router.push(`/profile/?userId=${user.id}`)}}
-              key={user.id}
-              className="flex items-center space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
-            >
-              {/* <img
+          {userData
+            .filter((data) => data.id !== session?.user?.id)
+            .map((user) => (
+              <div
+                onClick={() => {
+                  router.push(`/profile/?userId=${user.id}`);
+                }}
+                key={user.id}
+                className="flex items-center space-x-3 p-2 rounded-md hover:bg-[#3b82f6]/10 transition"
+              >
+                {/* <img
                 src={user.image}
                 alt={user.username}
                 className="w-10 h-10 rounded-full border border-gray-700"
               /> */}
-              {!user.image ?
-              <img
-              src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-              alt={user.name}
-              className="w-10 h-10 rounded-full border border-gray-700"
-            /> : 
-            ( user.image && user.image.includes("https://lh3.googleusercontent.com") ? 
-              <img
-              src={user.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-              alt={user.name}
-              className="w-10 h-10 rounded-full border border-gray-700"
-            /> :
-            <CldImage
-            src={user.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-            alt={user.name}
-            width={50}
-            height={50}
-             className="w-10 h-10 object-cover rounded-full"
-            />
-            )
-              }
-              
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-white text-sm">{user?.name}</p>
-                <p className="text-xs text-gray-400">@{user?.username}</p>
-                <p className="text-xs text-gray-500 truncate">{user.interest}</p>
+                {!user.image ? (
+                  <img
+                    src={
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full border border-gray-700"
+                  />
+                ) : user.image &&
+                  user.image.includes("https://lh3.googleusercontent.com") ? (
+                  <img
+                    src={
+                      user.image ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full border border-gray-700"
+                  />
+                ) : (
+                  <CldImage
+                    src={
+                      user.image ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
+                    alt={user.name}
+                    width={50}
+                    height={50}
+                    className="w-10 h-10 object-cover rounded-full"
+                  />
+                )}
+
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-white text-sm">{user?.name}</p>
+                  <p className="text-xs text-gray-400">@{user?.username}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {user.interest}
+                  </p>
+                </div>
+                <div className="px-3 py-1 text-sm font-semibold text-[#3b82f6] border border-[#3b82f6] rounded-full hover:bg-[#3b82f6]/10 transition">
+                  <FollowButton
+                    currentUserId={session?.user?.id}
+                    targetUserId={user.id}
+                  />
+                </div>
               </div>
-              <button  className="px-3 py-1 text-sm font-semibold text-[#3b82f6] border border-[#3b82f6] rounded-full hover:bg-[#3b82f6]/10 transition">
-                <FollowButton currentUserId={session?.user?.id} targetUserId={user.id} />
-              </button>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
     </aside>

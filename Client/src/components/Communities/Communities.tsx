@@ -1,11 +1,12 @@
 import { FC } from "react";
+import MiddleSection from "./MiddleSection";
 
-const Communities:FC = () => {
-    return (
-        <div>
-            Communities
-        </div>
-    )
-}
+const Communities: FC = () => {
+  return (
+    <div>
+      <MiddleSection />
+    </div>
+  );
+};
 
-export default Communities 
+export default Communities;

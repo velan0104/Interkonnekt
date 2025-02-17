@@ -48,20 +48,14 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       });
 
       const handleReceiveMessage = (message: IMessage) => {
-        console.log("ADDING MESSAGES...", message);
-        console.log("SELECTED CHATS receiving: ", selectedChatData);
+        // console.log("ADDING MESSAGES...", message);
+        // console.log("SELECTED CHATS receiving: ", selectedChatData);
         if (selectedChatData?._id !== session.user?.id) {
-          console.log("HELLO COMPLETED FIRST STEP: ", selectedChatType);
-          console.log(`SENDER: ${session.user?.id === message.sender._id}`);
-          console.log(
-            `RECEIVER: ${selectedChatData._id === message.recipient?._id}`
-          );
           if (
             selectedChatType !== undefined &&
             (selectedChatData._id === message.sender._id ||
               selectedChatData._id === message.recipient?._id)
           ) {
-            console.log("Hello calling add messages");
             dispatch(addMessage(message));
             dispatch(addContactsInDMContacts(message));
           } else {

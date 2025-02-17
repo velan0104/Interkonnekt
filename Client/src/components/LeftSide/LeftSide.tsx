@@ -14,7 +14,6 @@ import { signOut, useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
 import { useRouter, usePathname } from "next/navigation";
 
-
 import React, { FC, useEffect, useState } from "react";
 const LeftSide: FC = () => {
   const [activeLink, setActiveLink] = useState("home");
@@ -84,7 +83,7 @@ const LeftSide: FC = () => {
         ) {
           setIsCloudinaryImage(false);
           setProfileImage(data.image);
-          
+
           setCloudinaryImage("");
         } else {
           setIsCloudinaryImage(true);
@@ -97,10 +96,8 @@ const LeftSide: FC = () => {
     fetchUnameInterest();
   }, [session, pathname]);
 
-  console.log("cloudinary image: ", cloudinaryImage);
-  console.log("profile image: ", profileImage);
-
-  
+  // console.log("cloudinary image: ", cloudinaryImage);
+  // console.log("profile image: ", profileImage);
 
   return (
     <aside className=" flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-4 ">
@@ -130,7 +127,6 @@ const LeftSide: FC = () => {
         <ul className="space-y-2">
           <li onClick={() => setActiveLink("home")}>
             <button
-            
               onClick={() => router.push("/main")}
               className={`w-[70%] flex items-center gap-3 px-3 py-2 rounded transition-colors ${
                 activeLink === "home"
@@ -222,5 +218,3 @@ const LeftSide: FC = () => {
 };
 
 export default LeftSide;
-
-

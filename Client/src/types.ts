@@ -38,3 +38,13 @@ export interface IContact {
   lastMessageTime: string | Date;
   image?: string;
 }
+
+export interface ICommunity {
+  name: string;
+  bio: string;
+  admin: Types.ObjectId;
+  members: Types.ObjectId[];
+  banner: string;
+  category: string;
+  profilePic: string;
+}

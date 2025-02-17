@@ -1,10 +1,12 @@
 "use client";
 import { RootState } from "@/app/Store/store";
 import { useSocket } from "@/context/SocketContext";
+import { setFileUploadProgress, setIsUploading } from "@/Slice/chatSlice";
+import axios, { AxiosProgressEvent } from "axios";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Paperclip, Send, Smile } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 const MessageBar = () => {
@@ -20,7 +22,6 @@ const MessageBar = () => {
   );
   const socket = useSocket();
   const { data: session } = useSession();
-  console.log("SOCKET: ", socket);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,7 +45,65 @@ const MessageBar = () => {
     }
   };
 
-  const handleAttachmentChange = () => {};
+  const handleAttachmentChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    try {
+      const file = event.target.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append(
+          "upload_preset",
+          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
+        ); // Replace with your Cloudinary upload preset
+
+        setIsUploading(true);
+
+        // Upload file to Cloudinary
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, // Replace with your Cloudinary cloud name
+          formData,
+          {
+            onUploadProgress: (data: AxiosProgressEvent) => {
+              setFileUploadProgress(
+                Math.round((100 * data.loaded) / data?.total)
+              );
+            },
+          }
+        );
+
+        if (response.status === 200 && response.data) {
+          setIsUploading(false);
+
+          // Cloudinary returns the file URL in `secure_url`
+          const cloudinaryFileUrl = response.data.secure_url;
+
+          // Emit message with Cloudinary file URL
+          if (selectedChatType === "contact") {
+            socket?.emit("sendMessage", {
+              sender: session?.user?.id,
+              content: undefined,
+              recipient: selectedChatData._id,
+              messageType: "file",
+              fileUrl: cloudinaryFileUrl, // Use Cloudinary URL
+            });
+          } else if (selectedChatType === "channel") {
+            socket?.emit("sendChannelMessage", {
+              sender: session?.user?.id,
+              content: undefined,
+              messageType: "file",
+              fileUrl: cloudinaryFileUrl, // Use Cloudinary URL
+              channelId: selectedChatData._id,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Upload failed:", error);
+    }
+  };
 
   const handleAddEmoji = (emoji: EmojiClickData) => {
     setMessage((msg) => msg + emoji.emoji);
@@ -94,7 +153,7 @@ const MessageBar = () => {
           type="file"
           className="hidden"
           ref={fileInputRef}
-          onChange={handleAttachmentChange} 
+          onChange={handleAttachmentChange}
         />
         <div className="relative">
           <button

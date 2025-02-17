@@ -23,7 +23,6 @@ import { Input } from "../ui/input";
 import apiClient from "@/lib/api-client";
 import { useSession } from "next-auth/react";
 import { IContact } from "@/types";
-import { string } from "zod";
 
 interface ContactListProps {
   contacts: IContact[];
@@ -66,7 +65,7 @@ const ContactList: React.FC<ContactListProps> = ({
           { searchTerm, user: user?.user?.id },
           { withCredentials: true }
         );
-        console.log("SEARCH CONTACTS: ", response);
+        // console.log("SEARCH CONTACTS: ", response);
 
         if (response.status === 200 && response.data.message) {
           setSearchedContacts(response.data.message);
