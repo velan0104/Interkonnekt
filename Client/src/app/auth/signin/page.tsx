@@ -29,16 +29,30 @@ export default function SignInPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { emailOrUsername: ""  , password: "" },
   });
 
+  const handleGoogleSignIn = async () => {
+    setIsSigningIn(true);
+    try {
+      
+      await signIn("google", { callbackUrl: `/main` });
+    } catch (err) {
+      console.error("Error during Google SignIn", err);
+      
+    } finally {
+      setIsSigningIn(false);
+    }
+  };
+
   
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-    console.log("signin through credentils called ")
+   
     try {
       const response = await signIn("credentials", {
         redirect: false,
@@ -147,7 +161,7 @@ export default function SignInPage() {
           </p>
         </div>
 
-        {/* <div className="mt-6">
+        <div className="mt-6">
           <Button
             onClick={handleGoogleSignIn}
             className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300"
@@ -156,7 +170,7 @@ export default function SignInPage() {
               ? "Signing in with Google..."
               : "Sign in with Google"}
           </Button>
-        </div> */}
+        </div>
       </motion.div>
     </div>
   );

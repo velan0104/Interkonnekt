@@ -8,9 +8,14 @@ interface FollowState {
 }
 
 const initialState: FollowState = {
-  following: [],
+  following: JSON.parse(localStorage.getItem("followingList") || "[]"), // Load from localStorage
   status: "idle",
   error: null,
+};
+
+// Sync following state to localStorage
+const syncFollowingToLocalStorage = (followingList: string[]) => {
+  localStorage.setItem("followingList", JSON.stringify(followingList));
 };
 
 export const followUser = createAsyncThunk(
@@ -29,7 +34,7 @@ export const unfollowUser = createAsyncThunk(
   "follow/unfollowUser",
   async ({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }, { rejectWithValue }: { rejectWithValue: any }) => {
     try {
-      await axios.post("/api/Unfollow", {currentUserId, targetUserId});
+      await axios.post("/api/Unfollow", { currentUserId, targetUserId });
       return targetUserId;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Failed to unfollow user");
@@ -51,6 +56,7 @@ const followSlice = createSlice({
         state.status = "success";
         if (!state.following.includes(action.payload)) {
           state.following.push(action.payload); // Add targetUserId to following
+          syncFollowingToLocalStorage(state.following); // Sync to localStorage
         }
       })
       .addCase(followUser.rejected, (state, action) => {
@@ -64,6 +70,7 @@ const followSlice = createSlice({
       .addCase(unfollowUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = "success";
         state.following = state.following.filter((id) => id !== action.payload);
+        syncFollowingToLocalStorage(state.following); // Sync to localStorage
       })
       .addCase(unfollowUser.rejected, (state, action) => {
         state.status = "error";

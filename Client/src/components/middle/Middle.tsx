@@ -18,32 +18,11 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-
+import { motion } from "framer-motion";
 import { Suspense } from "react";
 import { use } from "react";
 import { Activity, addActivity } from "@/Slice/activitiesSlice";
 import { IActivity } from "@/models/Activity";
-
-// type Activity = {
-//   type: "follow" | "like" | "comment" | "unfollow";
-//   user: {
-//     name: string ;
-//     avatar: string ;
-//   };
-//   text: string;
-//   timestamp: string;
-// };
-
-// type LikeState = {
-//   [key: string]: {
-//     count: number;
-//     liked: boolean;
-//   };
-// };
-
-// type CommentsState = {
-//   [key: string]: string[];
-// };
 
 type ModalState = {
   isOpen: boolean;
@@ -94,14 +73,14 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   const params = useSearchParams();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [image, setImage] = useState("");
+  const [vote, setVote] = useState<boolean>(false);
 
-  // console.log("userId at middle: ", userId);/
+  console.log("posts at middle: ", posts);
   useEffect(() => {
     dispatch(fetchPosts({ userId }));
 
     // dispatch(fetchPosts());
-  }, [pathname, dispatch]);
-  console.log("posts at middle: ", posts);
+  }, [pathname, dispatch, vote]);
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [commentsModal, setCommentsModal] = useState<ModalState>({
@@ -139,70 +118,9 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     fetchData();
   }, [dispatch, pathname, session]);
 
-  // let PI : string;
-  //   const avatar = posts.map((post:any) => {
-  //     if(post.user_id == session?.user?.id){
-  //       PI = post.profileImage;
-  //     }
-  //   })
-
-  //   const handleLike = async(postId: string,userId2:string) => {
-  //     console.log("handleLike called")
-  //     await dispatch(toggleLikeAsync({ postId, userId: user_id }));
-  //     const targetPost = posts.find((post: any) => post._id === postId);
-  // const alreadyLike = targetPost?.likes.some((like: any) => like.userId === userId2) || false;
-
-  // console.log("Target Post: ", targetPost);
-  // console.log("Already Liked: ", alreadyLike);
-
-  //     console.log("userId at handle like: ",userId2)
-  //     const timestamp = new Date();
-  //     //setIsLiked(false);
-  //     if(userId2 != session?.user?.id){
-  //     let alreadyLiked = false;
-  //     await posts.map((post : any) => {
-  //       post.likes.map((like:any) => {
-  //         if( like.userId == userId2){
-  //           console.log("userId at map: ",like.userId)
-  //          // setIsLiked(true);
-  //          alreadyLiked = true;
-  //           console.log("post liked")
-  //         }
-
-  //       })
-  //     })
-  //     console.log("Already liked: ", alreadyLiked);
-
-  //     if(alreadyLiked){
-  //       console.log("new activity called")
-  //     const newActivity: Activity = {
-  //       likedById: session?.user?.id,
-  //       id: userId2,
-  //       post_id: postId,
-  //       type: "like",
-  //       user: {
-  //         name: session?.user?.name || '',
-  //         avatar: image || session?.user?.image || ''
-  //       },
-  //       text: 'liked your post',
-  //       timestamp: new Date().toISOString()
-  //     };
-  //     console.log("new activity: ",newActivity)
-  //     dispatch(addActivity(newActivity));
-  //   }
-  // }
-  //     setLikes((prevLikes) => ({
-  //       ...prevLikes,
-  //       [postId]: { liked: !prevLikes[postId]?.liked }
-  //     }));
-  //   };
-
   const handleLike = async (postId: string, userId2: string) => {
-    console.log("handleLike called");
-
     // Step 1: Toggle the like in the store
     await dispatch(toggleLikeAsync({ postId, userId: session?.user?.id }));
-    console.log("Like toggled in the store");
 
     // Step 2: Add activity if the user is not the owner
     if (userId2 !== session?.user?.id) {
@@ -218,18 +136,12 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
         text: "liked your post",
         timestamp: new Date().toISOString(),
       };
-      console.log("api calling");
+
       dispatch(addActivity(newActivity));
     }
   };
 
-  // const handleAddComment = (postId: string, content: string) => {
-  //   const userId = 'user-id'; // Get userId from state or context
-  //   dispatch(addCommentAsync({ postId, userId, content }));
-  // };
-
   const handleProfileClick = (userId: string) => {
-    console.log("Profile clicked: ", userId);
     router.push(`/profile/?userId=${userId}`);
   };
 
@@ -238,7 +150,6 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     content: string,
     userId: string
   ) => {
-    console.log("userId at comment modal: ", userId);
     if (content.trim() !== "") {
       try {
         await dispatch(
@@ -257,11 +168,11 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
             text: "commmented on your post",
             timestamp: new Date().toISOString(),
           };
-          console.log("new activity: ", newActivity);
+
           dispatch(addActivity(newActivity));
         }
         setCommentsModal({ isOpen: false, postId: null, userId: null });
-        dispatch(fetchPosts({ userId }));
+        dispatch(fetchPosts({ userId: "" }));
       } catch (error) {
         console.log("Failed to post comment:", error);
       }
@@ -277,7 +188,6 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   };
 
   const handleDelete = async (postId: string) => {
-    console.log("delete called");
     const response = await fetch("/api/deletePost", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -285,32 +195,35 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     });
     const data = await response.json();
     setActiveDropdown(null);
-    // alert(data.message);
+    dispatch(fetchPosts({ userId: "" }));
   };
 
   if (!session) return <SkeletonLoader />;
 
-  const Dropdown: React.FC<{ postId: string }> = ({ postId, userId }) => (
-    <div className="absolute right-0 top-8 bg-[#2A2A2A] rounded-lg shadow-lg py-2 min-w-[150px]">
-      {session?.user?.id === userId && (
-        <button
-          onClick={() => {
-            handleDelete(postId);
-          }}
-          className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]"
-        >
-          Delete
-        </button>
-      )}
-
-      <button className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]">
-        Report
-      </button>
-      <button className="w-full text-left px-4 py-2 text-white hover:bg-[#3A3A3A]">
-        Mute
-      </button>
-    </div>
-  );
+  const Dropdown: React.FC<{ postId: string; userId: string }> = ({
+    postId,
+    userId,
+  }) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="absolute right-0 top-8 bg-gray-800/80 backdrop-blur-xl rounded-lg shadow-xl py-2 min-w-[170px] border border-gray-700"
+      >
+        {session?.user?.id === userId && (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleDelete(postId)}
+            className="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700/60 hover:scale-105 transition-all duration-200"
+          >
+            Delete
+          </motion.button>
+        )}
+      </motion.div>
+    );
+  };
 
   const currentPost = posts.find(
     (post: any) => post._id === commentsModal.postId
@@ -318,11 +231,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   const comments = currentPost?.comments || [];
 
   const CommentsModal: React.FC = () => {
-    const [commentInput, setCommentInput] = useState(newComment); // Local state for input
-
-    // const handleInputChangeLocal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //   setCommentInput(e.target.value); // Update local state
-    // };
+    const [commentInput, setCommentInput] = useState(newComment);
 
     const postComment = async () => {
       if (commentInput.trim() !== "") {
@@ -331,20 +240,32 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
           commentInput,
           commentsModal.userId || ""
         );
-        setCommentInput(""); // Clear input
+        setCommentInput("");
       }
     };
-    return (
-      // const [content, setContent] = useState('');
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        {/* {!posts.length && (
-        <h1>Posts not available</h1>
-      )} */}
 
-        <div className="bg-[#1E1E1E] rounded-xl p-6 max-w-[500px] w-full">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-white text-xl font-bold">Comments</h2>
-            <button
+    return (
+      <motion.div
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <motion.div
+          className="bg-gray-900 bg-opacity-90 backdrop-blur-lg border border-gray-700 rounded-xl p-6 max-w-[500px] w-full shadow-2xl transform transition-all"
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 40, opacity: 1 }}
+          exit={{ y: 60, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {/* Header */}
+          <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+            <h2 className="text-white text-2xl font-semibold tracking-wide">
+              Comments
+            </h2>
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() =>
                 setCommentsModal({
                   isOpen: false,
@@ -352,37 +273,61 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                   userId: null,
                 })
               }
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-all"
             >
-              <X className="w-6 h-6 text-gray-400" />
-            </button>
+              <X className="w-6 h-6 text-gray-300" />
+            </motion.button>
           </div>
-          <div className="max-h-[300px] overflow-y-auto mb-4">
-            {comments.map((comment: any, index: number) => (
-              <div key={index} className="bg-[#2A2A2A] rounded-lg p-3 mb-2">
-                <p className="text-white">{comment.content}</p>
-                <p className="text-gray-400 text-sm">
-                  {new Date(comment.createdAt).toLocaleString()}
-                </p>
-              </div>
-            ))}
+
+          {/* Comments Section */}
+          <div className="max-h-[300px] overflow-y-auto mb-4 space-y-3 pr-2 scrollbar-thin scrollbar-thumb-gray-600">
+            {comments.length > 0 ? (
+              comments.map((comment: any, index: number) => (
+                <motion.div
+                  key={index}
+                  className="bg-gray-800 bg-opacity-80 rounded-lg p-3 shadow-sm hover:bg-opacity-100 transition-all"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.07, ease: "easeOut" }}
+                >
+                  <p className="text-white text-sm">{comment.content}</p>
+                  <p className="text-gray-400 text-xs mt-1">
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </p>
+                </motion.div>
+              ))
+            ) : (
+              <p className="text-gray-400 text-center py-4">
+                No comments yet. Be the first to comment!
+              </p>
+            )}
           </div>
-          <div className="flex gap-2">
-            <input
+
+          {/* Input Field */}
+          <motion.div
+            className="flex gap-2 items-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <motion.input
               type="text"
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
-              className="flex-1 bg-[#2A2A2A] rounded-lg px-4 py-2 text-white"
-              placeholder="Add a comment..."
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              placeholder="Write a comment..."
             />
-            <button
+            <motion.button
               onClick={postComment}
-              className="bg-[#1DA1F2] text-white px-4 py-2 rounded-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-500 transition-all"
             >
               Post
-            </button>
-          </div>
-        </div>
-      </div>
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     );
   };
 
@@ -417,27 +362,101 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
       </div>
     </div>
   );
+
   if (postStatus == "loading") return <SkeletonLoader />;
   if (postStatus === "failed") return <p>Error: {error}</p>;
+  const handleVote = async (postId: string, option: any, userId: string) => {
+    console.log("handle vote called");
+    setVote(true);
+    const hasVoted = option.votes && option.votes.includes(userId);
+
+    // Update local state optimistically
+    const updatedOption = hasVoted
+      ? option.votes.length - 1
+      : option.votes.length + 1;
+
+    // Optimistically update the poll options locally
+    // const updatedPoll = posts.map(post => {
+    //   if (post._id === postId) {
+    //     const updatedOptions = post.poll[0].options.map((opt: any) => {
+    //       if (opt.option === option.option) {
+    //         const updatedVotes = hasVoted
+    //           ? opt.votes.filter((id: string) => id !== userId)
+    //           : [...opt.votes, userId];
+    //         return { ...opt, votes: updatedVotes };
+    //       }
+    //       return opt;
+    //     });
+    //     return { ...post, poll: [{ ...post.poll[0], options: updatedOptions }] };
+    //   }
+    //   return post;
+    // });
+
+    // setPosts(updatedPoll);
+
+    try {
+      console.log("calling vote");
+      // Send request to update vote in the database
+      const response = await fetch("/api/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          option: option.optionValue,
+          userId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Vote updated successfully:", data);
+      } else {
+        // Rollback UI if there was an error with the API
+
+        console.error("Error updating vote:", data);
+      }
+    } catch (error) {
+      // Rollback UI in case of network or server error
+
+      console.error("Error updating vote:", error);
+    } finally {
+      setVote(false);
+    }
+  };
+
   return (
-    <main className=" bg-gray-900  px-4">
-      <div className=" mx-auto space-y-4 h-[89vh] overflow-y-auto ">
+    <main className="absolute h-[40rem] sm-[320px]:w-[47rem] w-[32.2rem] md:w-[35rem] md:h-[42rem] custom:w-[45rem]  lg:w-[48rem] lg:h-[37rem] left-0 xl:left-80 2xl:left-96 2xl:h-[41rem] bg-gray-900 overflow-x-hidden  px-4 py-6">
+      <div className="mx-auto   space-y-6  h-full overflow-y-auto">
         <Suspense fallback={<SkeletonLoader />}>
           {postStatus === "loading" ? (
             <SkeletonLoader />
           ) : (
             <>
               {posts.map((post: any, index: any) => (
-                <article
+                <motion.article
                   key={index}
-                  className="bg-gray-900 rounded-xl p-4 shadow-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 "
                 >
+                  {/* Header */}
                   <div className="flex items-start justify-between">
                     <div
-                      className="flex gap-3 cursor-pointer"
+                      className="flex gap-4 cursor-pointer"
                       onClick={() => handleProfileClick(post.user_id)}
                     >
-                      <div className="flex items-center gap-3 w-20 h-16 mb-8 px-2 rounded-full">
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-600 shadow-lg shadow-blue-600/50"
+                      >
                         {post.profileImage ? (
                           post.profileImage.includes(
                             "https://lh3.googleusercontent.com"
@@ -445,37 +464,30 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                             <img
                               src={post.profileImage}
                               alt="Profile"
-                              className="w-10 h-10 rounded-full object-cover"
+                              className="w-full h-full object-cover"
                             />
                           ) : (
-                            post.profileImage && (
-                              <CldImage
-                                src={post.profileImage}
-                                alt="Profile Image"
-                                width={80}
-                                height={60}
-                                className="w-full h-full object-cover rounded-full"
-                              />
-                            )
+                            <CldImage
+                              src={post.profileImage}
+                              alt="Profile Image"
+                              width={80}
+                              height={80}
+                              className="w-full h-full object-cover"
+                            />
                           )
                         ) : (
-                          <div className="w-12 h-10 rounded-full bg-gray-400 flex items-center justify-center">
-                            {/* Fallback for missing profile */}
-                            <img
-                              src={
-                                "data:image/png;base64,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"
-                              } // Placeholder image
-                              alt={`${
-                                post.newUsername || "User"
-                              } profile picture`}
-                              className="w-12 h-12 rounded-full"
-                            />
-                          </div>
+                          <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                            alt={`${
+                              post.newUsername || "User"
+                            } profile picture`}
+                            className="w-full h-full object-cover"
+                          />
                         )}
-                      </div>
+                      </motion.div>
 
                       <div>
-                        <h3 className="font-semibold text-white">
+                        <h3 className="text-white font-semibold text-lg">
                           {post.name}
                         </h3>
                         <p className="text-gray-400 text-sm">
@@ -483,69 +495,146 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="relative">
-                      <button
-                        aria-label="More options"
-                        onClick={() =>
-                          setActiveDropdown(
-                            activeDropdown === post._id ? null : post._id
-                          )
-                        }
+
+                    {/* More Options Dropdown */}
+                    {session?.user?.id === post.user_id && (
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="relative"
                       >
-                        <MoreHorizontal className="w-5 h-5 text-gray-400" />
-                      </button>
-                      {activeDropdown === post._id && (
-                        <Dropdown postId={post._id} userId={post.user_id} />
-                      )}
-                    </div>
+                        <button
+                          aria-label="More options"
+                          onClick={() =>
+                            setActiveDropdown(
+                              activeDropdown === post._id ? null : post._id
+                            )
+                          }
+                        >
+                          <MoreHorizontal className="w-5 h-5 text-gray-400 hover:text-white" />
+                        </button>
+                        {activeDropdown === post._id && (
+                          <Dropdown postId={post._id} userId={post.user_id} />
+                        )}
+                      </motion.div>
+                    )}
                   </div>
-                  <p className="text-white mt-4">{post.content}</p>
+
+                  {/* Post Content */}
+                  <p className="text-white mt-4 text-[15px] leading-relaxed">
+                    {post.content}
+                  </p>
+
+                  {/* Post Media */}
                   {post.image && (
-                    <div className="mt-4">
+                    <motion.div className="mt-4">
                       <img
                         src={post.image}
                         alt="Post media"
-                        className="w-full aspect-video object-cover rounded-xl"
+                        className="w-full aspect-video object-cover rounded-xl transition-all duration-300"
                       />
-                    </div>
+                    </motion.div>
                   )}
-                  {post.poll && (
-                    <div className="polls">
-                      <div key={index} className="bg-gray-800 p-4 rounded-lg">
-                        <h3 className="text-white font-semibold">
-                          {post.poll.question}
-                        </h3>
-                        <ul className="mt-2">
-                          {post.poll?.options?.map(
-                            (option: any, index: any) => (
-                              <li
-                                key={index}
-                                className="flex justify-between items-center mt-2 bg-gray-700 p-2 rounded"
-                              >
-                                <span className="text-white">{option}</span>
-                                <button
-                                  // onClick={() => handleVote(index)}
-                                  className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
-                                >
-                                  Vote ({option.votes})
-                                </button>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
+
+                  {/* Polls */}
+                  <div className="flex flex-col items-center w-full">
+                    {post.poll &&
+                      post.poll.map((poll, index) => {
+                        const totalVotes = poll.options.reduce(
+                          (sum, option) => sum + option.votes.length,
+                          0
+                        );
+
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.6 }}
+                            className="w-full max-w-lg bg-gradient-to-r from-gray-900 to-gray-800 p-6 rounded-2xl mt-6 shadow-2xl backdrop-blur-lg border border-gray-600"
+                          >
+                            {/* Poll Question */}
+                            <h3 className="text-white font-extrabold text-lg text-center">
+                              {poll.question}
+                            </h3>
+
+                            <ul className="mt-4 space-y-4">
+                              {poll.options.map((option, optionIndex) => {
+                                const votePercentage =
+                                  totalVotes > 0
+                                    ? (option.votes.length / totalVotes) * 100
+                                    : 0;
+
+                                return (
+                                  <motion.li
+                                    key={optionIndex}
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                      delay: 0.1 + optionIndex * 0.1,
+                                      duration: 0.1,
+                                    }}
+                                    whileHover={{ scale: 1.03 }}
+                                    className="relative p-4 rounded-xl bg-gray-800 transition-all duration-300 shadow-lg overflow-hidden flex items-center justify-between"
+                                  >
+                                    {/* Option Text & Vote Count */}
+                                    <div className="flex flex-col">
+                                      <span className="text-white font-medium text-sm">
+                                        {option.optionValue}
+                                      </span>
+                                      <span className="text-gray-300 text-xs">
+                                        {option.votes.length} votes
+                                      </span>
+                                    </div>
+
+                                    {/* Progress Bar - Slim and Elegant */}
+                                    <motion.div
+                                      initial={{ width: "0%" }}
+                                      animate={{ width: `${votePercentage}%` }}
+                                      transition={{
+                                        duration: 0.8,
+                                        ease: "easeOut",
+                                      }}
+                                      className="absolute left-0 bottom-2 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-60 rounded-xl"
+                                    ></motion.div>
+
+                                    {/* Vote Button (Aligned Right) */}
+                                    <motion.button
+                                      whileHover={{ scale: 1.08 }}
+                                      whileTap={{ scale: 0.92 }}
+                                      className="px-4 py-1 text-xs rounded-full font-semibold text-white transition-all duration-300 
+                        bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-md"
+                                      onClick={() =>
+                                        handleVote(
+                                          post._id,
+                                          option,
+                                          session?.user?.id
+                                        )
+                                      }
+                                    >
+                                      Vote
+                                    </motion.button>
+                                  </motion.li>
+                                );
+                              })}
+                            </ul>
+                          </motion.div>
+                        );
+                      })}
+                  </div>
+
+                  {/* Post Actions */}
                   <div className="flex gap-6 mt-4">
-                    <button
+                    {/* Like Button */}
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => handleLike(post._id, post.user_id)}
-                      className={`flex items-center gap-2 ${
+                      className={`flex items-center gap-2 transition-all duration-300 ${
                         post.likes.some(
                           (like) => like.userId === session?.user?.id
                         )
                           ? "text-red-500"
                           : "text-[#1DA1F2]"
-                      } hover:opacity-80`}
+                      }`}
                     >
                       <Heart
                         className={`w-5 h-5 ${
@@ -557,8 +646,11 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                         }`}
                       />
                       <span>{post.likeCount || 0}</span>
-                    </button>
-                    <button
+                    </motion.button>
+
+                    {/* Comment Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
                       onClick={() =>
                         setCommentsModal({
                           isOpen: true,
@@ -566,25 +658,30 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                           userId: post.user_id,
                         })
                       }
-                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80"
+                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80 transition-all duration-300"
                     >
                       <MessageCircle className="w-5 h-5" />
                       <span>{post.commentCount}</span>
-                    </button>
-                    <button
+                    </motion.button>
+
+                    {/* Share Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
                       onClick={() => handleShare(post.id)}
-                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80"
+                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80 transition-all duration-300"
                     >
                       <Share2 className="w-5 h-5" />
                       <span>{post.shares || 0}</span>
-                    </button>
+                    </motion.button>
                   </div>
-                </article>
+                </motion.article>
               ))}
             </>
           )}
         </Suspense>
       </div>
+
+      {/* Modals */}
       {commentsModal.isOpen && <CommentsModal />}
       {shareModal.isOpen && <ShareModal />}
     </main>
@@ -592,12 +689,3 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
 };
 
 export default PostFeed;
-// () {
-//   return (
-//     <main className="bg-gray-900 px-4">
-//       <Suspense fallback={<SkeletonLoader />}>
-//         <PostFeedContent />
-//       </Suspense>
-//     </main>
-//   );
-// }

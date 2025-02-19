@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req:NextRequest){
     await dbConnect();
 
-    if(req.method === "POST"){
+    
         const body = await req.json();
         const {user_id,newUsername,name,profileImage, content, image, poll } = body; 
-        console.log("profile at createPost: ",profileImage) 
+        console.log("poll at createPost: ",poll) 
         console.log("username at createPost: ",newUsername) 
 
         try{
@@ -17,8 +17,7 @@ export async function POST(req:NextRequest){
             await post.save();
             return NextResponse.json({message: "Post uploaded successfully"}, {status: 201})
         }catch(error){
+            console.error("Error uploading post: ",error);
             return NextResponse.json({message: "Internal server error"},{status:500})
         }
-    }
-    return NextResponse.json({message: "method not allowed"}, {status:405})
 }
