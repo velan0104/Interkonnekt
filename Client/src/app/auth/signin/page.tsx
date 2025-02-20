@@ -107,7 +107,7 @@ export default function SignInPage() {
                   <FormLabel className="text-gray-400">Email or Username</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                       className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                       type="text"
                       placeholder="Enter your email or username"
                       {...field}
@@ -127,7 +127,7 @@ export default function SignInPage() {
                   <FormLabel className="text-gray-400">Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                      className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                       type="password"
                       placeholder="Enter your password"
                       {...field}
@@ -142,7 +142,7 @@ export default function SignInPage() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300"
+             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
             >
               {isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
@@ -162,14 +162,17 @@ export default function SignInPage() {
         </div>
 
         <div className="mt-6">
-          <Button
-            onClick={handleGoogleSignIn}
-            className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300"
-          >
-            {isSigningIn
-              ? "Signing in with Google..."
-              : "Sign in with Google"}
-          </Button>
+        <Button
+  onClick={handleGoogleSignIn}
+  className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 py-3 rounded-2xl shadow-md  mt-5 font-medium"
+>
+  <img
+    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiHa4Twc-U2klLkqvuVq7PUQznfqx6LnV5Ag&s"
+    alt="Google"
+    className="w-10 h-9 "
+  />
+  {isSigningIn ? "Signing in with Google..." : "Sign up with Google"}
+</Button>
         </div>
       </motion.div>
     </div>

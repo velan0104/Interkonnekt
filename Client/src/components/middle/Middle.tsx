@@ -442,8 +442,10 @@ const CommentsModal: React.FC = () => {
   };
 
   return (
-    <main className= "absolute h-[40rem] sm-[320px]:w-[47rem] w-[32.2rem] md:w-[35rem] md:h-[42rem] custom:w-[45rem]  lg:w-[48rem] lg:h-[37rem] left-0 xl:left-80 2xl:left-96 2xl:h-[41rem] bg-gray-900 overflow-x-hidden  px-4 py-6">
-      <div className="mx-auto   space-y-6  h-full overflow-y-auto">
+    <main className={`absolute w-full  max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0  bg-gray-900 overflow-x-hidden px-4 py-6 pb-28 ${
+      pathname.includes("/profile") ? "left-0" : "xl:left-[24rem] 2xl:left-96"
+    }`}>
+    <div className="container mx-auto space-y-6 h-full overflow-y-auto">
         <Suspense fallback={<SkeletonLoader />}>
           {postStatus === "loading" ? (
             <SkeletonLoader />
@@ -602,6 +604,9 @@ const CommentsModal: React.FC = () => {
                   </div>
                 </motion.article>
               ))}
+              {posts.length === 0 && (
+                <p className="text-gray-400 text-center py-4">No posts found.</p>
+              )}
             </>
           )}
         </Suspense>

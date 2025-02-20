@@ -19,6 +19,7 @@ import { fetchPosts } from "@/Slice/postsSlice";
 import PostFeed from "../middle/Middle";
 import Posts from "@/models/post";
 
+
 interface UserProfile {
   name: string;
   username?: string;
@@ -356,24 +357,24 @@ console.log("posts at profile: ",posts)
 
   return (
     <>
-      <div className="bg-gray-900 text-white h-[89vh] overflow-y-auto">
+      <div className="bg-gray-900 absolute text-white w-full  overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[30.5rem] 2xl:max-w-[40.5rem] left-0 xl:left-[24rem] 2xl:left-[28rem] ">
         {/* Profile Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-800 py-12 flex justify-center">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-800 py-10 px-6 flex flex-col items-center md:flex-row md:justify-between  rounded-xl">
           <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-8 ">
             {/* Profile Image */}
             <div className="relative">
-              <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-white shadow-md">
+              <div className="w-32 h-32  md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg">
                 {!profileImage ?
                                       <img
                                       src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
                                       alt={username}
-                                      className="w-full h-full rounded-full border border-gray-700"
+                                      className="w-full h-full rounded-full border border-gray-700 object-cover"
                                     /> : 
                                     ( profileImage && profileImage.includes("https://lh3.googleusercontent.com") ? 
                                       <img
                                       src={profileImage }
                                       alt={username}
-                                      className="w-full h-full rounded-full  border border-gray-700"
+                                      className="w-full h-full rounded-full  border border-gray-700 object-cover"
                                     /> :
                                     <CldImage
                                     src={profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
@@ -388,7 +389,7 @@ console.log("posts at profile: ",posts)
               {signedInUser && (
                 <div
                   onClick={() => setEditingProfileImage(true)}
-                  className="absolute bottom-3 right-3 bg-blue-700 p-2 rounded-full hover:bg-blue-800 transition-colors cursor-pointer"
+                  className="absolute bottom-3 right-0 bg-blue-700 p-2 rounded-full hover:bg-blue-800 transition-colors cursor-pointer"
                 >
                   <Edit2 size={20} className="text-white" />
                   <UploadImages />
@@ -402,7 +403,7 @@ console.log("posts at profile: ",posts)
                 {username || user?.username || "No Username Set"}
               </span>
               {editingUsername ? (
-                <div className="flex flex-col items-center gap-2 w-full">
+                <div className="flex flex-col items-center gap-2 w-full mt-3">
                   <input
                     type="text"
                     value={username}
@@ -518,22 +519,23 @@ console.log("posts at profile: ",posts)
 
         {/* Stats Section */}
         <div className="py-10 bg-gray-900">
-          <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="container mx-auto grid  grid-cols-3 gap-8 px-3">
             <div
               onClick={() => setShowFollowerModal(true)}
-              className="bg-gray-800 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition cursor-pointer"
+              className="bg-gray-800 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition cursor-pointer"
             >
+
               <h2 className="text-2xl font-bold">{followers?.length}</h2>
-              <p className="text-gray-400">Followers</p>
+              <p className="text-gray-400 mr-2 sm:mr-0">Followers</p>
             </div>
             <div
               onClick={() => setShowFollowingModal(true)}
-              className="bg-gray-800 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition cursor-pointer"
+              className="bg-gray-800 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition cursor-pointer"
             >
               <h2 className="text-2xl font-bold">{following?.length}</h2>
               <p className="text-gray-400">Following</p>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
+            <div className="bg-gray-800 p-6 rounded-xl shadow-md text-center">
               <h2 className="text-2xl font-bold">
                 {/* {new Date(
                   createdAt2 || user?.createdAt || "empty"
@@ -562,7 +564,7 @@ console.log("posts at profile: ",posts)
         <div className="">
           <div className="container mx-auto px-6">
             <h2 className="text-3xl font-semibold mb-2  ">Your Posts</h2>
-            <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+            <div className="bg-gray-800  rounded-lg shadow-md">
               <PostFeed userId={params.get("userId") || ""} />
             </div>
           </div>

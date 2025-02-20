@@ -27,7 +27,9 @@ import Select from "react-select";
 import { twMerge } from "tailwind-merge";
 import { Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-
+import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
+import { WordRotate } from "@/components/ui/word-rotate";
+import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
 
 const signupSchema = z.object({
   name: z
@@ -125,6 +127,39 @@ export default function SignupForm() {
     
   }, []);
 
+  const words1 = [
+    {
+      text: "Interkonnekt",
+      className: "text-white dark:text-blue-500",
+    },
+   
+  ];
+
+  const words2 = [
+    {
+      text: "Join",
+    },
+    {
+      text: "a",
+    },
+    {
+      text: "thriving",
+    },
+    {
+      text: "community",
+    },
+    {
+      text: "of",
+    },
+    {
+      text: "like-minded",
+    },
+    {
+      text: "individuals!",
+    },
+    
+  ];
+
  
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -205,14 +240,33 @@ export default function SignupForm() {
 
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="relative w-full max-w-5xl flex flex-col lg:flex-row rounded-lg shadow-2xl overflow-hidden">
         {/* Left Section */}
-        <div className="left-section w-full lg:w-1/2 h-64 lg:h-auto bg-gradient-to-tr from-blue-600 to-blue-800 text-white flex flex-col items-center justify-center">
-          <h2 className="text-4xl font-extrabold">InterKonnekt</h2>
-          <p className="text-sm text-center mt-4">
-            Join a thriving community of like-minded individuals!
-          </p>
+        <div className=" hidden w-full lg:w-1/2 h-auto  bg-gradient-to-tr from-blue-600 to-blue-800 text-white lg:flex flex-col items-center justify-center p-6 sm:p-10">
+        
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-[-26px]"><TypewriterEffectSmooth words={words1} /></h2>
+          <span className="text-sm sm:text-xl text-center inline-flex items-center gap-0  whitespace-nowrap     ">
+  Join a  
+  <AnimatedGradientText>
+    <WordRotate
+      className="text-base font-bold text-black dark:text-white  animate-gradient bg-gradient-to-r from-[#42E695] via-[#3BB2B8] to-[#42E695] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent"
+      words={["thriving", "growing", "active"]}
+    />  
+  </AnimatedGradientText>
+
+  community of  
+  <AnimatedGradientText>
+    <WordRotate
+      className="text-base font-bold text-black dark:text-white  animate-gradient bg-gradient-to-r from-[#42E695] via-[#3BB2B8] to-[#42E695] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent"
+      words={["like-minded", "passionate", "enthusiastic"]}
+    />  
+  </AnimatedGradientText>
+  individuals!
+</span>
+
+
+           
           {/* <img
             src="https://source.unsplash.com/featured/?community"
             alt="Community"
@@ -226,9 +280,9 @@ export default function SignupForm() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: "easeInOut" }}
-          className="relative w-full lg:w-1/2 h-64 lg:h-auto bg-gray-800 p-8 lg:px-20  "
+          className="relative w-full lg:w-1/2 bg-gray-800 p-6 sm:p-10 flex flex-col justify-center"
         >
-          <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-6">
             Sign Up
           </h2>
           <Form {...form}>
@@ -245,7 +299,7 @@ export default function SignupForm() {
                     <FormLabel className="text-gray-400">Name</FormLabel>
                     <FormControl>
                       <Input
-                        className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                        className="w-full bg-gray-800 text-white border border-gray-700 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         placeholder="Your full name"
                         {...field}
                       />
@@ -264,7 +318,7 @@ export default function SignupForm() {
                     <FormLabel className="text-gray-400">Username</FormLabel>
                     <FormControl>
                       <Input
-                        className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                        className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                         placeholder="Your username"
                         {...field}
                       />
@@ -283,7 +337,7 @@ export default function SignupForm() {
                     <FormLabel className="text-gray-400">Email</FormLabel>
                     <FormControl>
                       <Input
-                        className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                        className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                         type="email"
                         placeholder="example@example.com"
                         {...field}
@@ -303,7 +357,7 @@ export default function SignupForm() {
                     <FormLabel className="text-gray-400">Password</FormLabel>
                     <FormControl>
                       <Input
-                        className="bg-gray-700 border-gray-600 text-gray-300 focus:ring-blue-600 focus:border-blue-600"
+                        className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                         type="password"
                         placeholder="Enter a strong password"
                         {...field}
@@ -364,7 +418,7 @@ export default function SignupForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300"
+                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
               >
                 {isSubmitting ? "Signing Up..." : "Sign Up"}
               </Button>
@@ -389,14 +443,17 @@ export default function SignupForm() {
               </Button> */}
             </form>
           </Form>
-            <Button
-                onClick={handleGoogleSignIn}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600 py-3 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300 mt-5"
-              >
-                {isSigningIn
-                  ? "Signing in with Google..."
-                  : "Sign up with Google"}
-              </Button>
+          <Button
+  onClick={handleGoogleSignIn}
+  className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 py-3 rounded-2xl shadow-md  mt-5 font-medium"
+>
+  <img
+    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiHa4Twc-U2klLkqvuVq7PUQznfqx6LnV5Ag&s"
+    alt="Google"
+    className="w-10 h-9 "
+  />
+  {isSigningIn ? "Signing in with Google..." : "Sign up with Google"}
+</Button>
         </motion.div>
       </div>
     </div>
