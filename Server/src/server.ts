@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import setUpSocket from "./services/socket.js";
 import messageRoute from "./routes/Message.route.js";
 import contactRoute from "./routes/Contact.route.js";
+import communityRoute from "./routes/Community.route.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/api/message", messageRoute);
 app.use("/api/contacts", contactRoute);
+app.use("/api/community", communityRoute);
 
 const server = app.listen(PORT, () =>
   console.log(`Server started on PORT: ${PORT}`)

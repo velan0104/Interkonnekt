@@ -1,17 +1,17 @@
-import mongoose, { Schema } from "mongoose";
-const FollowerSchema = new Schema({
+import mongoose from "mongoose";
+const FollowerSchema = new mongoose.Schema({
     userId: {
         type: String,
-        ref: "users",
+        ref: "User",
     },
 });
-const FollowingSchema = new Schema({
+const FollowingSchema = new mongoose.Schema({
     userId: {
         type: String,
-        ref: "users",
+        ref: "User",
     },
 });
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "name is required"],
@@ -52,8 +52,6 @@ const UserSchema = new Schema({
     },
     followers: { type: [FollowerSchema], default: [] },
     following: { type: [FollowingSchema], default: [] },
-}, {
-    collection: "users",
 });
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 export default User;

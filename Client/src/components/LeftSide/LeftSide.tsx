@@ -24,7 +24,7 @@
 //   const [activeLink, setActiveLink] = useState("home");
 //   const { data: session } = useSession();
 //   const [username, setUsername] = useState("");
-  
+
 //   const [signInMethod, setSignInMethod] = useState("");
 //   const router = useRouter();
 //   const [profileImage, setProfileImage] = useState("");
@@ -33,7 +33,6 @@
 //   const [interest, setInterest] = useState("");
 
 //   const pathname = usePathname();
- 
 
 //   useEffect(() => {
 //     // Automatically set the active link based on the current pathname
@@ -60,11 +59,10 @@
 //       setSignInMethod(session.user.provider === "google" ? "google" : "normal");
 //     }
 //   }, [session]);
-  
 
 //   useEffect(() => {
 //     if (!session?.user?.id) return;
-   
+
 //     const fetchUnameInterest = async () => {
 //       const response = await fetch("/api/getUnameInterest", {
 //         method: "POST",
@@ -72,7 +70,7 @@
 //         body: JSON.stringify({ userId: session?.user?.id }),
 //       });
 //       const data = await response.json();
-     
+
 //       if (data) {
 //         setUsername(data.username);
 //         setInterest(data.interest);
@@ -88,7 +86,7 @@
 //         ) {
 //           setIsCloudinaryImage(false);
 //           setProfileImage(data.image);
-          
+
 //           setCloudinaryImage("");
 //         } else {
 //           setIsCloudinaryImage(true);
@@ -100,10 +98,6 @@
 //     };
 //     fetchUnameInterest();
 //   }, [session, pathname]);
-
- 
-
-  
 
 //   return (
 //     <aside className="hidden md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm">
@@ -124,10 +118,10 @@
 //             className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg shadow-blue-600/50"
 //           />
 //         )}
-  
+
 //         <span className="text-lg font-semibold tracking-wide">{username || session?.user?.name}</span>
 //       </div>
-  
+
 //       {/* Navigation Links */}
 //       <nav className="flex-1">
 //         <ul className="space-y-2">
@@ -141,7 +135,7 @@
 //             <li key={id} onClick={() => setActiveLink(id)}>
 //               <button
 //                 onClick={() => router.push(route)}
-//                 className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300 
+//                 className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300
 //                   ${
 //                     activeLink === id
 //                       ? "bg-blue-600 text-white shadow-lg shadow-blue-600/50 border-l-4 border-blue-500"
@@ -155,19 +149,19 @@
 //           ))}
 //         </ul>
 //       </nav>
-  
+
 //       {/* Video Call Button */}
 //       <button className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105">
 //         <Video size={22} />
 //         <span>Start Video Call</span>
 //       </button>
-  
+
 //       {/* Logout Button */}
 //       {/* Logout Button */}
 // <button
 //   onClick={() => signOut({ callbackUrl: "/auth/signup" })}
-//   className="flex items-center justify-center gap-4 px-5 py-3 w-full bg-white/10 text-white font-semibold rounded-lg transition-all duration-300 
-//              shadow-md hover:bg-gradient-to-r from-red-600 to-red-500 hover:shadow-lg hover:shadow-red-500/50 
+//   className="flex items-center justify-center gap-4 px-5 py-3 w-full bg-white/10 text-white font-semibold rounded-lg transition-all duration-300
+//              shadow-md hover:bg-gradient-to-r from-red-600 to-red-500 hover:shadow-lg hover:shadow-red-500/50
 //              transform hover:scale-105 border border-transparent hover:border-white"
 // >
 //   <LogOut size={22} />
@@ -176,27 +170,38 @@
 
 //     </aside>
 //   );
-  
+
 // };
 
 // export default LeftSide;
 
-"use client"
-import { useEffect, useState } from "react"
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar"
-import { IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt } from "@tabler/icons-react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { cn } from "@/lib/utils"
-import { useSession } from "next-auth/react"
-import { usePathname, useRouter } from "next/navigation"
-import { CldImage } from "next-cloudinary"
+"use client";
+import { useEffect, useState } from "react";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import {
+  IconArrowLeft,
+  IconBrandTabler,
+  IconSettings,
+  IconUserBolt,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
-
-import {signOut } from "next-auth/react";
-import { Home, Compass, Users, MessageSquare, User, Video, LogOut } from "lucide-react";
-
+import { signOut } from "next-auth/react";
+import {
+  Home,
+  Compass,
+  Users,
+  MessageSquare,
+  User,
+  Video,
+  LogOut,
+} from "lucide-react";
 
 export default function SidebarDemo() {
   const { data: session } = useSession();
@@ -236,7 +241,7 @@ export default function SidebarDemo() {
     fetchUnameInterest();
   }, [session]);
 
-    useEffect(() => {
+  useEffect(() => {
     // Automatically set the active link based on the current pathname
     if (pathname === "/profile") {
       setActiveLink("profile");
@@ -260,7 +265,11 @@ export default function SidebarDemo() {
     { label: "Explore", href: "/explore", icon: <Compass size={20} /> },
     { label: "Communities", href: "/communities", icon: <Users size={20} /> },
     { label: "Messages", href: "/messages", icon: <MessageSquare size={20} /> },
-    { label: "Profile", href: `/profile/?userId=${session?.user?.id}`, icon: <User size={20} /> },
+    {
+      label: "Profile",
+      href: `/profile/?userId=${session?.user?.id}`,
+      icon: <User size={20} />,
+    },
   ];
 
   const [open, setOpen] = useState(false);
@@ -360,8 +369,6 @@ export default function SidebarDemo() {
   );
   
 }
-
-
 
 const Dashboard = () => (
   <div className="flex flex-1 p-10 bg-white dark:bg-neutral-900">

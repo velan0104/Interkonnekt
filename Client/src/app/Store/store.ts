@@ -3,6 +3,7 @@ import postsReducer from "@/Slice/postsSlice";
 import followReducer from "@/Slice/FolllowSlice";
 import activitiesReducer from "@/Slice/activitiesSlice";
 import chatReducer from "@/Slice/chatSlice";
+import communityReducer from "@/Slice/communitySlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     follow: followReducer,
     activities: activitiesReducer,
     chat: chatReducer,
+    community: communityReducer,
   },
 });
 

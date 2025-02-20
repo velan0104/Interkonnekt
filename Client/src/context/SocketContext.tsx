@@ -10,20 +10,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
-import { addMessage } from "@/Slice/chatSlice";
+import { addContactsInDMContacts, addMessage } from "@/Slice/chatSlice";
+import { IMessage, SessionUser } from "@/types";
+import { Session } from "next-auth";
 
 const SocketContext = createContext<Socket | null>(null);
 
 interface SocketProviderProps {
   children: ReactNode;
-}
-
-interface Message {
-  sender: { _id: string };
-  recipient: { _id: string };
-  channelId?: string;
 }
 
 export const useSocket = () => {
@@ -32,7 +28,8 @@ export const useSocket = () => {
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const socket = useRef<Socket | null>(null);
-  const { data: session } = useSession();
+  const dispatch = useDispatch();
+  const { data: session }: { data: Session | null } = useSession();
   const selectedChatData = useSelector(
     (state: RootState) => state.chat.selectedChatData
   );
@@ -50,23 +47,29 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         console.log("Connected to socket server from client side");
       });
 
-      const handleReceiveMessage = (message: any) => {
-        if (selectedChatData._id !== session.user?.id)
+      const handleReceiveMessage = (message: IMessage) => {
+        // console.log("ADDING MESSAGES...", message);
+        // console.log("SELECTED CHATS receiving: ", selectedChatData);
+        if (selectedChatData?._id !== session.user?.id) {
           if (
-            (selectedChatType !== undefined &&
-              selectedChatData._id === message.sender._id) ||
-            selectedChatData._id === message.recipient._id
+            selectedChatType !== undefined &&
+            (selectedChatData._id === message.sender._id ||
+              selectedChatData._id === message.recipient?._id)
           ) {
-            addMessage(message);
+            dispatch(addMessage(message));
+            dispatch(addContactsInDMContacts(message));
+          } else {
+            console.log("Nhi... chal rha vroo...");
           }
+        }
       };
-      const handleReceiveChannelMessage = (message: Message) => {
+      const handleReceiveChannelMessage = (message: IMessage) => {
         if (
           (selectedChatType !== undefined &&
             selectedChatData._id === message.channelId) ||
-          selectedChatData._id === message.recipient._id
+          selectedChatData._id === message.recipient?._id
         ) {
-          // addMessage(message);
+          addMessage(message);
         }
       };
 

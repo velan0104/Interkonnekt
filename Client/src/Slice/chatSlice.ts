@@ -1,16 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Message {
-  recipent: string | undefined;
-  recipient?: { _id: string };
-  sender: string | undefined;
-  _id?: string;
-  userId?: string;
-}
+import { IMessage } from "@/types";
+import { Types } from "mongoose";
 
 interface Contact {
   _id: string;
-  [key: string]: any;
+  email: string;
+  name: string;
 }
 
 interface Channel {
@@ -18,10 +13,18 @@ interface Channel {
   [key: string]: any;
 }
 
+interface ChatData {
+  _id: string | Types.ObjectId;
+  name: string;
+  username: string;
+  email: string;
+  lastMessageTime: string;
+}
+
 interface ChatState {
   selectedChatType: string | undefined;
-  selectedChatData: any;
-  selectedChatMessages: Message[];
+  selectedChatData: ChatData | undefined;
+  selectedChatMessages: IMessage[];
   directMessagesContacts: Contact[];
   isUploading: boolean;
   isDownloading: boolean;
@@ -84,7 +87,7 @@ const chatSlice = createSlice({
     setSelectedChatData(state, action: PayloadAction<any>) {
       state.selectedChatData = action.payload;
     },
-    setSelectedChatMessages(state, action: PayloadAction<Message[]>) {
+    setSelectedChatMessages(state, action: PayloadAction<IMessage[]>) {
       state.selectedChatMessages = action.payload;
     },
     setDirectMessagesContacts(state, action: PayloadAction<Contact[]>) {
@@ -101,7 +104,8 @@ const chatSlice = createSlice({
       state.selectedChatType = undefined;
       state.selectedChatMessages = [];
     },
-    addMessage(state, action: PayloadAction<Message>) {
+    addMessage(state, action: PayloadAction<IMessage>) {
+      console.log("Hello from Add messages");
       const message = action.payload;
       const { selectedChatType } = state;
 
@@ -114,8 +118,9 @@ const chatSlice = createSlice({
         sender:
           selectedChatType === "channel" ? message.sender : message.sender,
       });
+      console.log("Updated chat messages: ", setSelectedChatMessages);
     },
-    addChannelInChannelList(state, action: PayloadAction<Message>) {
+    addChannelInChannelList(state, action: PayloadAction<IMessage>) {
       const message = action.payload;
       const index = state.channels.findIndex(
         (channel) => channel._id === message.recipient?._id
@@ -126,14 +131,14 @@ const chatSlice = createSlice({
         state.channels.unshift(data);
       }
     },
-    addContactsInDMContacts(state, action: PayloadAction<Message>) {
+    addContactsInDMContacts(state, action: PayloadAction<IMessage>) {
       const message = action.payload;
       const userId = action.payload.userId as string;
       const fromId =
-        message.sender === userId ? message.recipent : message.sender;
+        message.sender._id === userId ? message.recipent : message.sender;
 
       const fromData =
-        message.sender === userId ? message.recipent : message.sender;
+        message.sender._id === userId ? message.recipent : message.sender;
 
       const index = state.directMessagesContacts.findIndex(
         (contact) => contact._id === fromId

@@ -6,10 +6,9 @@ import dynamic from "next/dynamic";
 
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import {gsap} from "gsap";
+import { gsap } from "gsap";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-
 
 interface PostModalProps {
   isOpen: boolean;
@@ -18,8 +17,7 @@ interface PostModalProps {
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
-const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
- 
+const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
   const { data: session } = useSession();
 
   const [content, setContent] = useState("");
@@ -32,9 +30,8 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
     question: "",
     options: [{ optionValue: "", votes: [] }], // Initialize votes as an empty array
   });
-  
-  
-  const [IsPollOpen,setIsPollOpen] = useState(false);
+
+  const [IsPollOpen, setIsPollOpen] = useState(false);
   const [pollLength, setPollLength] = useState(2);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const { toast } = useToast();
@@ -42,39 +39,32 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
   const username = session?.user?.username;
   const profile = session?.user?.image;
   const name = session?.user?.name;
- 
+
   const [profileImage, setProfileImage] = useState("");
-      const [cloudinaryImage, setCloudinaryImage] = useState("");
-       const [newUsername, setnewUsername] = useState("");
-  
-      
-      const pathname = usePathname();
-      const router = useRouter();
+  const [cloudinaryImage, setCloudinaryImage] = useState("");
+  const [newUsername, setnewUsername] = useState("");
 
-  
+  const pathname = usePathname();
+  const router = useRouter();
 
-   useEffect(() => {
-        if (!session?.user?.email) return;
-        
-        const fetchUnameInterest = async () => {
-          const response = await fetch("/api/getUnameInterest", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: session?.user?.id }),
-          })
-          const data = await response.json();
-          if (data) {
-            setnewUsername(data.username);
-           
-            setProfileImage(data.image);
-          
-          }
-    
-    
-         
-        }
-        fetchUnameInterest();
-      }, [session, pathname]);
+  useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchUnameInterest = async () => {
+      const response = await fetch("/api/getUnameInterest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session?.user?.id }),
+      });
+      const data = await response.json();
+      if (data) {
+        setnewUsername(data.username);
+
+        setProfileImage(data.image);
+      }
+    };
+    fetchUnameInterest();
+  }, [session, pathname]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -97,8 +87,6 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
     setPoll({ ...poll, options: updatedOptions });
   };
 
-  
-
   const handleSubmit = async () => {
     const postData = {
       user_id,
@@ -108,42 +96,48 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
       content,
       image,
       poll: poll.question ? poll : null,
-    }
+    };
 
-    try{
-      const response = await fetch("/api/createPost",{
+    try {
+      const response = await fetch("/api/createPost", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(postData)
-      })
-      
-      if(response.ok){
-        
-        toast({title: "Post Uploaded Successfully",description:"Post Uploaded Successfully", variant: "success"})
-        setContent(""); 
+        body: JSON.stringify(postData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Post Uploaded Successfully",
+          description: "Post Uploaded Successfully",
+          variant: "success",
+        });
+        setContent("");
         setImage(null);
-        setPoll({ question: "", options: [{ optionValue: "", votes: [] } ] });
+        setPoll({ question: "", options: [{ optionValue: "", votes: [] }] });
         setIsSuccessVisible(true);
         setnewUsername("");
         setProfileImage("");
-       
+
         onClose();
-       
-      }else{
+      } else {
         const error = await response.json();
-        toast({title: "Post Uploading Failed", description: error.message, variant: "warning"})
+        toast({
+          title: "Post Uploading Failed",
+          description: error.message,
+          variant: "warning",
+        });
       }
-    }catch(error:any){
-      toast({title: "Error", description:error})
+    } catch (error: any) {
+      toast({ title: "Error", description: error });
     }
-  }
+  };
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-0">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
@@ -156,9 +150,9 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
         >
           <X className="h-6 w-6" />
         </button>
-  
+
         <h2 className="text-xl font-bold text-white mb-4">Create Post</h2>
-  
+
         {/* Post Content Input */}
         <textarea
           className="w-full h-32 p-3 rounded-lg bg-gray-800 text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -166,7 +160,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
-  
+
         {/* Preview Image */}
         {image && (
           <div className="mt-4 rounded-lg overflow-hidden">
@@ -177,7 +171,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
             />
           </div>
         )}
-  
+
         {/* Action Buttons */}
         <div className="flex justify-between items-center mt-4">
           <div className="flex space-x-3">
@@ -190,7 +184,7 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
                 onChange={handleImageUpload}
               />
             </label>
-            
+
             <div className="relative">
               <button
                 className="p-2 rounded-full hover:bg-gray-700 transition"
@@ -206,8 +200,8 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
             </div>
             <button
               className="p-2 rounded-full hover:bg-gray-700 transition"
-              onClick={() =>
-                setIsPollOpen(!IsPollOpen)
+              onClick={
+                () => setIsPollOpen(!IsPollOpen)
                 // setPoll({
                 //   question: "",
                 //   options: new Array(pollLength).fill(""),
@@ -217,15 +211,15 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
               <BarChart2 className="h-6 w-6 text-gray-400 hover:text-white" />
             </button>
           </div>
-  
-          <button 
+
+          <button
             className="px-5 py-2 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition transform hover:scale-105"
             onClick={handleSubmit}
           >
             Post
           </button>
         </div>
-  
+
         {/* Poll Section */}
         {IsPollOpen && (
           <div className="mt-4 bg-gray-800 p-4 rounded-lg">
@@ -248,7 +242,12 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
             ))}
             <div className="flex space-x-2 mt-2">
               <button
-                onClick={() => setPoll({ ...poll, options: [...poll.options, { optionValue: "", votes: [] }] })}
+                onClick={() =>
+                  setPoll({
+                    ...poll,
+                    options: [...poll.options, { optionValue: "", votes: [] }],
+                  })
+                }
                 className="px-3 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
               >
                 Add Option
@@ -264,7 +263,12 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
                 Remove Option
               </button>
               <button
-                onClick={() => setPoll({ question: "", options: [{ optionValue: "", votes: [] }] })}
+                onClick={() =>
+                  setPoll({
+                    question: "",
+                    options: [{ optionValue: "", votes: [] }],
+                  })
+                }
                 className="px-3 py-1 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition"
               >
                 Cancel Poll
@@ -275,7 +279,6 @@ const PostModal:FC<PostModalProps> = ({ isOpen, onClose }) => {
       </motion.div>
     </div>
   );
-  
 };
 
 export default PostModal;

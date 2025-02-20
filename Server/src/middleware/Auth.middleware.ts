@@ -1,26 +1,57 @@
 import axios from "axios";
-import { NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import { AuthenticatedRequest, Token, IUserToken } from "../lib/type.js"; // Assuming this is the correct path
+import asyncHandler from "express-async-handler";
 
-export const verifyToken = async (req: any, res: any, next: NextFunction) => {
-  const token = req.cookies["next-auth.session-token"];
+export const verifyToken = asyncHandler(
+  async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const token = req.cookies["next-auth.session-token"];
+      console.log("Token:", token);
 
-  if (!token) return res.status(401).send("You are not authorized!");
-  try {
-    const payload = await axios.get("http://localhost:3000/api/getToken", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    console.log("Payload: ", payload);
-    if (payload) {
-      req.user = payload?.data?.token;
-      next();
-    } else {
-      return res.status(400).json("Unable to get payload");
+      // If there's no token, return a 401 Unauthorized error
+      if (!token) {
+        res.status(401).json({ error: "You are not authorized!" });
+        return;
+      }
+
+      // Request to validate the token and get user details
+      const { data } = await axios.get<{ token: Token }>(
+        "http://localhost:3000/api/getToken",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // If token is valid, attach the user to the request object
+      if (data?.token) {
+        const user: IUserToken = {
+          name: data.token.name,
+          username: data.token.username,
+          email: data.token.email,
+          interest: data.token.interest,
+          id: data.token.id,
+          provider: data.token.provider,
+        };
+        req.user = user; // Attach the token or user information to the request
+        console.log("REQ USER:", req.user);
+        return next(); // Proceed to the next middleware/route
+      } else {
+        // If payload is not valid, send a 400 Bad Request response
+        res.status(400).json({ error: "Unable to get payload" });
+        return;
+      }
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      res.status(500).json({ error: "Internal Server Error", details: error });
+      return;
     }
-  } catch (error) {
-    console.error("Error: ", error);
   }
-};
+);

@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
 interface IChannel extends Document {
   name: string;
@@ -18,13 +18,13 @@ const ChannelSchema = new Schema<IChannel>({
   members: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       required: true,
     },
   ],
   admin: {
     type: Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "User",
     required: true,
   },
   image: {
@@ -34,7 +34,7 @@ const ChannelSchema = new Schema<IChannel>({
   messages: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: "Messages",
+      ref: "Message",
     },
   ],
   createdAt: {
@@ -57,5 +57,5 @@ ChannelSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
-const Channel: Model<IChannel> = mongoose.model("Channels", ChannelSchema);
+const Channel: Model<IChannel> = mongoose.model("Channel", ChannelSchema);
 export default Channel;

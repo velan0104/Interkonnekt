@@ -111,7 +111,9 @@ export default function Navbar() {
                         alt={username}
                         className="w-full h-full object-cover"
                       />
-                    ) : profileImage.includes("https://lh3.googleusercontent.com") ? (
+                    ) : profileImage.includes(
+                        "https://lh3.googleusercontent.com"
+                      ) ? (
                       <img
                         src={profileImage}
                         alt={username}

@@ -22,19 +22,10 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import apiClient from "@/lib/api-client";
 import { useSession } from "next-auth/react";
-
-interface Contact {
-  _id: string;
-  image?: string;
-  color?: string;
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  name?: string; // For channels
-}
+import { IContact } from "@/types";
 
 interface ContactListProps {
-  contacts: Contact[];
+  contacts: IContact[];
   isChannel?: boolean;
 }
 
@@ -52,7 +43,7 @@ const ContactList: React.FC<ContactListProps> = ({
     (state: RootState) => state.chat.openNewContactModal
   );
 
-  const handleClick = (contact: Contact) => {
+  const handleClick = (contact: IContact) => {
     if (isChannel) {
       dispatch(setSelectedChatType("channel"));
     } else {
@@ -74,7 +65,7 @@ const ContactList: React.FC<ContactListProps> = ({
           { searchTerm, user: user?.user?.id },
           { withCredentials: true }
         );
-        console.log("SEARCH CONTACTS: ", response);
+        // console.log("SEARCH CONTACTS: ", response);
 
         if (response.status === 200 && response.data.message) {
           setSearchedContacts(response.data.message);
@@ -87,7 +78,7 @@ const ContactList: React.FC<ContactListProps> = ({
     }
   };
 
-  const selectNewContact = (contact: Contact) => {
+  const selectNewContact = (contact: IContact) => {
     dispatch(setOpenNewContactModal(false));
     dispatch(setSelectedChatType("contact"));
     dispatch(setSelectedChatData(contact));
@@ -115,59 +106,65 @@ const ContactList: React.FC<ContactListProps> = ({
           />
         </div>
       </div>
-      {contacts.map((contact) => (
-        <div
-          key={contact._id}
-          className={`pl-10 py-2 transition-all duration-300 cursor-pointer bg-gray-900 ${
-            selectedChatData && selectedChatData._id === contact._id
-              ? "bg-[#8417ff] hover:bg-[#8417ff]"
-              : "hover:bg-purple-600"
-          }`}
-          onClick={() => handleClick(contact)}
-        >
-          <div className="flex gap-5 items-center justify-start text-neutral-300">
-            {!isChannel && (
-              <Avatar className="h-10 w-10 rounded-full overflow-hidden">
-                {contact.image ? (
-                  <AvatarImage
-                    src={contact.image}
-                    alt="profile"
-                    className="object-cover w-full h-full bg-black"
-                  />
-                ) : (
-                  <div
-                    className={`${
-                      selectedChatData && selectedChatData._id === contact._id
-                        ? "bg-[#ffffff22] border border-white"
-                        : getColor(contact.color)
-                    } uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full`}
-                  >
-                    {contact.firstName
-                      ? contact.firstName.charAt(0)
-                      : contact.email.charAt(0)}
-                  </div>
-                )}
-              </Avatar>
-            )}
-            {isChannel && (
-              <Avatar className="h-10 w-10 rounded-full overflow-hidden">
-                {contact.image && contact.image.includes(".svg") ? (
-                  <AvatarImage src={contact.image} />
-                ) : (
-                  <AvatarImage src={contact.image} />
-                )}
-              </Avatar>
-            )}
-            {isChannel ? (
-              <span>{contact.name}</span>
-            ) : (
-              <span>{`${contact.firstName || ""} ${
-                contact.lastName || ""
-              }`}</span>
-            )}
-          </div>
+      {(contacts.length === 0 || !contacts) && (
+        <div className="h-[60vh] flex justify-center items-center ">
+          <div className="text-3xl text-white"> No Messages </div>
         </div>
-      ))}
+      )}
+      {contacts.length > 0 &&
+        contacts.map((contact) => (
+          <div
+            key={`${
+              typeof contact._id === "string"
+                ? contact._id
+                : contact._id.toString
+            }`}
+            className={`pl-10 py-2 transition-all duration-300 cursor-pointer bg-gray-900 ${
+              selectedChatData && selectedChatData._id === contact._id
+                ? "bg-[#8417ff] hover:bg-[#8417ff]"
+                : "hover:bg-purple-600"
+            }`}
+            onClick={() => handleClick(contact)}
+          >
+            <div className="flex gap-5 items-center justify-start text-neutral-300">
+              {!isChannel && (
+                <Avatar className="h-10 w-10 rounded-full overflow-hidden">
+                  {contact.image ? (
+                    <AvatarImage
+                      src={contact.image}
+                      alt="profile"
+                      className="object-cover w-full h-full bg-black"
+                    />
+                  ) : (
+                    <div
+                      className={`${
+                        selectedChatData && selectedChatData._id === contact._id
+                          ? "bg-[#ffffff22] border border-white"
+                          : "bg-[#FF0000]"
+                      } uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full`}
+                    >
+                      {contact.name?.charAt(0)}
+                    </div>
+                  )}
+                </Avatar>
+              )}
+              {isChannel && (
+                <Avatar className="h-10 w-10 rounded-full overflow-hidden">
+                  {contact.image && contact.image.includes(".svg") ? (
+                    <AvatarImage src={contact.image} />
+                  ) : (
+                    <AvatarImage src={contact.image} />
+                  )}
+                </Avatar>
+              )}
+              {isChannel ? (
+                <span>{contact.name}</span>
+              ) : (
+                <span> {contact.username} </span>
+              )}
+            </div>
+          </div>
+        ))}
       {openNewContactModal && (
         <Dialog
           open={openNewContactModal}
@@ -188,9 +185,9 @@ const ContactList: React.FC<ContactListProps> = ({
             {searchContacts.length > 0 && (
               <ScrollArea className="h-[250px] ">
                 <div className="flex flex-col gap-5">
-                  {searchedContacts.map((contact: Contact) => (
+                  {searchedContacts.map((contact: IContact) => (
                     <div
-                      key={contact._id}
+                      key={contact._id.toString()}
                       className="flex gap-3 items-center cursor-pointer"
                       onClick={() => selectNewContact(contact)}
                     >
