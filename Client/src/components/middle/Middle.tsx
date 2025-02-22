@@ -245,12 +245,14 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     };
 
     return (
+      
       <motion.div
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
+
         <motion.div
           className="bg-gray-900 bg-opacity-90 backdrop-blur-lg border border-gray-700 rounded-xl p-6 max-w-[500px] w-full shadow-2xl transform transition-all"
           initial={{ y: 60, opacity: 0 }}
@@ -321,7 +323,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
               onClick={postComment}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-500 transition-all"
+              className="bg-[#53c97d] text-white px-4 py-2 rounded-lg shadow-lg hover:bg-[#53e686] transition-all"
             >
               Post
             </motion.button>
@@ -431,6 +433,8 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     <main className={`absolute w-full  max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0  bg-gray-900 overflow-x-hidden px-4 py-6 pb-28 ${
       pathname.includes("/profile") ? "left-0" : "xl:left-[24rem] 2xl:left-96"
     }`}>
+      
+     
     <div className="container mx-auto space-y-6 h-full overflow-y-auto">
         <Suspense fallback={<SkeletonLoader />}>
           {postStatus === "loading" ? (
@@ -457,7 +461,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                     >
                       <motion.div
                         whileHover={{ scale: 1.1 }}
-                        className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-600 shadow-lg shadow-blue-600/50"
+                        className="w-16 h-16 rounded-full overflow-hidden border-1 border-[#53c97d] shadow-md shadow-[#53c97d]/50"
                       >
                         {post.profileImage ? (
                           post.profileImage.includes(
@@ -596,7 +600,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                                         duration: 0.8,
                                         ease: "easeOut",
                                       }}
-                                      className="absolute left-0 bottom-2 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-60 rounded-xl"
+                                      className="absolute left-0 bottom-2 h-1 bg-gradient-to-r from-[#53c97d] to-green-500 opacity-80 rounded-xl"
                                     ></motion.div>
 
                                     {/* Vote Button (Aligned Right) */}
@@ -604,7 +608,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                                       whileHover={{ scale: 1.08 }}
                                       whileTap={{ scale: 0.92 }}
                                       className="px-4 py-1 text-xs rounded-full font-semibold text-white transition-all duration-300 
-                        bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-md"
+                        bg-gradient-to-r from-[#53c97d] to-green-600 hover:from-green-500 hover:to-green-700 shadow-md"
                                       onClick={() =>
                                         handleVote(
                                           post._id,
@@ -635,7 +639,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                           (like) => like.userId === session?.user?.id
                         )
                           ? "text-red-500"
-                          : "text-[#1DA1F2]"
+                          : "text-[#53c97d]"
                       }`}
                     >
                       <Heart
@@ -660,7 +664,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                           userId: post.user_id,
                         })
                       }
-                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80 transition-all duration-300"
+                      className="flex items-center gap-2 text-[#53c97d] hover:text-[#53e686]/80 transition-all duration-300"
                     >
                       <MessageCircle className="w-5 h-5" />
                       <span>{post.commentCount}</span>
@@ -670,7 +674,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                     <motion.button
                       whileHover={{ scale: 1.1 }}
                       onClick={() => handleShare(post.id)}
-                      className="flex items-center gap-2 text-[#1DA1F2] hover:text-[#1DA1F2]/80 transition-all duration-300"
+                      className="flex items-center gap-2 text-[#53c97d] hover:text-[#53e686]/80 transition-all duration-300"
                     >
                       <Share2 className="w-5 h-5" />
                       <span>{post.shares || 0}</span>

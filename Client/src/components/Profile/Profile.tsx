@@ -18,6 +18,7 @@ import { RootState } from "@/app/Store/store";
 import { fetchPosts } from "@/Slice/postsSlice";
 import PostFeed from "../middle/Middle";
 import Posts from "@/models/post";
+import { Button } from "../ui/moving-border";
 
 
 interface UserProfile {
@@ -359,7 +360,8 @@ console.log("posts at profile: ",posts)
     <>
       <div className="bg-gray-900 absolute text-white w-full  overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[30.5rem] 2xl:max-w-[40.5rem] left-0 xl:left-[24rem] 2xl:left-[28rem] ">
         {/* Profile Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-800 py-10 px-6 flex flex-col items-center md:flex-row md:justify-between  rounded-xl">
+        <div className=" py-10 px-6 flex flex-col items-center md:flex-row md:justify-between  rounded-xl border-2 border-green-400">
+         
           <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-8 ">
             {/* Profile Image */}
             <div className="relative">
@@ -389,7 +391,7 @@ console.log("posts at profile: ",posts)
               {signedInUser && (
                 <div
                   onClick={() => setEditingProfileImage(true)}
-                  className="absolute bottom-3 right-0 bg-blue-700 p-2 rounded-full hover:bg-blue-800 transition-colors cursor-pointer"
+                  className="absolute bottom-3 right-0 bg-[#53c97d] p-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer"
                 >
                   <Edit2 size={20} className="text-white" />
                   <UploadImages />
@@ -408,13 +410,13 @@ console.log("posts at profile: ",posts)
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="border rounded px-4 py-2 bg-gray-700 text-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border rounded px-4 py-2 bg-gray-700 text-white w-full focus:outline-none focus:ring-2 focus:ring-green-500"
                     autoFocus
                   />
                   <div className="flex gap-2">
                     <button
                       onClick={saveUsername}
-                      className="px-4 py-2 text-sm text-blue-600 bg-gray-700 rounded hover:bg-blue-600 hover:text-white"
+                      className="px-4 py-2 text-sm text-[#53c97d] bg-gray-700 rounded hover:bg-green-600 hover:text-white"
                     >
                       Save
                     </button>
@@ -430,7 +432,7 @@ console.log("posts at profile: ",posts)
                 signedInUser && (
                   <button
                     onClick={() => setEditingUsername(true)}
-                    className="text-blue-300 hover:text-blue-500 ml-2"
+                    className="text-blue-300 hover:text-green-500 ml-2"
                   >
                     <Edit2 size={20} />
                   </button>
@@ -458,7 +460,7 @@ console.log("posts at profile: ",posts)
                 {signedInUser && (
                   <button
                     onClick={() => setEditingInterest(true)}
-                    className="ml-2 text-blue-300 hover:text-blue-500"
+                    className="ml-2 text-blue-300 hover:text-green-500"
                   >
                     <Edit2 size={16} />
                   </button>
@@ -475,7 +477,7 @@ console.log("posts at profile: ",posts)
                     <div className="flex gap-2">
                       <button
                         onClick={saveInterest}
-                        className="px-4 py-2 text-sm text-blue-600 bg-gray-700 rounded hover:bg-blue-600 hover:text-white"
+                        className="px-4 py-2 text-sm text-[#53c97d] bg-gray-700 rounded hover:bg-green-600 hover:text-white"
                       >
                         Save
                       </button>
@@ -498,7 +500,7 @@ console.log("posts at profile: ",posts)
               {signedInUser && (
                 <button
                   onClick={() => signOut()}
-                  className="inline-flex items-center gap-2 bg-blue-700 px-6 py-2 rounded-lg hover:bg-blue-800 transition"
+                  className="inline-flex items-center gap-2 bg-[#53c97d] px-6 py-2 rounded-lg hover:bg-[#53c97d] transition"
                 >
                   <LogOut size={18} />
                   Sign Out

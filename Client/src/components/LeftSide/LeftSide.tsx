@@ -286,7 +286,7 @@ export default function SidebarDemo() {
               alt="Profile Image"
               width={80}
               height={60}
-              className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+              className="w-14 h-14 object-cover rounded-full border-1 border-[#53c97d] shadow-lg shadow-[#53c97d]/50"
             />
           ) : (
             <img
@@ -314,7 +314,7 @@ export default function SidebarDemo() {
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300 
                     ${
                       activeLink === id
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/50 border-l-4 border-blue-500"
+                        ? "bg-[#53c97d] text-white shadow-lg shadow-[#53c97d]/50 border-l-4 border-[#53c97d]"
                         : "hover:bg-white/10"
                     }`}
                 >

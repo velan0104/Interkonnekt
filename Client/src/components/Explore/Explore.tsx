@@ -125,7 +125,7 @@ const [searching,setSearching] = useState(false);
   }, []);
 
   return (
-    <div className="absolute bg-gray-900 text-gray-100   p-4 md:p-6 overflow-hidden max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0 xl:left-[23rem] 2xl:left-96 pb-20 sm:pb-0">
+    <div className="absolute bg-gray-900 text-gray-100   p-4 md:p-6 overflow-hidden max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0 xl:left-[23rem] 2xl:left-96 pb-20 sm:pb-0 border border-gray-800">
  <div className="mb-8 flex justify-center">
       <div className="relative w-full max-w-md">
       {/* <input
@@ -160,7 +160,7 @@ const [searching,setSearching] = useState(false);
       
       <div
         key={index}
-        className="flex items-center gap-4 mb-6 bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow duration-300"
+        className="flex items-center gap-4 mb-6 bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 hover:bg-gray-700 border border-gray-700 cursor-pointer"
         onClick={() => router.push(`/profile/?userId=${result.id}`)}
       >
         {!result.image ?
@@ -185,8 +185,8 @@ const [searching,setSearching] = useState(false);
                     )
                       }
         <div>
-          <h3 className="text-lg font-semibold ">{result.username}</h3>
-          <p className="text-sm text-gray-500">{result.interest}</p>
+          <h3 className="text-lg font-semibold text-[#53c97d]">{result.username}</h3>
+          <p className="text-sm text-gray-400">{result.interest}</p>
         </div>
       </div>
     ))
@@ -213,7 +213,7 @@ const [searching,setSearching] = useState(false);
 
       {/* Interests Section */}
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold text-blue-400 mb-8 text-center">
+        <h2 className="text-3xl font-semibold text-[#53c97d] mb-8 text-center">
           Popular Interests
         </h2>
         <motion.div
@@ -226,7 +226,7 @@ const [searching,setSearching] = useState(false);
             <motion.div
               key={index}
               //whileHover={{ scale: 1.2 }}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full shadow-md flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3 bg-gradient-to-r from-[#67a57d] to-green-600 text-white rounded-full shadow-md flex items-center gap-2 cursor-pointer hover:shadow-lg transition-all"
               onClick={() => setSearchTerm(interest.name)}
             >
               <span>{interest.emoji}</span>
@@ -238,7 +238,7 @@ const [searching,setSearching] = useState(false);
 
       {/* Communities Section */}
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold text-blue-400 mb-8 text-center">
+        <h2 className="text-3xl font-semibold text-[#53c97d] mb-8 text-center">
           Featured Communities
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -246,12 +246,12 @@ const [searching,setSearching] = useState(false);
             <motion.div
               key={community._id}
               whileHover={{ scale: 1.05, rotateZ: 1 }}
-              className="relative bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-xl"
+              className="relative bg-gradient-to-b from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-xl "
             >
              
                 <div key={community._id} className="bg-gray-800 rounded-lg p-4 shadow-md">
             <img src={community.image} alt={community.name} className="w-full h-32 object-cover rounded-md" />
-            <h3 className="text-lg font-bold text-blue-500 mt-2">{community.name}</h3>
+            <h3 className="text-lg font-bold text-[#53c97d] mt-2">{community.name}</h3>
             <p className="text-gray-300 text-sm">{community.description}</p>
           </div>
              
@@ -262,7 +262,7 @@ const [searching,setSearching] = useState(false);
 
       {/* Users Section */}
       <section className="mb-12">
-        <h2 className="text-3xl font-semibold text-blue-400 mb-8 text-center">
+        <h2 className="text-3xl font-semibold text-[#53c97d] mb-8 text-center">
           Meet Inspiring People
         </h2>
         <motion.div
@@ -275,11 +275,11 @@ const [searching,setSearching] = useState(false);
             <motion.div
               key={user.id}
               whileHover={{ scale: 1.1 }}
-              className="bg-gray-800 h-auto p-6 rounded-xl shadow-lg flex flex-col items-center group hover:bg-gradient-to-br from-blue-600 to-blue-800 "
+              className="bg-gray-800 h-auto p-6 rounded-xl shadow-lg flex flex-col items-center group  "
               onClick={() => {router.push(`/profile/?userId=${user.id}`)}}
             >
               <div className="relative" >
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#53c97d] to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform">
                {!user.image ?
                              <img
                              src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
@@ -303,7 +303,7 @@ const [searching,setSearching] = useState(false);
                              }
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-blue-500 mt-4 group-hover:text-blue-300">
+              <h3 className="text-lg font-bold text-[#53c97d] mt-4 group-hover:text-green-600">
                 {user.name}
               </h3>
               <p className="text-gray-300 text-sm mt-2 text-center group-hover:text-gray-100">

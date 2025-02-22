@@ -65,14 +65,14 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 right-0 h-16 md:h-20 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700 z-30">
         <div className="max-w-full mx-auto px-4 h-full flex items-center justify-between">
           {/* Logo */}
-          <h1 className="sm:text-2xl ml-4 font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-wide">
+          <h1 className="sm:text-2xl ml-4 font-bold bg-gradient-to-r from-[#42E695] via-[#3BB2B8] to-[#42E695] bg-clip-text text-transparent tracking-wide">
             Interkonnekt
           </h1>
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
             <button
-              className="flex items-center space-x-1 px-3 py-2 sm:px-4 sm:py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition"
+              className="flex items-center space-x-1 px-3 py-2 sm:px-4 sm:py-2 bg-[#53c97d] text-white rounded-full hover:bg-green-600 shadow-md transition"
               onClick={() => setIsModalOpen(true)}
             >
               <Plus className="h-5 w-5" />
@@ -102,7 +102,7 @@ export default function Navbar() {
                   className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-700 transition-colors"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  <div className="sm:w-10 sm:h-10 w-8 h-8 rounded-full overflow-hidden border-purple-500">
+                  <div className="sm:w-10 sm:h-10 w-8 h-8 rounded-full overflow-hidden border-1 border-[#53c97d] shadow-md shadow-[#53c97d]/50">
                     {!profileImage ? (
                       <img
                         src={
@@ -172,7 +172,7 @@ export default function Navbar() {
     isRecentActivitiesOpen ? "max-h-[400px] opacity-100 " : "max-h-0 opacity-0 pointer-events-none"
   }`}
 >
-  <h2 className="bg-gray-900 w-full h-[2rem] text-lg font-semibold text-[#3b82f6] sticky top-0 z-10">
+  <h2 className="bg-gray-900 w-full h-[2rem] text-lg font-semibold text-[#53c97d] sticky top-0 z-10">
     Recent Activities
   </h2>
   <div className="bg-gray-800 rounded-xl p-3 max-h-[400px] z-10 flex-grow overflow-y-auto shadow-lg">

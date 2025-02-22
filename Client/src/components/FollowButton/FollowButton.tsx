@@ -68,7 +68,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
     <button
       onClick={handleFollow}
       className={`px-4 py-2 w-24 text-white rounded ${
-        isFollowing ? "bg-red-500" : "bg-blue-500"
+        isFollowing ? "bg-red-500" : "bg-[#53c97d]"
       }`}  
     >
       {isFollowing ? "Unfollow" : "Follow"}

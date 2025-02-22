@@ -87,7 +87,7 @@ export default function SignInPage() {
         transition={{ duration: 1, ease: "easeInOut" }}
         className="max-w-md w-full p-8 bg-gray-800 rounded-lg shadow-lg"
       >
-        <h1 className="text-3xl font-bold text-blue-600 text-center mb-6">
+        <h1 className="text-3xl font-bold text-[#53c97d] text-center mb-6">
           Welcome Back!
         </h1>
         <p className="text-sm text-gray-400 text-center mb-6">
@@ -107,7 +107,7 @@ export default function SignInPage() {
                   <FormLabel className="text-gray-400">Email or Username</FormLabel>
                   <FormControl>
                     <Input
-                       className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
+                       className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                       type="text"
                       placeholder="Enter your email or username"
                       {...field}
@@ -127,7 +127,7 @@ export default function SignInPage() {
                   <FormLabel className="text-gray-400">Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
+                      className="w-full bg-gray-800/80 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
                       type="password"
                       placeholder="Enter your password"
                       {...field}
@@ -142,7 +142,7 @@ export default function SignInPage() {
             <Button
               type="submit"
               disabled={isSubmitting}
-             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
+             className="w-full bg-[#53c97d] hover:bg-green-700 text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
             >
               {isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
@@ -154,7 +154,7 @@ export default function SignInPage() {
             Don't have an account?{" "}
             <a
               href="/auth/signup"
-              className="text-blue-400 underline"
+              className="text-[#53c97d] underline"
             >
               Sign Up
             </a>
