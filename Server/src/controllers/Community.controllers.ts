@@ -2,14 +2,14 @@ import { Response } from "express";
 import { AuthenticatedRequest } from "../lib/type.js";
 import { Community } from "../models/Community.model.js";
 import { handleRequest } from "../lib/handleRequest.js";
+import User from "../models/User.model.js";
 
 export const createCommunity = async (
   req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const { name, bio, members, admin, banner, category, profilePic } =
-      req.body;
+    const { name, bio, members, banner, category, profilePic } = req.body;
     const userCommunityCount = await Community.find({
       admin: req.user?.id,
     });
@@ -32,7 +32,7 @@ export const createCommunity = async (
       return;
     }
 
-    if (members.length < 2) {
+    if (members.length <= 2) {
       res.status(500).json({
         message:
           "There should be atleast 2 members while creating a community.",
@@ -43,14 +43,13 @@ export const createCommunity = async (
     const response = await Community.create({
       name,
       bio,
-      admin,
+      admin: req.user?.id,
       members,
       banner,
       category,
       profilePic,
     });
 
-    console.log("Community created: ", response);
     res.status(200).json({ response });
     return;
   } catch (error) {
@@ -61,7 +60,6 @@ export const createCommunity = async (
 
 export const getCommunityInfo = handleRequest(async (req, res) => {
   const { id } = req.params;
-  console.log("Community ID: ", id);
 
   if (!id) {
     res.status(400).json({ message: "ID not found" });
@@ -70,7 +68,7 @@ export const getCommunityInfo = handleRequest(async (req, res) => {
 
   const community = await Community.findById(id).populate(
     "members",
-    "image username"
+    "image username name"
   );
   res.status(200).json({ community });
   return;
@@ -98,7 +96,7 @@ export const exploreCommunity = handleRequest(
 
     const communities = await Community.find({
       category: { $in: userInterest },
-    }).populate("members", "image");
+    }).populate("members", "image name username");
 
     res.status(200).json({ communities });
     return;
@@ -129,4 +127,24 @@ export const searchCommunity = handleRequest(async (req, res) => {
 
   res.status(200).json({ communities });
   return;
+});
+
+export const getMember = handleRequest(async (req, res) => {
+  const userId = req.user?.id;
+
+  // Fetch user and populate followers & following with userId, username, profilePic
+  const user = await User.find(
+    {
+      _id: {
+        $ne: req.user?.id,
+      },
+    },
+    "username name image _id"
+  );
+
+  if (!user) {
+    throw { status: 404, message: "User not found" };
+  }
+
+  res.status(200).json({ members: user });
 });

@@ -1,8 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, Plus } from "lucide-react";
-import React, { useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React, { useEffect, useRef, useState } from "react";
+import { Controller, Form, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Select,
@@ -11,7 +11,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MultipleSelector from "./MultipleSelector";
+import { MultipleSelector } from "./MultipleSelector";
+import Image from "next/image";
+import { Button } from "../ui/button";
+import axios from "axios";
+import apiClient from "@/lib/api-client";
+import { CREATE_COMMUNITY, GET_USER_MUTUAL } from "@/lib/constant";
+import { useToast } from "@/hooks/use-toast";
+import { MultiSelect } from "react-multi-select-component";
+import { Value } from "@radix-ui/react-select";
+import { Types } from "mongoose";
+
+interface IOptions {
+  _id: Types.ObjectId;
+  name: string;
+  username: string;
+  image?: string;
+}
 
 const formSchema = z.object({
   name: z
@@ -42,7 +58,16 @@ const formSchema = z.object({
       "File must be under 6MB"
     ),
   category: z.string().min(1, "Category is Required"),
-  members: z.array(z.string()).length(2, "At least two member is required"),
+  members: z
+    .array(
+      z.object({
+        _id: z.string(),
+        name: z.string(),
+        username: z.string(),
+        image: z.string().optional(),
+      })
+    )
+    .min(2, "At least 2 members required."),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -57,48 +82,148 @@ export default function CreateForm() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form Data: ", data);
+  const { toast } = useToast();
+
+  const onSubmit = async (data: FormData) => {
+    const [profilePicUrl, bannerUrl] = await Promise.all([
+      data.profilePic ? uploadToCloudinary(data.profilePic) : null,
+      data.banner ? uploadToCloudinary(data.banner) : null,
+    ]);
+
+    if (!profilePicUrl || !bannerUrl) {
+      return;
+    }
+
+    const filteredOptions = selectedOptions?.map((item) => item._id);
+
+    const formData = {
+      ...data,
+      members: filteredOptions,
+      profilePic: profilePicUrl,
+      banner: bannerUrl,
+    };
+
+    try {
+      const response = await apiClient.post(`${CREATE_COMMUNITY}`, formData, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        toast({ title: "Successfully created community" });
+      } else {
+        toast({ title: "Unable to create community" });
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: "Try Again!! ",
+        description: `${
+          error.response.data
+            ? error.response?.data
+            : "Unable to create community"
+        }`,
+      });
+    }
   };
 
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [options, setOptions] = useState<IOptions[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<IOptions[]>([]);
 
   const profilePicRef = useRef<HTMLInputElement | null>(null);
   const bannerImgRef = useRef<HTMLInputElement | null>(null);
 
-  const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const getMember = async () => {
+      try {
+        const response = await apiClient.get(GET_USER_MUTUAL, {
+          withCredentials: true,
+        });
+        console.log("USER MUTUALS: ", response.data);
+        if (response.status === 200 && response.data) {
+          setOptions(response.data.members);
+        }
+      } catch (error) {
+        setOptions([]);
+      }
+    };
+
+    getMember();
+  }, []);
+
+  const uploadToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
+    );
+    formData.append(
+      "cloud_name",
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string
+    );
+
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, // Replace with your Cloudinary cloud name
+        formData
+      );
+
+      const data = await response.data;
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Upload Error.", error);
+      return null;
+    }
+  };
+
+  const handleProfilePicChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (file: File) => void
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       setProfilePreview(URL.createObjectURL(file));
+      onChange(file);
     }
-    console.log(profilePreview);
   };
 
-  // const contacts = ["Ram", "Shyam", "Karan", "Aman"];
-  const options = [
-    { value: "react", label: "React" },
-    { value: "vue", label: "Vue" },
-    { value: "angular", label: "Angular" }, // Disabled option
-    { value: "svelte", label: "Svelte" },
-    { value: "gsap", label: "GSAP " },
-  ];
+  const handleBannerChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (file: File) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setBannerPreview(URL.createObjectURL(file));
+      onChange(file); // ✅ Update form state with the selected file
+    }
+  };
 
-  const [selectedOptions, setSelectedOptions] = React.useState<
-    { value: string; label: string }[]
-  >([]);
+  useEffect(() => {
+    console.log(selectedOptions);
+  }, [selectedOptions]);
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className=" rounded-xl bg-gray-600/10 text-black h-[500px] relative min-w-[400px]"
+      className=" rounded-xl bg-gray-600/10 text-black h-fit min-h-[500px] relative w-[400px] max-w-[400px]"
     >
       <div>
         <div
           className="h-28 bg-zinc-200/10 flex items-center justify-center text-white rounded-t-xl cursor-pointer"
           onClick={() => bannerImgRef.current?.click()}
         >
-          <ImagePlus className=" text-2xl " />
+          {bannerPreview ? (
+            <Image
+              src={bannerPreview}
+              alt="Banner"
+              height={300}
+              width={400}
+              className="w-full h-full object-cover rounded-t-xl"
+            />
+          ) : (
+            <ImagePlus className=" text-2xl " />
+          )}
         </div>
         <Controller
           name="banner"
@@ -108,11 +233,11 @@ export default function CreateForm() {
               type="file"
               className="hidden"
               ref={bannerImgRef}
-              onChange={(e) => field.onChange(e.target.files?.[0])} // Convert to File object
+              onChange={(e) => handleBannerChange(e, field.onChange)} // Convert to File object
             />
           )}
         />
-        {errors.banner && <p>{errors.banner.message}</p>}
+        {errors.banner && <div>{errors.banner?.message}</div>}
       </div>
 
       <div className="mb-8">
@@ -121,10 +246,12 @@ export default function CreateForm() {
           className="size-[4.5rem] rounded-full bg-white absolute top-16 left-4 flex items-center justify-center cursor-pointer"
         >
           {profilePreview ? (
-            <img
+            <Image
               src={profilePreview}
               alt="Profile"
-              className="w-full h-full object-cover"
+              width={200}
+              height={200}
+              className="w-full h-full object-cover rounded-full"
             />
           ) : (
             <Plus />
@@ -138,11 +265,11 @@ export default function CreateForm() {
               type="file"
               className="hidden"
               ref={profilePicRef}
-              onChange={handleProfilePicChange} // Convert to File object
+              onChange={(e) => handleProfilePicChange(e, field.onChange)} // Convert to File object
             />
           )}
         />
-        {errors.profilePic && <p>{errors.profilePic.message}</p>}
+        {errors.profilePic && <div>{errors.profilePic?.message}</div>}
       </div>
 
       <div className="px-5 space-y-3">
@@ -154,7 +281,7 @@ export default function CreateForm() {
             {...register("name")}
             className="h-10 w-[90%] bg-transparent border-b-2 border-b-gray-700 outline-none text-white"
           />
-          {errors.name && <p>{errors.name.message}</p>}
+          {errors.name && <div>{errors.name?.message}</div>}
         </div>
 
         <div>
@@ -164,7 +291,7 @@ export default function CreateForm() {
             {...register("bio")}
             className="h-10 w-[90%] bg-transparent border-b-2 border-b-gray-700 outline-none text-white"
           />
-          {errors.bio && <p>{errors.bio.message}</p>}
+          {errors.bio && <div>{errors.bio?.message}</div>}
         </div>
 
         <div className="flex gap-5 items-center mt-2">
@@ -186,7 +313,7 @@ export default function CreateForm() {
           />
 
           {/* <input type="text" {...register("category")} /> */}
-          {errors.profilePic && <p> {errors.category?.message} </p>}
+          {errors.profilePic && <div> {errors.category?.message} </div>}
         </div>
 
         <div>
@@ -200,24 +327,30 @@ export default function CreateForm() {
             control={control}
             render={({ field }) => (
               <MultipleSelector
-                className="rounded-lg bg-[#2c2e3b] border-none py-2 text-white"
                 options={options}
-                placeholder="Select Technologies..."
-                value={field.value || []} // Default to empty array
-                onChange={field.onChange} // Update form state
-                hidePlaceholderWhenSelected
-                emptyIndicator={
-                  <p className="text-center text-lg leading-10 text-gray-600">
-                    No results found
-                  </p>
-                }
+                selected={selectedOptions}
+                onChange={(selected) => {
+                  setSelectedOptions(selected);
+                  field.onChange(selected);
+                  console.log(field);
+                }}
+                placeholder="Search by name or username..."
               />
             )}
           />
 
-          {/* <input type="text" {...register("members")} /> */}
-          {errors.members && <p> {errors.members?.message} </p>}
+          {errors.members && (
+            <div className="text-red-500">{errors.members?.message}</div>
+          )}
         </div>
+        <Button
+          title="create"
+          className="bg-indigo-800 rounded-2xl text-white mx-auto hover:bg-indigo-600 "
+          type="submit"
+        >
+          {" "}
+          Create{" "}
+        </Button>
       </div>
     </form>
   );

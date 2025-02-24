@@ -43,8 +43,15 @@ export interface ICommunity {
   name: string;
   bio: string;
   admin: Types.ObjectId;
-  members: Types.ObjectId[];
+  members: IMembers[];
   banner: string;
   category: string;
   profilePic: string;
+}
+
+export interface IMembers {
+  image: string;
+  _id: Types.ObjectId;
+  username: string;
+  name: string;
 }

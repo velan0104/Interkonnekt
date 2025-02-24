@@ -39,6 +39,8 @@ const ChatHeader = () => {
                     src={"/images/profilePic2.jpeg"}
                     alt="profile"
                     className="object-cover w-full h-full bg-black"
+                    height={100}
+                    width={100}
                   />
                 ) : (
                   <div

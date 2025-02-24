@@ -1,16 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ICommunity } from "../types";
-
-interface Members {
-  image: string;
-  _id: string;
-}
+import { ICommunity, IMembers } from "../types";
+import { Types } from "mongoose";
 
 interface Community {
   name: string;
   bio: string;
-  admin: string;
-  members: Members[];
+  admin: Types.ObjectId;
+  members: IMembers[];
   banner: string;
   category: string;
   profilePic: string;
@@ -19,11 +15,13 @@ interface Community {
 interface CommunityState {
   communitySuggestion: Community[] | undefined;
   communities: ICommunity[] | undefined;
+  selectedCommunity: Community | undefined;
 }
 
 const initialState: CommunityState = {
   communitySuggestion: undefined,
   communities: undefined,
+  selectedCommunity: undefined,
 };
 
 const communitySlice = createSlice({
@@ -36,10 +34,13 @@ const communitySlice = createSlice({
     setCommunities(state, action: PayloadAction<ICommunity[]>) {
       state.communities = action.payload;
     },
+    setSelectedCommunity(state, action: PayloadAction<Community>) {
+      state.selectedCommunity = action.payload;
+    },
   },
 });
 
-export const { setCommunitySuggestion, setCommunities } =
+export const { setCommunitySuggestion, setCommunities, setSelectedCommunity } =
   communitySlice.actions;
 
 export default communitySlice.reducer;

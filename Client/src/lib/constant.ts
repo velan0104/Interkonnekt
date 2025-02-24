@@ -15,3 +15,4 @@ export const CREATE_COMMUNITY = `${COMMUNITY_ROUTE}/create`;
 export const GET_COMMUNITY_INFO = `${COMMUNITY_ROUTE}/info`;
 export const GET_COMMUNITY = `${COMMUNITY_ROUTE}/explore`;
 export const GET_USER_COMMUNITY = `${COMMUNITY_ROUTE}/getCommunity`;
+export const GET_USER_MUTUAL = `${COMMUNITY_ROUTE}/getMember`;

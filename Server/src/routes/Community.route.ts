@@ -4,6 +4,7 @@ import {
   createCommunity,
   exploreCommunity,
   getCommunityInfo,
+  getMember,
   searchCommunity,
   userCommunity,
 } from "../controllers/Community.controllers.js";
@@ -17,5 +18,6 @@ app.get("/info/:id", getCommunityInfo);
 app.get("/explore", exploreCommunity);
 app.get("/getCommunity", userCommunity);
 app.get("/search", searchCommunity);
+app.get("/getMember", getMember);
 
 export default app;
