@@ -155,7 +155,7 @@ const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
 
         {/* Post Content Input */}
         <textarea
-          className="w-full h-32 p-3 rounded-lg bg-gray-800 text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full h-32 p-3 rounded-lg bg-gray-800 text-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
           placeholder="What's on your mind?"
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -213,7 +213,7 @@ const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           <button
-            className="px-5 py-2 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition transform hover:scale-105"
+            className="px-5 py-2 bg-[#53c97d] text-white font-medium rounded-full hover:bg-green-700 transition transform hover:scale-105"
             onClick={handleSubmit}
           >
             Post
@@ -227,7 +227,7 @@ const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
               type="text"
               value={poll.question}
               onChange={(e) => setPoll({ ...poll, question: e.target.value })}
-              className="w-full p-2 mb-2 bg-gray-900 text-gray-200 rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 mb-2 bg-gray-900 text-gray-200 rounded-md focus:ring-2 focus:ring-[#53c97d]"
               placeholder="Poll question"
             />
             {poll.options.map((option, index) => (
@@ -236,7 +236,7 @@ const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
                 type="text"
                 value={option.optionValue}
                 onChange={(e) => handlePollChange(index, e.target.value)}
-                className="w-full p-2 mb-2 bg-gray-900 text-gray-200 rounded-md focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 mb-2 bg-gray-900 text-gray-200 rounded-md focus:ring-2 focus:ring-[#53c97d]"
                 placeholder={`Option ${index + 1}`}
               />
             ))}
@@ -248,7 +248,7 @@ const PostModal: FC<PostModalProps> = ({ isOpen, onClose }) => {
                     options: [...poll.options, { optionValue: "", votes: [] }],
                   })
                 }
-                className="px-3 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+                className="px-3 py-1 bg-[#53c97d] text-white rounded-full hover:bg-green-700 transition"
               >
                 Add Option
               </button>
