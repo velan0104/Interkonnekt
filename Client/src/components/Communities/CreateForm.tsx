@@ -18,8 +18,6 @@ import axios from "axios";
 import apiClient from "@/lib/api-client";
 import { CREATE_COMMUNITY, GET_USER_MUTUAL } from "@/lib/constant";
 import { useToast } from "@/hooks/use-toast";
-import { MultiSelect } from "react-multi-select-component";
-import { Value } from "@radix-ui/react-select";
 import { Types } from "mongoose";
 
 interface IOptions {
@@ -198,10 +196,6 @@ export default function CreateForm() {
       onChange(file); // ✅ Update form state with the selected file
     }
   };
-
-  useEffect(() => {
-    console.log(selectedOptions);
-  }, [selectedOptions]);
 
   return (
     <form

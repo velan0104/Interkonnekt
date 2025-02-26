@@ -1,15 +1,6 @@
 "use client";
-import Navbar from "@/components/Navbar/Navbar";
 import { FC, useEffect, useState } from "react";
-import LeftSide from "@/components/LeftSide/LeftSide";
-import Middle from "@/components/middle/Middle";
-import RightSide from "@/components/RightSide/RightSide";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "@/components/PrivateRoute/PrivateRoute";
-import { useSession } from "next-auth/react";
-import User from "@/models/user";
-import { SessionUser, UserProps } from "@/types";
-import { SessionProvider } from "next-auth/react";
 import Communities from "@/components/Communities/Communities";
 
 interface user {
@@ -51,25 +42,6 @@ const MainPage: FC = () => {
 
     getToken();
   }, []);
-
-  // const { data: session } = useSession();
-
-  // if (!session) return <p>Loading...</p>;
-
-  // // Safely destructure session.user with a check
-  // const user = session.user as SessionUser | undefined;
-
-  // if (!user) return <p>User not found</p>;
-
-  // const { name, email, image, username } = user;
-  // console.log("token at frontend: ",token)
-  // const session = await auth();
-  // console.log("values: ",image)
-
-  // const userProps:UserProps = {
-  //   username,
-  //   image,
-  // };
 
   return <Communities />;
 };

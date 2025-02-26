@@ -4,14 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
+import { Controller } from "react-hook-form";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { gsap } from "gsap";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,16 +21,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import Select from "react-select";
-import { twMerge } from "tailwind-merge";
-import { Controller } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
-import { WordRotate } from "@/components/ui/word-rotate";
-import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
 
 const signupSchema = z.object({
   name: z
@@ -48,9 +42,10 @@ const signupSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters." })
     .max(50, { message: "Password must not exceed 50 characters." }),
-  interest: z.array(z.string()).min(1, { message: "Enter at least one interest." }),
+  interest: z
+    .array(z.string())
+    .min(1, { message: "Enter at least one interest." }),
 });
-
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
@@ -112,7 +107,6 @@ export default function SignupForm() {
   const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
-
     gsap.fromTo(
       ".left-section",
       { x: "-100%", opacity: 0 },
@@ -121,12 +115,9 @@ export default function SignupForm() {
   }, []);
 
   useEffect(() => {
-
-
     if (!session) {
-      localStorage.setItem('auth_token', '');
+      localStorage.setItem("auth_token", "");
     }
-
   }, []);
 
   const words1 = [
@@ -134,7 +125,6 @@ export default function SignupForm() {
       text: "Interkonnekt",
       className: "text-white dark:text-blue-500",
     },
-
   ];
 
   const words2 = [
@@ -159,9 +149,7 @@ export default function SignupForm() {
     {
       text: "individuals!",
     },
-
   ];
-
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -189,17 +177,13 @@ export default function SignupForm() {
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
     try {
-
       await signIn("google", { callbackUrl: `/main` });
     } catch (err) {
       console.error("Error during Google SignIn", err);
-
     } finally {
       setIsSigningIn(false);
     }
   };
-
-
 
   const onSubmit = async (data: SignupFormValues) => {
     setIsSubmitting(true);
@@ -227,7 +211,10 @@ export default function SignupForm() {
   const handleAddInterest = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && event.currentTarget.value.trim() !== "") {
       setInterests((prev) => [...prev, event.currentTarget.value.trim()]);
-      form.setValue("interest", [...interests, event.currentTarget.value.trim()]);
+      form.setValue("interest", [
+        ...interests,
+        event.currentTarget.value.trim(),
+      ]);
       event.currentTarget.value = ""; // Clear the input field
     }
   };
@@ -238,14 +225,8 @@ export default function SignupForm() {
     form.setValue("interest", updatedInterests);
   };
 
-
-
-
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-
-
-
       {/* Right Section */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -253,190 +234,182 @@ export default function SignupForm() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="relative w-full max-w-lg bg-gray-800 p-10 rounded-2xl shadow-xl text-white"
       >
-       <h2 className="text-3xl font-bold text-center text-[#53c97d] mb-6">
+        <h2 className="text-3xl font-bold text-center text-[#53c97d] mb-6">
           Sign Up
         </h2>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Name Field */}
             <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all"
-                      placeholder="Your full name"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-             </motion.div>
-
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400">Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-full bg-gray-700 text-white border border-gray-600 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all"
+                        placeholder="Your full name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
             {/* Username Field */}
             <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-          >
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
-                      placeholder="Your username"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400">Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-full bg-gray-700 text-white border border-gray-600 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
+                        placeholder="Your username"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
             </motion.div>
             <div className="grid grid-cols-2 gap-4">
-            {/* Email Field */}
-            <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full bg-gray-700 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
-                      type="email"
-                      placeholder="example@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-            </motion.div>
-
-            {/* Password Field */}
-            <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-          >
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full bg-gray-700 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-[#53c97d] transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
-                      type="password"
-                      placeholder="Enter a strong password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-            </motion.div>
+              {/* Email Field */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-400">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="w-full bg-gray-700 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#53c97d] focus:border-green-500 transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
+                          type="email"
+                          placeholder="example@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+              {/* Password Field */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+              >
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-400">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="w-full bg-gray-700 text-white border border-gray-700 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-[#53c97d] transition-all placeholder-gray-400 shadow-inner backdrop-blur-md"
+                          type="password"
+                          placeholder="Enter a strong password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
             </div>
-
             {/* Interest Field */}
             <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
-          >
-            <FormField
-              control={form.control}
-              name="interest"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Interest</FormLabel>
-                  <FormControl>
-
-                    <Controller
-                      name="interest"
-                      control={form.control}
-                      render={({ field }) => (
-                        <CreatableSelect
-                          isMulti
-                          options={interestOptions}
-                          value={field.value.map((interest) =>
-                            interestOptions.find((option) => option.value === interest) || {
-                              value: interest,
-                              label: interest,
-                            }
-                          )}
-                          onChange={(selectedOptions) => {
-                            const updatedInterests = selectedOptions.map((option) => option.value);
-                            field.onChange(updatedInterests);
-                            setInterests(updatedInterests);
-                          }
-                          }
-                          placeholder="Select or create your interests"
-                          styles={customStyles}
-                          classNamePrefix="react-select"
-                          onKeyDown={(e) => {
-                            // Prevent form submission when pressing enter
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-            </motion.div>
-
-            <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full  text-white py-3 rounded-lg shadow-lg transition-all"
-          >
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-[#53c97d] hover:bg-[#42a767]  text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.5 }}
             >
-              {isSubmitting ? "Signing Up..." : "Sign Up"}
-            </Button>
+              <FormField
+                control={form.control}
+                name="interest"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400">Interest</FormLabel>
+                    <FormControl>
+                      <Controller
+                        name="interest"
+                        control={form.control}
+                        render={({ field }) => (
+                          <CreatableSelect
+                            isMulti
+                            options={interestOptions}
+                            value={field.value.map(
+                              (interest) =>
+                                interestOptions.find(
+                                  (option) => option.value === interest
+                                ) || {
+                                  value: interest,
+                                  label: interest,
+                                }
+                            )}
+                            onChange={(selectedOptions) => {
+                              const updatedInterests = selectedOptions.map(
+                                (option) => option.value
+                              );
+                              field.onChange(updatedInterests);
+                              setInterests(updatedInterests);
+                            }}
+                            placeholder="Select or create your interests"
+                            styles={customStyles}
+                            classNamePrefix="react-select"
+                            onKeyDown={(e) => {
+                              // Prevent form submission when pressing enter
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                              }
+                            }}
+                          />
+                        )}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full  text-white py-3 rounded-lg shadow-lg transition-all"
+            >
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#53c97d] hover:bg-[#42a767]  text-white py-3 rounded-2xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 font-semibold"
+              >
+                {isSubmitting ? "Signing Up..." : "Sign Up"}
+              </Button>
             </motion.button>
 
             <p className="text-center text-gray-500">
               Already have an account?{" "}
-              <Link
-                href="/auth/signin"
-                className="text-[#53c97d] underline"
-              >
+              <Link href="/auth/signin" className="text-[#53c97d] underline">
                 Log in
               </Link>
             </p>
@@ -454,8 +427,6 @@ export default function SignupForm() {
           {isSigningIn ? "Signing in with Google..." : "Sign up with Google"}
         </Button>
       </motion.div>
-
     </div>
   );
 }
-

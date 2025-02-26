@@ -8,17 +8,14 @@ import apiClient from "@/lib/api-client";
 import { GET_COMMUNITY } from "@/lib/constant";
 import { setCommunitySuggestion } from "@/Slice/communitySlice";
 import axios from "axios";
-
-interface Members {
-  image: string;
-  _id: string;
-}
+import { Types } from "mongoose";
+import { IMembers } from "@/types";
 
 interface Community {
   name: string;
   bio: string;
-  admin: string;
-  members: Members[];
+  admin: Types.ObjectId;
+  members: IMembers[];
   banner: string;
   category: string;
   profilePic: string;
@@ -140,7 +137,7 @@ const ExploreCommunity = () => {
 
   return (
     <div className="h-[89vh] overflow-y-scroll">
-      <h1 className="text-2xl mt-5 text-center mb-3 text-white font-semibold">
+      <h1 className="text-2xl mt-5 text-center mb-3 text-theme font-semibold">
         Explore
       </h1>
       <hr />
