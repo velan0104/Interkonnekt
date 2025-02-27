@@ -1,7 +1,5 @@
 "use client";
 import { CommunityPost } from "@/seeders/seeders";
-import { Heart, MessageCircle, Share2 } from "lucide-react";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -9,30 +7,32 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import apiClient from "@/lib/api-client";
-import { GET_USER_COMMUNITY } from "@/lib/constant";
+import { GET_ALL_COMMUNITY_POSTS, GET_USER_COMMUNITY } from "@/lib/constant";
 import { setCommunities } from "@/Slice/communitySlice";
 import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
-import PostCard from "./PostCard";
 import CreateForm from "./CreateForm";
+import { Types } from "mongoose";
+import { CommunityPostProps } from "@/types";
+import { PostCard } from "./Post/PostCard";
 
 interface CardProps {
+  _id: Types.ObjectId;
   title: string;
   image: string;
   bio: string;
 }
 
-const Card = ({ title, image, bio, id }: CardProps) => {
+const Card = ({ title, image, bio, _id }: CardProps) => {
   const router = useRouter();
   return (
     <div
-      className="flex justify-start items-center gap-3 bg-purple-800 p-5 w-64 h-24 cursor-pointer rounded-xl"
-      onClick={() => router.push(`communities/${id}`)}
+      className="flex justify-start items-center gap-3 bg-gray-900 p-5 w-64 h-24 cursor-pointer rounded-xl text-white border-2 border-theme"
+      onClick={() => router.push(`communities/${_id}`)}
     >
       <CldImage
         src={image}
@@ -53,7 +53,10 @@ const Card = ({ title, image, bio, id }: CardProps) => {
 };
 
 const MiddleSection = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [communityPosts, setCommunityPosts] = useState<CommunityPostProps[]>(
+    []
+  );
   const communities = useSelector(
     (state: RootState) => state.community.communities
   );
@@ -72,15 +75,30 @@ const MiddleSection = () => {
     }
   };
 
+  const getAllPosts = async () => {
+    try {
+      const response = await apiClient.get(GET_ALL_COMMUNITY_POSTS, {
+        withCredentials: true,
+      });
+      if (response.status === 200 && response.data) {
+        setCommunityPosts(response.data.posts);
+        console.log("COMMUNITIES POST: ", response.data.posts);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (!communities) {
       getCommunity();
+      getAllPosts();
     }
   }, []);
 
   return (
     <div className=" relative h-[89vh] overflow-y-auto">
-      <h1 className="text-white text-center text-2xl py-5 font-semibold border-b-2 border-b-white/20">
+      <h1 className="text-theme text-center text-2xl py-5 font-semibold border-b-2 border-b-white/20">
         {" "}
         Communities
       </h1>
@@ -88,7 +106,7 @@ const MiddleSection = () => {
         <div className="flex overflow-x-scroll gap-3 mt-4 border-b-2 border-b-white/20 pb-5">
           {communities?.map((community, index) => (
             <Card
-              id={community._id}
+              _id={community._id}
               title={community.name}
               image={community.profilePic}
               bio={community.bio}
@@ -97,8 +115,8 @@ const MiddleSection = () => {
           ))}
         </div>
         <div className=" my-3">
-          {CommunityPost.map((post, index) => (
-            <PostCard post={post} key={post.author} />
+          {communityPosts.map((post, index) => (
+            <PostCard post={post} key={post.createdAt.toLocaleString()} />
           ))}
           <button
             className=" fixed bottom-10 bg-purple-700 text-white rounded-3xl px-5 py-3 flex items-center gap-2"

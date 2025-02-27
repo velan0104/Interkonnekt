@@ -3,6 +3,7 @@ import { ICommunity, IMembers } from "../types";
 import { Types } from "mongoose";
 
 interface Community {
+  _id: Types.ObjectId;
   name: string;
   bio: string;
   admin: Types.ObjectId;
@@ -14,7 +15,7 @@ interface Community {
 
 interface CommunityState {
   communitySuggestion: Community[] | undefined;
-  communities: ICommunity[] | undefined;
+  communities: Community[] | undefined;
   selectedCommunity: Community | undefined;
 }
 
@@ -28,10 +29,10 @@ const communitySlice = createSlice({
   name: "community",
   initialState,
   reducers: {
-    setCommunitySuggestion(state, action: PayloadAction<ICommunity[]>) {
+    setCommunitySuggestion(state, action: PayloadAction<Community[]>) {
       state.communitySuggestion = action.payload;
     },
-    setCommunities(state, action: PayloadAction<ICommunity[]>) {
+    setCommunities(state, action: PayloadAction<Community[]>) {
       state.communities = action.payload;
     },
     setSelectedCommunity(state, action: PayloadAction<Community>) {

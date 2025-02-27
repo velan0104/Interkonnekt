@@ -80,10 +80,14 @@ export default function Navbar() {
             </button>
 
             {/* Notifications (Hidden on large screens) */}
-            <button className="p-2 sm:hidden relative rounded-full hover:bg-gray-700 transition"
-              onClick={() => setIsRecentActivitiesOpen((prev) => !prev)}>
+            <button
+              className="p-2 sm:hidden relative rounded-full hover:bg-gray-700 transition"
+              onClick={() => setIsRecentActivitiesOpen((prev) => !prev)}
+            >
               <Bell className="h-5 w-5 text-gray-200" />
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">{activities.length}</span>
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
+                {activities.length}
+              </span>
             </button>
 
 
@@ -112,8 +116,8 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   ) : profileImage.includes(
-                    "https://lh3.googleusercontent.com"
-                  ) ? (
+                      "https://lh3.googleusercontent.com"
+                    ) ? (
                     <img
                       src={profileImage}
                       alt={username}

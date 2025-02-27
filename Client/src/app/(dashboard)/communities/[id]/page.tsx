@@ -1,34 +1,37 @@
 "use client";
 import { RootState } from "@/app/Store/store";
-import PostCard from "@/components/Communities/PostCard";
+import { CreatePostModal } from "@/components/Communities/CreatePostModal";
+import { PostCard } from "@/components/Communities/Post/PostCard";
+import { Button } from "@/components/ui/button";
 import apiClient from "@/lib/api-client";
-import { GET_COMMUNITY_INFO } from "@/lib/constant";
+import { GET_COMMUNITY_INFO, GET_COMMUNITY_POSTS } from "@/lib/constant";
+import { ICommunityPost } from "@/models/CommunityPost.model";
 import { CommunityPost } from "@/seeders/seeders";
 import { setSelectedCommunity } from "@/Slice/communitySlice";
-import { IMembers } from "@/types";
+import { CommunityPostProps, ExtendedSession, IMembers } from "@/types";
+import { useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-interface Community {
-  name: string;
-  bio: string;
-  admin: string;
-  members: IMembers[];
-  banner: string;
-  category: string;
-  profilePic: string;
-}
+import { boolean } from "zod";
 
 const page = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   let count = 0;
   const router = useRouter();
   const dispatch = useDispatch();
   const selectedCommunity = useSelector(
     (state: RootState) => state.community.selectedCommunity
   );
+  const [communityPosts, setCommunityPosts] = useState<CommunityPostProps[]>(
+    []
+  );
+  const [isMember, setIsMember] = useState<boolean>(false);
+
+  const { data: session } = useSession() as { data: ExtendedSession | null };
+
   const getCommunityInfo = async () => {
     try {
       const response = await apiClient.get(`${GET_COMMUNITY_INFO}/${id}`, {
@@ -42,9 +45,41 @@ const page = () => {
       console.log(error);
     }
   };
+
+  const getCommunityPosts = async () => {
+    try {
+      const response = await apiClient.get(`${GET_COMMUNITY_POSTS}?id=${id}`, {
+        withCredentials: true,
+      });
+      if (response.status === 200 && response.data) {
+        setCommunityPosts(response.data.posts);
+        console.log(response.data.posts);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getCommunityInfo();
+    getCommunityPosts();
   }, []);
+
+  useEffect(() => {
+    const userIdToCheck = session?.user?._id;
+
+    if (!userIdToCheck || !selectedCommunity) return;
+
+    const isAdmin = selectedCommunity.admin?._id.toString() === userIdToCheck; // Fixed .id to ._id
+
+    const isUserMember =
+      isAdmin ||
+      selectedCommunity.members.some(
+        (member) => member._id.toString() === userIdToCheck
+      );
+
+    setIsMember(isUserMember);
+  }, [selectedCommunity]);
 
   if (!selectedCommunity) return <h1> Loading... </h1>;
   return (
@@ -70,14 +105,27 @@ const page = () => {
           />
         </div>
         <div className=" bg-slate-700 px-5 py-3">
-          <h1 className="text-xl font-bold"> {selectedCommunity.name} </h1>
-          <h3 className="text-lg font-light"> {selectedCommunity.bio}</h3>
+          <div className="flex items-center gap-10">
+            <div>
+              <h1 className="text-xl font-bold"> {selectedCommunity.name} </h1>
+              <h3 className="text-lg font-light"> {selectedCommunity.bio}</h3>
+            </div>
+            <Button
+              variant={"ghost"}
+              className={`bg-theme rounded-xl text-white ${
+                isMember ? "hidden" : "block"
+              }`}
+            >
+              {" "}
+              Join{" "}
+            </Button>
+          </div>
           <div className="flex relative items-center bg-black">
             {selectedCommunity.members.map((member, idx) => {
               if (member?.image && count > 5) {
                 count++;
                 return (
-                  <CldImage
+                  <Image
                     src={member.image}
                     alt={idx.toString()}
                     width={50}
@@ -90,11 +138,11 @@ const page = () => {
           </div>
         </div>
       </header>
-      <button className=" fixed bottom-10 bg-purple-700 text-white rounded-3xl px-5 py-3 flex items-center gap-2">
-        <span className="font-bold text-2xl"> + </span> Post
+      <button className=" fixed bottom-10 bg-green-500 text-white rounded-xl">
+        <CreatePostModal id={id} />
       </button>
       <section className=" my-3">
-        {CommunityPost.map((post, index) => (
+        {communityPosts?.map((post, index) => (
           <PostCard post={post} key={index} />
         ))}
       </section>
