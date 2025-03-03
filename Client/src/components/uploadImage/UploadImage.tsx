@@ -17,14 +17,14 @@ interface UploadImagesProps {
   const [error, setError] = useState(null);
   console.log("email in upload image: ",session?.user?.email)
     return (
-<CldUploadWidget uploadPreset="sahilmahadik" onSuccess={async({event, info}) => {
+<CldUploadWidget uploadPreset="interkonnekt_uploads" onSuccess={async({event, info}) => {
   if(event === 'success'){
     setLoading(true);
-    console.log("uploading image")
+    console.log("info at uploading image", info)
     try {
       const response = await fetch('/api/InsertUsername', {
         method: 'POST',
-        body: JSON.stringify({  profileImage: info?.public_id, email: session?.user?.email, id: session?.user?.id}),
+        body: JSON.stringify({  profileImage: info?.url, email: session?.user?.email, id: session?.user?.id}),
         headers: { 'Content-Type': 'application/json' },
       });
       // const response2 = await fetch("/api/createPost",{
