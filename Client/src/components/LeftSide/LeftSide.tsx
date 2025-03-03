@@ -209,6 +209,7 @@ import {
 } from "@/components/ui/dialog";
 import { VideoCallModal } from "../VideoCall/VideoCallModal";
 import { CallModal } from "../VideoCall/CallModal";
+import Image from "next/image";
 
 export default function SidebarDemo() {
   const { data: session } = useSession();
@@ -304,7 +305,7 @@ export default function SidebarDemo() {
 
   const handleDeclineCall = () => {
     console.log("CALLER: " + caller?._id);
-    const senderId = caller._id;
+    const senderId = caller?._id;
     const receiverId = session?.user?.id;
     socket?.emit("declineCall", { senderId, receiverId });
     dispatch(setOpenCallModal(false));
@@ -332,9 +333,12 @@ export default function SidebarDemo() {
       <aside className="hidden fixed md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm">
         {/* Profile Section */}
         <div className="flex items-center gap-4 p-4 rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 shadow-md mb-8">
-
           <Image
-            src={profileImage || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+            src={
+              profileImage ||
+              session?.user?.image ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+            }
             alt="Profile Image"
             width={80}
             height={60}
@@ -385,10 +389,11 @@ export default function SidebarDemo() {
                 <button
                   onClick={() => router.push(route)}
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300 
-                  ${activeLink === id
+                  ${
+                    activeLink === id
                       ? "bg-[#53c97d] text-white shadow-lg shadow-[#53c97d]/50 border-l-4 border-[#53c97d]"
                       : "hover:bg-white/10 hover:text-[#53c97d]"
-                    }`}
+                  }`}
                 >
                   {icon}
                   <span className="font-medium text-[16px] tracking-wide">
@@ -401,14 +406,10 @@ export default function SidebarDemo() {
         </nav>
 
         {/* Video Call Button */}
-<<<<<<< HEAD
         <button
           onClick={() => dispatch(setOpenVideoChatModal(!openVideoChatModal))}
-          className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105"
+          className="flex items-center justify-center gap-3 w-full bg-theme hover:bg-theme/80 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105"
         >
-=======
-        <button className="flex items-center justify-center gap-3 w-full bg-[#53c97d] hover:bg-[#47b06e] text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105">
->>>>>>> abd58bafa551d20b804d8df1b93651908dd17f21
           <Video size={22} />
           <span>Start Video Call</span>
         </button>

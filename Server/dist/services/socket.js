@@ -128,7 +128,7 @@ const setUpSocket = (server) => {
         };
         io.to(receiverSocketId).emit("incomingCall", {
             from: caller,
-            callId: `1v1-${senderSocketId}-${receiverSocketId}`,
+            callId: `1v1-${senderId}-${receiverId}`,
         });
         console.log(caller);
     };
@@ -138,7 +138,7 @@ const setUpSocket = (server) => {
             const senderSocketId = onlineUsers.get(sender.toString())?.socketId;
             const receiverSocketId = onlineUsers.get(receiver.toString())?.socketId;
             console.log("Call Accepted");
-            const callId = `1v1-${senderSocketId}-${receiverSocketId}`;
+            const callId = `1v1-${sender.toString()}-${receiver.toString()}`;
             io.to([senderSocketId, receiverSocketId]).emit("acceptedCall", callId);
         }
     };
