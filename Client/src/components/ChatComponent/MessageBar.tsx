@@ -3,7 +3,7 @@ import { RootState } from "@/app/Store/store";
 import { useSocket } from "@/context/SocketContext";
 import { setFileUploadProgress, setIsUploading } from "@/Slice/chatSlice";
 import axios, { AxiosProgressEvent } from "axios";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { Paperclip, Send, Smile } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 const MessageBar = () => {
   const [message, setMessage] = useState<string>("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState<boolean>(false);
-  const fileInputRef = useRef<HTMLInputElement>();
-  const emojiRef = useRef<HTMLDivElement>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const emojiRef = useRef<HTMLDivElement>(null);
   const selectedChatType = useSelector(
     (state: RootState) => state.chat.selectedChatType
   );
@@ -67,7 +67,7 @@ const MessageBar = () => {
           {
             onUploadProgress: (data: AxiosProgressEvent) => {
               setFileUploadProgress(
-                Math.round((100 * data.loaded) / data?.total)
+                Math.round((100 * data.loaded) / data?.total!)
               );
             },
           }
@@ -84,7 +84,7 @@ const MessageBar = () => {
             socket?.emit("sendMessage", {
               sender: session?.user?.id,
               content: undefined,
-              recipient: selectedChatData._id,
+              recipient: selectedChatData?._id,
               messageType: "file",
               fileUrl: cloudinaryFileUrl, // Use Cloudinary URL
             });
@@ -94,7 +94,7 @@ const MessageBar = () => {
               content: undefined,
               messageType: "file",
               fileUrl: cloudinaryFileUrl, // Use Cloudinary URL
-              channelId: selectedChatData._id,
+              channelId: selectedChatData?._id,
             });
           }
         }
@@ -110,24 +110,28 @@ const MessageBar = () => {
   };
 
   const handleSendMessage = async () => {
-    console.log("Chat Type: ", selectedChatType);
-    console.log("Chat Data: ", selectedChatData);
     if (selectedChatType === "contact" && message.length > 0) {
-      // console.log(socket)
+      console.log(socket);
+      console.log("HANDLE SEND MESSAGE");
       socket?.emit("sendMessage", {
         sender: session?.user?.id,
         content: message,
-        recipient: selectedChatData._id,
+        recipient: selectedChatData?._id,
         messageType: "text",
         fileUrl: undefined,
       });
+
+      // socket?.emit("findMatch", {
+      //   sender: session?.user.id,
+      //   selectedInterest: "technology",
+      // });
     } else if (selectedChatType === "channel" && message.length > 0) {
       socket?.emit("sendChannelMessage", {
         sender: session?.user?.id,
         content: message,
         messageType: "text",
         fileUrl: undefined,
-        channelId: selectedChatData._id,
+        channelId: selectedChatData?._id,
       });
     }
     setMessage("");
@@ -164,7 +168,7 @@ const MessageBar = () => {
           </button>
           <div className="absolute bottom-16 right-0" ref={emojiRef}>
             <EmojiPicker
-              theme="dark"
+              theme={Theme.DARK}
               open={emojiPickerOpen}
               onEmojiClick={handleAddEmoji}
               autoFocusSearch={false}

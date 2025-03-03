@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import SessionWrapper from "@/components/SessionWrapper";
 import ReduxProvider from "@/components/ReduxProvider";
 import { SocketProvider } from "@/context/SocketContext";
+import StreamVideoProvider from "@/context/StreamClientProvider";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,12 +34,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProvider>
-          <SessionWrapper>
-            <SocketProvider>{children}</SocketProvider>
-          </SessionWrapper>
-          <Toaster />
-        </ReduxProvider>
+        <SessionWrapper>
+          <ReduxProvider>
+            <SocketProvider>
+              <StreamVideoProvider>
+                {children}
+                <Toaster />
+              </StreamVideoProvider>
+            </SocketProvider>
+          </ReduxProvider>
+        </SessionWrapper>
       </body>
     </html>
   );

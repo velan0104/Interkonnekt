@@ -24,7 +24,7 @@ export const getMessage = async (
         { sender: user1, recipient: user2 },
         { sender: user2, recipient: user1 },
       ],
-    }).sort({ timeStamp: 1 });
+    }).sort({ timestamp: 1 });
 
     res.status(200).json({ messages });
     return;

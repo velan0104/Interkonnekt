@@ -1,11 +1,11 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema, Types } from "mongoose";
 
 interface IChannel extends Document {
   name: string;
-  members: mongoose.Types.ObjectId[];
-  admin: mongoose.Types.ObjectId;
+  members: Types.ObjectId[];
+  admin: Types.ObjectId;
   image?: string;
-  messages: mongoose.Types.ObjectId[];
+  messages: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,7 +33,7 @@ const ChannelSchema = new Schema<IChannel>({
   },
   messages: [
     {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
   ],

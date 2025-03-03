@@ -7,8 +7,15 @@ interface FollowState {
   error: string | null;
 }
 
+const getInitialFollowing = (): string[] => {
+  if (typeof window !== "undefined") {
+    return JSON.parse(localStorage.getItem("followingList") || "[]");
+  }
+  return [];
+};
+
 const initialState: FollowState = {
-  following: JSON.parse(localStorage.getItem("followingList") || "[]"), // Load from localStorage
+  following: getInitialFollowing(), // Load from localStorage
   status: "idle",
   error: null,
 };
@@ -20,24 +27,40 @@ const syncFollowingToLocalStorage = (followingList: string[]) => {
 
 export const followUser = createAsyncThunk(
   "follow/followUser",
-  async ({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }, { rejectWithValue }: { rejectWithValue: any }) => {
+  async (
+    {
+      currentUserId,
+      targetUserId,
+    }: { currentUserId: string; targetUserId: string },
+    { rejectWithValue }: { rejectWithValue: any }
+  ) => {
     try {
-      await axios.post("/api/follow", { currentUserId , targetUserId });
+      await axios.post("/api/follow", { currentUserId, targetUserId });
       return targetUserId;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to follow user");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to follow user"
+      );
     }
   }
 );
 
 export const unfollowUser = createAsyncThunk(
   "follow/unfollowUser",
-  async ({ currentUserId, targetUserId }: { currentUserId: string; targetUserId: string }, { rejectWithValue }: { rejectWithValue: any }) => {
+  async (
+    {
+      currentUserId,
+      targetUserId,
+    }: { currentUserId: string; targetUserId: string },
+    { rejectWithValue }: { rejectWithValue: any }
+  ) => {
     try {
       await axios.post("/api/Unfollow", { currentUserId, targetUserId });
       return targetUserId;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to unfollow user");
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to unfollow user"
+      );
     }
   }
 );
@@ -67,11 +90,16 @@ const followSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(unfollowUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.status = "success";
-        state.following = state.following.filter((id) => id !== action.payload);
-        syncFollowingToLocalStorage(state.following); // Sync to localStorage
-      })
+      .addCase(
+        unfollowUser.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.status = "success";
+          state.following = state.following.filter(
+            (id) => id !== action.payload
+          );
+          syncFollowingToLocalStorage(state.following); // Sync to localStorage
+        }
+      )
       .addCase(unfollowUser.rejected, (state, action) => {
         state.status = "error";
         state.error = action.payload as string;

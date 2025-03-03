@@ -1,18 +1,8 @@
 "use client";
-import Navbar from "@/components/Navbar/Navbar";
 import { FC, useEffect, useState } from "react";
-import LeftSide from "@/components/LeftSide/LeftSide";
 import Middle from "@/components/middle/Middle";
-import RightSide from "@/components/RightSide/RightSide";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "@/components/PrivateRoute/PrivateRoute";
 import { useSession } from "next-auth/react";
-import User from "@/models/user";
-import { SessionUser, UserProps } from "@/types";
-import { SessionProvider } from "next-auth/react";
-import jwt from "jsonwebtoken";
-import { generateToken } from "@/lib/utils";
-
 
 interface user {
   id?: string;
@@ -23,18 +13,7 @@ interface user {
   provider?: string;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-const MainPage:FC = () => {
+const MainPage: FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
@@ -79,8 +58,6 @@ const MainPage:FC = () => {
     }
   }, [session]);
 
-   
-
   // // Safely destructure session.user with a check
   // const user = session.user as SessionUser | undefined;
 
@@ -96,7 +73,8 @@ const MainPage:FC = () => {
   //   image,
   // };
 
-  return <Middle userId={session?.user?.id} />;
+  if (session?.user !== undefined) return <Middle userId={session?.user?.id} />;
+  else <h1> Loading Main Page.... </h1>;
 };
 
 export default MainPage;

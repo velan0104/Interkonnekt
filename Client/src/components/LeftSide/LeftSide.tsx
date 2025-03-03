@@ -177,21 +177,11 @@
 
 "use client";
 import { useEffect, useState } from "react";
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
-} from "@tabler/icons-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
-
 import { signOut } from "next-auth/react";
 import {
   Home,
@@ -202,6 +192,23 @@ import {
   Video,
   LogOut,
 } from "lucide-react";
+import { useSocket } from "@/context/SocketContext";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/Store/store";
+import {
+  setOpenCallModal,
+  setOpenVideoChatModal,
+} from "@/Slice/videoChatSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { VideoCallModal } from "../VideoCall/VideoCallModal";
+import { CallModal } from "../VideoCall/CallModal";
 
 export default function SidebarDemo() {
   const { data: session } = useSession();
@@ -210,8 +217,17 @@ export default function SidebarDemo() {
   const [profileImage, setProfileImage] = useState("");
   const [cloudinaryImage, setCloudinaryImage] = useState("");
   const [IscloudinaryImage, setIsCloudinaryImage] = useState(false);
+  const openVideoChatModal = useSelector(
+    (state: RootState) => state.videoChat.openVideoChatModal
+  );
+  const openCallModal = useSelector(
+    (state: RootState) => state.videoChat.openCallModal
+  );
+  const caller = useSelector((state: RootState) => state.videoChat.caller);
   const pathname = usePathname();
   const router = useRouter();
+  const socket = useSocket();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!session?.user?.id) return;
@@ -272,7 +288,26 @@ export default function SidebarDemo() {
     },
   ];
 
-  const [open, setOpen] = useState(false);
+  const handleVideoCallModal = () => {
+    dispatch(setOpenVideoChatModal(!openVideoChatModal));
+  };
+
+  const handleAcceptCall = () => {
+    console.log("call accepted");
+    socket?.emit("acceptCall", {
+      sender: session?.user?.id,
+      receiver: caller?._id,
+    });
+    dispatch(setOpenCallModal(false));
+  };
+
+  const handleDeclineCall = () => {
+    console.log("CALLER: " + caller?._id);
+    const senderId = caller._id;
+    const receiverId = session?.user?.id;
+    socket?.emit("declineCall", { senderId, receiverId });
+    dispatch(setOpenCallModal(false));
+  };
 
   return (
     <div
@@ -373,7 +408,10 @@ export default function SidebarDemo() {
         </nav>
 
         {/* Video Call Button */}
-        <button className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105">
+        <button
+          onClick={() => dispatch(setOpenVideoChatModal(!openVideoChatModal))}
+          className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105"
+        >
           <Video size={22} />
           <span>Start Video Call</span>
         </button>
@@ -389,6 +427,19 @@ export default function SidebarDemo() {
           <LogOut size={22} />
           <span className="text-lg">Logout</span>
         </button>
+        <VideoCallModal
+          open={openVideoChatModal}
+          onOpenChange={handleVideoCallModal}
+        />
+        {caller !== null && (
+          <CallModal
+            isOpen={openCallModal}
+            onAccept={handleAcceptCall}
+            onClose={handleDeclineCall}
+            onDecline={handleDeclineCall}
+            caller={caller}
+          />
+        )}
       </aside>
     </div>
   );

@@ -22,19 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  CommunityPostProps,
-  ICommunityPost,
-  Poll,
-  POST_CATEGORIES,
-} from "@/types";
+import { ICommunityPost, Poll, POST_CATEGORIES } from "@/types";
 import axios from "axios";
 import apiClient from "@/lib/api-client";
 import { CREATE_POST } from "@/lib/constant";
 import { useToast } from "@/hooks/use-toast";
 
 export function CreatePostModal({ id }: { id: string }) {
-  const [postData, setPostData] = useState<Partial<CommunityPostProps>>({
+  const [postData, setPostData] = useState<Partial<ICommunityPost>>({
     title: "",
     content: "",
     media: [],

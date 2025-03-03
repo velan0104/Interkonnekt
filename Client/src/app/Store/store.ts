@@ -4,6 +4,7 @@ import followReducer from "@/Slice/FolllowSlice";
 import activitiesReducer from "@/Slice/activitiesSlice";
 import chatReducer from "@/Slice/chatSlice";
 import communityReducer from "@/Slice/communitySlice";
+import VideoChatReducer from "@/Slice/videoChatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     activities: activitiesReducer,
     chat: chatReducer,
     community: communityReducer,
+    videoChat: VideoChatReducer,
   },
 });
 

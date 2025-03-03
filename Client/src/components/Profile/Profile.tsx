@@ -20,7 +20,6 @@ import PostFeed from "../middle/Middle";
 import Posts from "@/models/post";
 import { Button } from "../ui/moving-border";
 
-
 interface UserProfile {
   name: string;
   username?: string;
@@ -62,12 +61,12 @@ export default function Profile() {
     useState<string>();
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
- const posts = useSelector((state: RootState) => (state.posts as any).posts);
+  const posts = useSelector((state: RootState) => (state.posts as any).posts);
   const profileRef = useRef(null);
   const statsRef = useRef(null);
-  const [followed,setFollowed] = useState<boolean>(false);
+  const [followed, setFollowed] = useState<boolean>(false);
   const mainContentRef = useRef(null);
-console.log("posts at profile: ",posts)
+  console.log("posts at profile: ", posts);
   const fetchUserData = async (userId: string) => {
     //const sessionData = await getSession();
     if (!session) return;
@@ -84,10 +83,9 @@ console.log("posts at profile: ",posts)
       setCreatedAt2(data.createdAt);
       setEmail(data.email);
       setProfileImage(data.image);
-      
+
       setFollowers(data.followers);
       setFollowing(data.following);
-      
     }
 
     if (session) {
@@ -107,8 +105,8 @@ console.log("posts at profile: ",posts)
     }
   };
 
-  console.log("profileimage at profile: ",profileImage)
-  console.log("cloudinary at profile: ",cloudinaryImage)
+  console.log("profileimage at profile: ", profileImage);
+  console.log("cloudinary at profile: ", cloudinaryImage);
 
   const fetchUnameInterest = async (userId: string) => {
     if (!userId || userId == "") return;
@@ -127,8 +125,6 @@ console.log("posts at profile: ",posts)
       setProfileImage(data.image);
       setFollowers(data.followers);
       setFollowing(data.following);
-     
-      
     }
   };
   const params = useSearchParams();
@@ -143,13 +139,12 @@ console.log("posts at profile: ",posts)
       fetchUserData(params.get("userId"));
     } else {
       if (params.get("userId") || session?.user?.provider == "google") {
-        
         fetchUnameInterest(params.get("userId") || session?.user?.id);
         setIsSignedInUser(false);
         // Fetch other user data logic here
       }
     }
-  }, [params, session, pathname,FollowButton]);
+  }, [params, session, pathname, FollowButton]);
 
   const saveUsername = async () => {
     if (username.trim()) {
@@ -213,22 +208,16 @@ console.log("posts at profile: ",posts)
     title: string;
     data: { userId: string }[];
   }) {
-    
     if (!isOpen) return null;
 
     const [userDetails, setUserDetails] = useState<
       Record<string, { username: string; name: string; image: string }>
     >({});
 
-    
-
     useEffect(() => {
       if (isOpen) {
-       
-
         data.forEach(async (item) => {
           if (!userDetails[item.userId]) {
-           
             await fetchForModal(item.userId);
           }
         });
@@ -260,9 +249,6 @@ console.log("posts at profile: ",posts)
         console.error(`Failed to fetch details for userId: ${userId}`, error);
       }
     };
-
-   
-    
 
     return (
       <div className="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
@@ -302,22 +288,22 @@ console.log("posts at profile: ",posts)
                   className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow hover:bg-gray-700"
                 >
                   {!userDetail?.image ? (
-                   <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                   alt={userDetail?.name}
-                   width={40}
-                   height={40}
-                   className="rounded-full"
-                   />
-                ) : (
-                 
-                 
-                  userDetail.image.includes(
-                    "https://lh3.googleusercontent.com"
-                  ) ? (
+                    <img
+                      src={
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                      }
+                      alt={userDetail?.name}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  ) : userDetail.image.includes(
+                      "https://lh3.googleusercontent.com"
+                    ) ? (
                     <img
                       src={
                         userDetail?.image ||
-                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
                       }
                       alt={userDetail.name}
                       width={40}
@@ -326,15 +312,17 @@ console.log("posts at profile: ",posts)
                     />
                   ) : (
                     <CldImage
-                    src={userDetail?.image || cloudinaryImageAtModal || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                    alt={userDetail?.name}
-                    width={40}
-                    height={60}
-                    className="rounded-full w-14 h-14"
-                  />
-                  )
-                )
-                  }
+                      src={
+                        userDetail?.image ||
+                        cloudinaryImageAtModal ||
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                      }
+                      alt={userDetail?.name}
+                      width={40}
+                      height={60}
+                      className="rounded-full w-14 h-14"
+                    />
+                  )}
                   <div>
                     <p className="text-sm font-medium text-gray-300">
                       {userDetail?.name || "Unknown User"}
@@ -353,7 +341,7 @@ console.log("posts at profile: ",posts)
   }
 
   if (!session) {
-    return <p>Loading...</p>;
+    return <p>Loading Profile Page...</p>;
   }
 
   return (
@@ -361,32 +349,37 @@ console.log("posts at profile: ",posts)
       <div className="bg-gray-900 absolute text-white w-full  overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[30.5rem] 2xl:max-w-[40.5rem] left-0 xl:left-[24rem] 2xl:left-[28rem] ">
         {/* Profile Header */}
         <div className=" py-10 px-6 flex flex-col items-center md:flex-row md:justify-between  rounded-xl border-2 border-green-400">
-         
           <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-8 ">
             {/* Profile Image */}
             <div className="relative">
               <div className="w-32 h-32  md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                {!profileImage ?
-                                      <img
-                                      src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                                      alt={username}
-                                      className="w-full h-full rounded-full border border-gray-700 object-cover"
-                                    /> : 
-                                    ( profileImage && profileImage.includes("https://lh3.googleusercontent.com") ? 
-                                      <img
-                                      src={profileImage }
-                                      alt={username}
-                                      className="w-full h-full rounded-full  border border-gray-700 object-cover"
-                                    /> :
-                                    <CldImage
-                                    src={profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                                    alt={username}
-                                    width={128}
-                                    height={128}
-                                     className="w-full h-full object-cover rounded-full"
-                                    />
-                                    )
-                                      }
+                {!profileImage ? (
+                  <img
+                    src={
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
+                    alt={username}
+                    className="w-full h-full rounded-full border border-gray-700 object-cover"
+                  />
+                ) : profileImage &&
+                  profileImage.includes("https://lh3.googleusercontent.com") ? (
+                  <img
+                    src={profileImage}
+                    alt={username}
+                    className="w-full h-full rounded-full  border border-gray-700 object-cover"
+                  />
+                ) : (
+                  <CldImage
+                    src={
+                      profileImage ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
+                    alt={username}
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                )}
               </div>
               {signedInUser && (
                 <div
@@ -508,11 +501,10 @@ console.log("posts at profile: ",posts)
               )}
               {!signedInUser && (
                 <div onClick={() => setFollowed(true)}>
-                <FollowButton
-                  currentUserId={session.user?.id}
-                  targetUserId={params.get("userId") || ""}
-                  
-                />
+                  <FollowButton
+                    currentUserId={session.user?.id}
+                    targetUserId={params.get("userId") || ""}
+                  />
                 </div>
               )}
             </div>
@@ -526,7 +518,6 @@ console.log("posts at profile: ",posts)
               onClick={() => setShowFollowerModal(true)}
               className="bg-gray-800 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition cursor-pointer"
             >
-
               <h2 className="text-2xl font-bold">{followers?.length}</h2>
               <p className="text-gray-400 mr-2 sm:mr-0">Followers</p>
             </div>
