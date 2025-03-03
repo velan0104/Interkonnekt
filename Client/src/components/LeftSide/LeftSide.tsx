@@ -240,18 +240,19 @@ export default function SidebarDemo() {
       const data = await response.json();
       if (data) {
         setUsername(data.username);
-        if (!data.image) {
-          setIsCloudinaryImage(false);
-          setProfileImage(
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-          );
-        } else if (data.image.includes("https://lh3.googleusercontent.com")) {
-          setIsCloudinaryImage(false);
-          setProfileImage(data.image);
-        } else {
-          setIsCloudinaryImage(true);
-          setCloudinaryImage(data.image);
-        }
+        setProfileImage(data.image);
+        // if (!data.image) {
+        //   setIsCloudinaryImage(false);
+        //   setProfileImage(
+        //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+        //   );
+        // } else if (data.image.includes("https://lh3.googleusercontent.com")) {
+        //   setIsCloudinaryImage(false);
+        //   setProfileImage(data.image);
+        // } else {
+        //   setIsCloudinaryImage(true);
+        //   setCloudinaryImage(data.image);
+        // }
       }
     };
     fetchUnameInterest();
@@ -320,7 +321,7 @@ export default function SidebarDemo() {
           <Link
             key={idx}
             href={link.href}
-            className="flex flex-col items-center text-gray-700 dark:text-gray-300"
+            className="flex flex-col items-center text-gray-700 dark:text-gray-300 hover:text-[#53c97d] transition-colors"
           >
             {link.icon}
             <span className="text-xs">{link.label}</span>
@@ -328,24 +329,17 @@ export default function SidebarDemo() {
         ))}
       </div>
 
-      <aside className="hidden md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm">
+      <aside className="hidden fixed md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm">
         {/* Profile Section */}
         <div className="flex items-center gap-4 p-4 rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 shadow-md mb-8">
-          {IscloudinaryImage ? (
-            <CldImage
-              src={cloudinaryImage}
-              alt="Profile Image"
-              width={80}
-              height={60}
-              className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
-            />
-          ) : (
-            <img
-              src={profileImage}
-              alt="Profile"
-              className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-lg shadow-blue-600/50"
-            />
-          )}
+
+          <Image
+            src={profileImage || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+            alt="Profile Image"
+            width={80}
+            height={60}
+            className="w-14 h-14 object-cover rounded-full border-2 border-[#53c97d] shadow-lg shadow-[#53c97d]/50"
+          />
 
           <span className="text-lg font-semibold tracking-wide">
             {username || session?.user?.name}
@@ -391,11 +385,10 @@ export default function SidebarDemo() {
                 <button
                   onClick={() => router.push(route)}
                   className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300 
-                  ${
-                    activeLink === id
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/50 border-l-4 border-blue-500"
-                      : "hover:bg-white/10"
-                  }`}
+                  ${activeLink === id
+                      ? "bg-[#53c97d] text-white shadow-lg shadow-[#53c97d]/50 border-l-4 border-[#53c97d]"
+                      : "hover:bg-white/10 hover:text-[#53c97d]"
+                    }`}
                 >
                   {icon}
                   <span className="font-medium text-[16px] tracking-wide">
@@ -408,10 +401,14 @@ export default function SidebarDemo() {
         </nav>
 
         {/* Video Call Button */}
+<<<<<<< HEAD
         <button
           onClick={() => dispatch(setOpenVideoChatModal(!openVideoChatModal))}
           className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105"
         >
+=======
+        <button className="flex items-center justify-center gap-3 w-full bg-[#53c97d] hover:bg-[#47b06e] text-white font-semibold py-3 px-5 rounded-lg mb-4 shadow-lg transition-all transform hover:scale-105">
+>>>>>>> abd58bafa551d20b804d8df1b93651908dd17f21
           <Video size={22} />
           <span>Start Video Call</span>
         </button>

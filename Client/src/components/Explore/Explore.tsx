@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { Carousel } from "../ui/carousel";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
+import Image from "next/image";
 
 interface Details {
   id: string;
@@ -146,7 +147,7 @@ const ExplorePage = () => {
                     className="flex items-center gap-4 mb-6 bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 hover:bg-gray-700 border border-gray-700 cursor-pointer"
                     onClick={() => router.push(`/profile/?userId=${result.id}`)}
                   >
-                    {!result.image ? (
+                    {/* {!result.image ? (
                       <img
                         src={
                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
@@ -177,7 +178,14 @@ const ExplorePage = () => {
                         height={50}
                         className="w-10 h-10 object-cover rounded-full"
                       />
-                    )}
+                    )} */}
+                                                 <Image
+                                                  src={result?.image || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                                  alt="Profile Image"
+                                                  width={80}
+                                                  height={60}
+                                                  className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                                                />
                     <div>
                       <h3 className="text-lg font-semibold text-[#53c97d]">
                         {result.username}
@@ -269,7 +277,7 @@ const ExplorePage = () => {
             >
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-r from-[#53c97d] to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold group-hover:scale-110 transition-transform">
-                  {!user.image ? (
+                  {/* {!user.image ? (
                     <img
                       src={
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
@@ -298,7 +306,14 @@ const ExplorePage = () => {
                       height={50}
                       className="w-14 h-14 object-cover rounded-full"
                     />
-                  )}
+                  )} */}
+                  <Image
+                                                  src={user?.image || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                                  alt="Profile Image"
+                                                  width={80}
+                                                  height={60}
+                                                  className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                                                />
                 </div>
               </div>
               <h3 className="text-lg font-bold text-[#53c97d] mt-4 group-hover:text-green-600">
