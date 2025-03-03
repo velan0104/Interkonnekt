@@ -301,7 +301,7 @@ console.log("posts at profile: ",posts)
                   }}
                   className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow hover:bg-gray-700"
                 >
-                  {!userDetail?.image ? (
+                  {/* {!userDetail?.image ? (
                    <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
                    alt={userDetail?.name}
                    width={40}
@@ -334,7 +334,14 @@ console.log("posts at profile: ",posts)
                   />
                   )
                 )
-                  }
+                  } */}
+                  <Image
+                              src={ userDetail?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                              alt="Profile Image"
+                              width={80}
+                              height={60}
+                              className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                            />
                   <div>
                     <p className="text-sm font-medium text-gray-300">
                       {userDetail?.name || "Unknown User"}

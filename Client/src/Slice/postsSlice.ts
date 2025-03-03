@@ -3,10 +3,10 @@ import axios from 'axios';
 import Posts, { IPost } from '@/models/post';
 import { RootState } from '@/app/Store/store';
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({userId}:{userId:string}) => {
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({ userId, sessionUserId }: { userId?: string; sessionUserId?: string }) => {
   const response = await fetch('/api/getPosts',{
     method: 'POST',
-    body: JSON.stringify({userId:userId}),
+    body: JSON.stringify({ userId, sessionUserId }),
     headers: {'Content-Type': 'application/json'}
   });
   const data = await response.json();

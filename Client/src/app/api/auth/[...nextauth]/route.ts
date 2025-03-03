@@ -214,7 +214,7 @@ const handler = NextAuth({
         image?: string;
         provider?: string;
       };
-      //  console.log("Session Token:", session);
+        console.log("Session Token:", session);
       await dbConnect();
 
      // console.log("Id in session updated: ", token.id);

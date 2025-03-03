@@ -17,6 +17,7 @@ import PostModal from "../PostModal/PostModal";
 import { usePathname } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Store/store";
 
@@ -107,7 +108,7 @@ export default function Navbar() {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 <div className="sm:w-10 sm:h-10 w-8 h-8 rounded-full overflow-hidden border-1 border-[#53c97d] shadow-md shadow-[#53c97d]/50">
-                  {!profileImage ? (
+                  {/* {!profileImage ? (
                     <img
                       src={
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
@@ -134,7 +135,14 @@ export default function Navbar() {
                       height={40}
                       className="w-full h-full object-cover"
                     />
-                  )}
+                  )} */}
+                  <Image
+                    src={profileImage || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                    alt="Profile Image"
+                    width={80}
+                    height={60}
+                    className="w-10 h-110 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                  />
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-400" />
               </button>
@@ -218,5 +226,5 @@ export default function Navbar() {
         <PostModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
     </>
-);
+  );
 }

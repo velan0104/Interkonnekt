@@ -124,7 +124,7 @@ const layout = ({ children }: { children: ReactNode }) => {
       <SessionProvider>
         <div className="bg-gray-900 w-full overflow-hidden ">
           <Navbar />
-          <div className="grid grid-cols-4 top-20 absolute overflow-auto">
+          <div className="grid grid-cols-4 w-full top-20 absolute overflow-auto">
             <LeftSide />
             <div className="col-span-2 min-w-[23.5rem] min-h-[37rem]">
               {children}
