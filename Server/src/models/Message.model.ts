@@ -1,8 +1,8 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Document, Model, Types } from "mongoose";
 
 export interface IMessage extends Document {
-  sender: mongoose.Schema.Types.ObjectId;
-  recipient: mongoose.Schema.Types.ObjectId;
+  sender: Types.ObjectId;
+  recipient: Types.ObjectId;
   messageType: "text" | "file";
   content: string;
   fileUrl?: string;

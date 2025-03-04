@@ -1,8 +1,8 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models, Types } from "mongoose";
 
 interface IComment {
   userId: string;
-  post_id: mongoose.Schema.Types.ObjectId;
+  post_id: Types.ObjectId;
   content: string;
   createdAt: Date;
 }
@@ -10,7 +10,7 @@ interface IComment {
 const CommentSchema = new Schema({
   // id: {type: String, required: true},
   post_id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: "posts",
     required: true,
   },
@@ -21,14 +21,14 @@ const CommentSchema = new Schema({
 
 interface ILike {
   userId: string;
-  post_id: mongoose.Schema.Types.ObjectId;
+  post_id: Types.ObjectId;
   createdAt: Date;
 }
 
 const LikeSchema = new Schema(
   {
     post_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "posts",
       required: true,
     },

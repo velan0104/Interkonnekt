@@ -40,7 +40,7 @@ const PollSchema = new Schema<IPoll>(
     options: [{ type: String, required: true }],
     votes: [
       {
-        user: { type: Schema.Types.ObjectId, ref: "User" },
+        user: { type: Types.ObjectId, ref: "User" },
         optionIndex: { type: Number, required: true },
       },
     ],

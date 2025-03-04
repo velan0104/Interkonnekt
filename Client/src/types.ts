@@ -9,6 +9,7 @@ export interface SessionUser {
   username: string | undefined;
   image: string | undefined;
   provider?: string;
+  interest: string[];
 }
 
 // types.ts
@@ -128,6 +129,23 @@ export interface ExtendedSession {
     image?: string | null;
   };
 }
+
+export interface MatchedUserState {
+  _id: Types.ObjectId;
+  name: string;
+  username?: string;
+  image?: string;
+}
+
+export interface CallerState {
+  _id: Types.ObjectId;
+  name: string;
+  username: string;
+  image?: string;
+  interests?: string;
+}
+
+export type callStatus = "idle" | "connecting" | "accepted" | "declined";
 
 export const POST_CATEGORIES = [
   "Technology",

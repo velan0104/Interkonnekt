@@ -22,7 +22,7 @@ interface MessageType {
 }
 
 const MessageContainer = () => {
-  const scrollRef = useRef<HTMLDivElement>();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const selectedChatData = useSelector(
     (state: RootState) => state.chat.selectedChatData
   );
@@ -186,7 +186,7 @@ const MessageContainer = () => {
       {message.messageType === "file" && message.fileUrl && (
         <div
           className={`${
-            message.sender !== selectedChatData._id
+            message.sender !== selectedChatData?._id
               ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : "bg-[#2a2b33]/5 text-white/80 border-white/20"
           } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
@@ -214,7 +214,7 @@ const MessageContainer = () => {
               <span>{`FILE-${Date.now()}`}</span>
               <span
                 className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
-                onClick={() => downloadFile(message?.fileUrl)}
+                onClick={() => downloadFile(message?.fileUrl!)}
               >
                 <ArrowDownToLine />
               </span>

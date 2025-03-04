@@ -22,7 +22,7 @@ const ChannelSchema = new Schema({
     },
     messages: [
         {
-            type: mongoose.Schema.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Message",
         },
     ],

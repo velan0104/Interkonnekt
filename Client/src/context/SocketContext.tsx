@@ -13,8 +13,18 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import { addContactsInDMContacts, addMessage } from "@/Slice/chatSlice";
-import { IMessage, SessionUser } from "@/types";
+import { CallerState, IMessage, MatchedUserState, SessionUser } from "@/types";
 import { Session } from "next-auth";
+import {
+  setCaller,
+  setCallStatus,
+  setIsSearching,
+  setMatchedUser,
+  setOpenCallModal,
+  setOpenVideoChatModal,
+} from "@/Slice/videoChatSlice";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const SocketContext = createContext<Socket | null>(null);
 
@@ -36,25 +46,33 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const selectedChatType = useSelector(
     (state: RootState) => state.chat.selectedChatType
   );
+  const [incomingCall, setIncomingCall] = useState<{
+    from: string;
+    callId: string;
+  } | null>(null);
+  const router = useRouter();
+  console.log("Socket Context Provider initialized");
+  const { toast } = useToast();
 
   useEffect(() => {
+    // if (!session || socket.current) return;
     if (session) {
       socket.current = io(HOST, {
         withCredentials: true,
-        query: { userId: session.user?.id },
+        query: { userId: session.user?.id, interests: session.user?.interest },
       });
       socket.current.on("connect", () => {
-        console.log("Connected to socket server from client side");
+        console.log("Connected to socket server from client side", socket);
       });
 
-      const handleReceiveMessage = (message: IMessage) => {
-        // console.log("ADDING MESSAGES...", message);
-        // console.log("SELECTED CHATS receiving: ", selectedChatData);
+      const handleReceiveMessage = (
+        message: IMessage & { sender: { _id: string } }
+      ) => {
         if (selectedChatData?._id !== session.user?.id) {
           if (
             selectedChatType !== undefined &&
-            (selectedChatData._id === message.sender._id ||
-              selectedChatData._id === message.recipient?._id)
+            (selectedChatData?._id === message.sender._id ||
+              selectedChatData?._id === message.recipient?._id)
           ) {
             dispatch(addMessage(message));
             dispatch(addContactsInDMContacts(message));
@@ -66,27 +84,92 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       const handleReceiveChannelMessage = (message: IMessage) => {
         if (
           (selectedChatType !== undefined &&
-            selectedChatData._id === message.channelId) ||
-          selectedChatData._id === message.recipient?._id
+            selectedChatData?._id === message.channelId) ||
+          selectedChatData?._id === message.recipient?._id
         ) {
           addMessage(message);
         }
       };
 
+      const handleIncomingCall = ({
+        from,
+        callId,
+      }: {
+        from: CallerState;
+        callId: string;
+      }) => {
+        // alert("Call from " + from + " with callID: " + callId);
+        // setIncomingCall({ from, callId });
+        console.log("CALL INCOMING...." + from._id);
+        dispatch(setCaller(from));
+        dispatch(setOpenCallModal(true));
+      };
+      2;
+
+      const handleMatchedUser = (matchedUser: MatchedUserState) => {
+        console.log("RANDOM USER: ", matchedUser);
+        dispatch(setMatchedUser(matchedUser));
+        dispatch(setIsSearching(false));
+      };
+
+      const acceptedCall = (callId: string) => {
+        // socket?.current?.emit("acceptCall", incomingCall?.callId);
+        console.log("CALLID: ", callId);
+        setIncomingCall(null);
+        router.push(`/call/${callId}`);
+        dispatch(setOpenCallModal(false));
+        dispatch(setOpenVideoChatModal(false));
+        dispatch(setCallStatus("idle"));
+        dispatch(setMatchedUser(null));
+      };
+
+      // const declineCall = () => {
+      //   socket.emit("declineCall", { callId: incomingCall.callId });
+      //   setIncomingCall(null);
+      // };
+
+      const handleNoMatchFound = () => {
+        dispatch(setIsSearching(false));
+        toast({
+          title: "Try again later",
+          description: "Currently no user is online with your interest",
+        });
+        dispatch(setOpenVideoChatModal(false));
+      };
+
+      const handleCallDeclined = () => {
+        console.log("CALL DECLINED");
+        dispatch(setIsSearching(false));
+        dispatch(setCallStatus("declined"));
+        dispatch(setMatchedUser(null));
+        toast({
+          title: "Call Declined",
+          description: "User do not want to connect",
+        });
+      };
+
       socket.current.on("receiveMessage", handleReceiveMessage);
       socket.current.on("receiveChannelMessage", handleReceiveChannelMessage);
+      socket.current.on("incomingCall", handleIncomingCall);
+      socket.current.on("callDeclined", () => {
+        alert("User declined the call. Searching for a new match...");
+        // findNewMatch(); // Function to search again
+      });
+      socket.current.on("matchedUser", handleMatchedUser);
+      socket.current.on("acceptedCall", acceptedCall);
+      socket.current.on("noMatchFound", handleNoMatchFound);
+      socket.current.on("callDeclined", handleCallDeclined);
 
       return () => {
         if (socket.current) {
-          socket.current.off("receiveMessage", handleReceiveMessage);
-          socket.current.off(
-            "receiveChannelMessage",
-            handleReceiveChannelMessage
-          );
+          socket.current.disconnect();
+          socket.current = null;
         }
       };
     }
-  }, [session?.user, selectedChatData, selectedChatType]);
+  }, [session?.user?.id, selectedChatData, selectedChatType]);
+
+  if (!socket) return null;
 
   return (
     <SocketContext.Provider value={socket.current}>

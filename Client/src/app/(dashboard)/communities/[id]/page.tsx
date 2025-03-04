@@ -3,6 +3,9 @@ import { RootState } from "@/app/Store/store";
 import { CreatePostModal } from "@/components/Communities/CreatePostModal";
 import { PostCard } from "@/components/Communities/Post/PostCard";
 import { Button } from "@/components/ui/button";
+import CreateWorkshopForm from "@/components/Workshop/CreateWorkshop";
+import CreateWorkshopModal from "@/components/Workshop/CreateWorkshopModal";
+import WorkshopPost from "@/components/Workshop/WorkshopPost";
 import apiClient from "@/lib/api-client";
 import { GET_COMMUNITY_INFO, GET_COMMUNITY_POSTS } from "@/lib/constant";
 import { ICommunityPost } from "@/models/CommunityPost.model";
@@ -141,10 +144,17 @@ const page = () => {
       <button className=" fixed bottom-10 bg-green-500 text-white rounded-xl">
         <CreatePostModal id={id} />
       </button>
+      <button className=" fixed bottom-10 right-10 bg-green-500 text-white rounded-xl">
+        <CreateWorkshopModal />
+      </button>
       <section className=" my-3">
-        {communityPosts?.map((post, index) => (
-          <PostCard post={post} key={index} />
-        ))}
+        {communityPosts?.map((post, index) => {
+          return post.isWorkshop ? (
+            <WorkshopPost post={post} key={index} />
+          ) : (
+            <PostCard post={post} key={index} />
+          );
+        })}
       </section>
     </div>
   );
