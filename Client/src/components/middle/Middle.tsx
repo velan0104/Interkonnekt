@@ -81,15 +81,11 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     console.log("userId at middle: ",userId)
     console.log("sessionId: ",session)
     if(userId || session){
-    if(session){
-      dispatch(fetchPosts({ userId:  undefined, sessionUserId: session?.user?.id }));
-    }else if(userId){
+    if(userId && pathname=='/profile'){
       dispatch(fetchPosts({ userId: userId , sessionUserId: undefined }));
+      
     }else{
-      dispatch(fetchPosts({ 
-        userId: userId || undefined, 
-        sessionUserId: session?.user?.id || undefined 
-      }));
+      dispatch(fetchPosts({ userId:  undefined, sessionUserId: session?.user?.id }));
     }
   }
   }, [pathname, dispatch, vote,session]);
