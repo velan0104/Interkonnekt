@@ -444,7 +444,7 @@ export default function SidebarDemo() {
 }
 
 const Dashboard = () => (
-  <div className="flex flex-1 p-10 bg-white dark:bg-neutral-900">
+  <div className="flex flex-1 p-10 bg-gray-900 dark:bg-neutral-900">
     <div className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 animate-pulse" />
   </div>
 );

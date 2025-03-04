@@ -9,12 +9,10 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
   const videoClient = useRef<StreamVideoClient | null>(null); // Use useRef instead of useState
   const { data: session } = useSession();
   const sessionUser = session?.user;
-  console.log("Stream Video Provider initialized.");
 
   useEffect(() => {
     if (!session?.user || !apiKey) return;
 
-    console.log("Initializing StreamVideo client...");
     videoClient.current = new StreamVideoClient({
       apiKey,
       user: {
@@ -25,21 +23,14 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
       tokenProvider: tokenProvider,
     });
 
-    console.log("VIDEO CALL: ", videoClient.current);
-
     // Cleanup function
     return () => {
       if (videoClient.current) {
-        console.log("Disconnecting StreamVideo client...");
         videoClient.current.disconnectUser();
         videoClient.current = null;
       }
     };
-  }, [sessionUser?.id]); // Only re-initialize when sessionUser.id changes
-
-  // if (!videoClient.current) {
-  //   return <div>Loading Stream Client...</div>;
-  // }
+  }, [sessionUser?.id]);
 
   return <StreamVideo client={videoClient.current}>{children}</StreamVideo>;
 };

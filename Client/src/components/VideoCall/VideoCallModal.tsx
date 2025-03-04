@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2 } from "lucide-react";
-import { Toast } from "../ui/toast";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { useSocket } from "@/context/SocketContext";
@@ -29,17 +28,7 @@ import {
   setIsSearching,
   setMatchedUser,
 } from "@/Slice/videoChatSlice";
-import { Types } from "mongoose";
 import { disableInstantTransitions } from "framer-motion";
-
-// Mock user data
-const currentUser = {
-  id: "user1",
-  name: "John Doe",
-  username: "@johndoe",
-  avatar:
-    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1760&q=80",
-};
 
 // Mock categories
 const categories = [
@@ -111,23 +100,6 @@ export function VideoCallModal({ open, onOpenChange }: VideoCallModalProps) {
       receiverId: matchedUser?._id,
       category: selectedCategory,
     });
-
-    // Simulate other user's response
-    // setTimeout(() => {
-    //   // Randomly decide if call is accepted or declined
-    //   const isAccepted = Math.random() > 0.5;
-
-    //   if (isAccepted) {
-    //     setCallStatus("accepted");
-    //     // Redirect to call page
-    //     setTimeout(() => {
-    //       window.location.href = "/call"; // This would be replaced with proper Next.js navigation
-    //     }, 1000);
-    //   } else {
-    //     setCallStatus("declined");
-    //     setIsConnecting(false);
-    //   }
-    // }, 3000);
   };
 
   const resetModal = () => {
