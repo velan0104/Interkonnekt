@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession(); // useSession provides both session and status
   const router = useRouter();
+  console.log("AUTH STATE: ", status);
 
   useEffect(() => {
     if (status === "unauthenticated") {

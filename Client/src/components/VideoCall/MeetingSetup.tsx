@@ -7,6 +7,10 @@ import {
 } from "@stream-io/video-react-sdk";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { useParams, useSearchParams } from "next/navigation";
+import apiClient from "@/lib/api-client";
+import { ADD_PARTICIPANT_WORKSHOP, START_WORKSHOP } from "@/lib/constant";
+import { useSession } from "next-auth/react";
 
 const MeetingSetup = ({
   setIsSetupComplete,
@@ -16,6 +20,10 @@ const MeetingSetup = ({
   const [isMicCamToggledOn, setIsMicCamToggledOn] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
   const call = useCall();
+
+  const { callId } = useParams();
+  const isWorkshop = callId?.toString().startsWith("workshop");
+  const { data: session } = useSession();
 
   console.log("Call object in MeetingSetup:", call); // Log the call object
 
@@ -31,6 +39,42 @@ const MeetingSetup = ({
 
   const handleJoinMeeting = async () => {
     if (!call || isJoining) return;
+
+    if (isWorkshop) {
+      const url = callId?.toString().split("-");
+      const workshopId = url![1];
+      const hostId = url![2];
+      const isHost = session?.user?.id === hostId;
+
+      if (isHost) {
+        const res = await apiClient.put(
+          `${START_WORKSHOP}`,
+          {
+            workshopId,
+            meetingLink: window.location.href,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status !== 200) {
+          return;
+        }
+      } else {
+        const res = await apiClient.put(
+          `${ADD_PARTICIPANT_WORKSHOP}`,
+          {
+            workshopId,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.status !== 200) {
+          return;
+        }
+      }
+    }
 
     setIsJoining(true);
 

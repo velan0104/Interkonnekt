@@ -9,6 +9,7 @@ import {
   getCommunityInfo,
   getCommunityPosts,
   getMember,
+  getPostWithComments,
   likePost,
   searchCommunity,
   userCommunity,
@@ -29,5 +30,6 @@ app.get("/getCommunityPosts", getCommunityPosts);
 app.get("/getAllPosts", getAllPosts);
 app.post("/likePost", likePost);
 app.post("/addComment", addComment);
+app.get("/getPostWithComments/:id", getPostWithComments);
 
 export default app;

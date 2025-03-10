@@ -11,5 +11,6 @@ const WorkshopSchema = new Schema({
     bannerImage: { type: String, required: true },
     maxParticipants: { type: Number },
     isCompleted: { type: Boolean, default: false },
+    isStarted: { type: Boolean, default: false },
 }, { timestamps: true });
 export const Workshop = mongoose.model("Workshop", WorkshopSchema);

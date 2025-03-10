@@ -97,6 +97,7 @@ export const authOptions: NextAuthOptions = {
       // console.log("account at custom: ",account)
 
       if (user && account) {
+        console.log("TOKEN AT AUTH: ", token);
         // Save user ID and email to token
         token.id = user?.id;
         token.email = user.email;
@@ -189,7 +190,7 @@ export const authOptions: NextAuthOptions = {
       const existingUser = await User.findOne({
         email: token.email,
       });
-      // console.log("existing user in session: ",existingUser)
+      console.log("existing user in session: ", existingUser);
       existingUser.id = existingUser._id;
       await existingUser.save();
 
@@ -219,6 +220,7 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user, account, profile }) {
+      console.log("User TOKEN at signin: " + user);
       const jwtToken = jwt.sign(
         {
           id: user.id,

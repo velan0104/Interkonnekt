@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   CallControls,
   SpeakerLayout,
   CallStatsButton,
   CallParticipantsList,
   PaginatedGridLayout,
+  useCall,
 } from "@stream-io/video-react-sdk";
 import {
   DropdownMenu,
@@ -16,6 +17,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LayoutList, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { useSession } from "next-auth/react";
+import apiClient from "@/lib/api-client";
+import { ON_WORKSHOP_COMPLETION } from "@/lib/constant";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
@@ -23,7 +28,16 @@ const MeetingRoom = () => {
   const [showParticipants, setShowParticipants] = useState<boolean>(false);
   const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
 
+  const { callId } = useParams();
   const router = useRouter();
+  const call = useCall();
+  const { data: session } = useSession();
+  const url = callId?.toString().split("-");
+  const hostId = url![2];
+  const workshopId = url![1];
+  console.log("SESSION ID: " + session?.user?.id + " host: " + hostId);
+
+  const isHost = session?.user?.id === hostId;
 
   const CallLayout = () => {
     switch (layout) {
@@ -36,6 +50,20 @@ const MeetingRoom = () => {
       default:
         return <SpeakerLayout participantsBarPosition="right" />;
     }
+  };
+
+  const handleEndCall = async () => {
+    await call?.endCall();
+    const res = await apiClient.post(
+      `${ON_WORKSHOP_COMPLETION}`,
+      {
+        workshopId,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    router.push("/main");
   };
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
@@ -83,7 +111,15 @@ const MeetingRoom = () => {
             <Users />
           </div>
         </button>
-        {/* {!isPersonalRoom && <EndCallButton />} */}
+        {isHost && (
+          <Button
+            onClick={() => handleEndCall()}
+            className="bg-yellow-500 rounded-xl"
+          >
+            {" "}
+            End Call for everyone{" "}
+          </Button>
+        )}
       </div>
     </section>
   );

@@ -29,6 +29,7 @@ const CommunityPostSchema = new Schema({
     isWorkshop: { type: Boolean, default: false },
     workshopId: {
         type: Schema.Types.ObjectId,
+        ref: "Workshop",
         required: function () {
             return this.isWorkshop; // Required only if isWorkshop is true
         },

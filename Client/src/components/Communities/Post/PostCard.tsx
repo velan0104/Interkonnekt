@@ -1,6 +1,6 @@
 "use client";
 
-import { CommunityPostProps, Poll } from "@/types";
+import { CommunityPostProps, IWorkshop, Poll } from "@/types";
 import {
   Card,
   CardContent,
@@ -20,17 +20,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { Heart, MessageCircle, Share2, Smile } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { PollCard } from "./Poll";
 import apiClient from "@/lib/api-client";
 import {
   ADD_COMMUNITY_POST_COMMENT,
+  GET_WORKSHOP_BY_ID,
   LIKE_COMMUNITY_POST,
 } from "@/lib/constant";
 import { Textarea } from "@/components/ui/textarea";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 export function PostCard({ post }: { post: CommunityPostProps }) {
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -38,11 +41,13 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
   const [commentCount, setCommentCount] = useState<number>(
     post.comments?.length || 0
   );
+  const [workshop, setWorkshop] = useState<IWorkshop>();
   const [comments, setComments] = useState<string>("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const emojiRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const isWorkshop = post.isWorkshop;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -109,12 +114,35 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
     }
   };
 
+  const fetchWorkshop = async () => {
+    console.log("WORKSHOP ID: ", post.workshopId);
+    if (post.workshopId) {
+      const res = await apiClient.get(
+        `${GET_WORKSHOP_BY_ID}/${post.workshopId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const data = res.data.data;
+      console.log("WORKSHOP DETAILS: ", data);
+      setWorkshop(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkshop();
+  }, []);
+
   return (
-    <Card className="w-full max-w-2xl mx-auto rounded-xl my-2 bg-gray-900/70 border-2 border-gray-700 text-white">
+    <Card
+      className={`w-full max-w-2xl mx-auto rounded-xl my-2 bg-gray-900/70 border-2  text-white ${
+        isWorkshop ? "border-theme" : "border-gray-700"
+      }`}
+    >
       <CardHeader>
         <div className="flex items-start space-x-4">
           <Avatar>
-            <AvatarImage src={`${post.author?.image}`} />
+            <AvatarImage src={`${post.author.image}}`} />
             <AvatarFallback>
               {post.author?.name?.slice(0, 2).toUpperCase()}
             </AvatarFallback>
@@ -135,7 +163,15 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
                   </p>
                 </div>
               </div>
-              {/* <Badge variant="secondary">{post.tags}</Badge> */}
+
+              {isWorkshop && (
+                <Badge
+                  variant="secondary"
+                  className="bg-theme text-white hover:bg-theme"
+                >
+                  {workshop?.category}
+                </Badge>
+              )}
             </div>
             <h3 className="text-xl font-semibold leading-tight">
               {post.title}
@@ -160,13 +196,30 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
             }`}
           >
             {post.media.map((url, index) => (
-              <img
+              <Image
                 key={index}
                 src={url}
                 alt={`Post media ${index + 1}`}
+                width={200}
+                height={200}
                 className="w-full h-64 object-cover rounded-lg"
               />
             ))}
+            {isWorkshop && workshop?.bannerImage && (
+              <Image
+                src={workshop.bannerImage}
+                alt={workshop._id.toString()}
+                width={200}
+                height={200}
+                className="w-full h-64 object-cover rounded-lg"
+              />
+            )}
+            {isWorkshop && workshop?.startTime && (
+              <h1 className="bg-red-50">
+                {" "}
+                {workshop?.startTime.toLocaleDateString()}{" "}
+              </h1>
+            )}
           </div>
         )}
       </CardContent>

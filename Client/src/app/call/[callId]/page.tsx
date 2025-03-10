@@ -22,8 +22,6 @@ const CallRoom = () => {
   useEffect(() => {
     if (!client || !callId) return;
 
-    console.log("Call ID:", callId); // Log the call ID
-
     const newCall = client.call("default", callId);
 
     // Create the call if it doesn't exist
