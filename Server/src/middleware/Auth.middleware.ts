@@ -55,7 +55,6 @@ export const verifyToken = asyncHandler(
           provider: data.token.provider,
         };
         req.user = user;
-        console.log("USER", user);
         return next();
       } else {
         res.status(400).json({ error: "Unable to get payload" });

@@ -104,7 +104,7 @@ export const MobileSidebar = ({ className, children, ...props }: React.Component
   const { data: session } = useSession()
   const pathname = usePathname()
   const [profileImage, setProfileImage] = useState<string | null>(null)
-console.log("open: ",open)
+// console.log("open: ",open)
   useEffect(() => {
     if (!session?.user?.id) return
 

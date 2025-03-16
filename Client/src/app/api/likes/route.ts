@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
     const { postId, userId } = await req.json();
 
     //console.log("result at like route: ",result)
-    console.log("postId at like route: ",postId)
-      console.log("userId at like route: ",userId)
+    // console.log("postId at like route: ",postId)
+    //   console.log("userId at like route: ",userId)
 
     try {
       if (!postId || !userId) {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       }
       
       await dbConnect();
-      console.log("database connected")
+      // console.log("database connected")
       // const result = await Posts.findOneAndUpdate(
       //   { _id: postId },
       //   {
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       //   { new: true } // Return the updated document
       // );
       const post = await Posts.findById(postId);
-      console.log("result at like route: ",post)
+      // console.log("result at like route: ",post)
       if (!post) {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
       }
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
         //   return NextResponse.json(result, { status: 200 });
      
     } catch (error) {
-      console.error("Error in like API:", error);
+      // console.error("Error in like API:", error);
         return NextResponse.json({error: "Error updating like"}, { status: 500 });
      
     }

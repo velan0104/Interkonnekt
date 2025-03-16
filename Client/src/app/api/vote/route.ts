@@ -3,18 +3,18 @@ import Posts from "@/models/post"; // Your Post model
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-    console.log("vote called");
+    // console.log("vote called");
     const { postId, option, userId } = await req.json();
-    console.log("postId at vote: ", postId);
-    console.log("option at vote: ", option);
-    console.log("userId at vote: ", userId);
+    // console.log("postId at vote: ", postId);
+    // console.log("option at vote: ", option);
+    // console.log("userId at vote: ", userId);
 
     try {
         await dbConnect();
 
         // Find the post by ID
         const post = await Posts.findById(postId);
-        console.log("post at vote: ", post);
+        // console.log("post at vote: ", post);
 
         if (!post) {
             return NextResponse.json({ message: "Post not found" }, { status: 404 });
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        console.log("userPreviouslyVotedOptionIndex: ", userPreviouslyVotedOptionIndex);
+        // console.log("userPreviouslyVotedOptionIndex: ", userPreviouslyVotedOptionIndex);
 
         // Find the index of the selected option
         const selectedOptionIndex = poll.options.findIndex(o => o.optionValue === option);

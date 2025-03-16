@@ -20,7 +20,7 @@ const setUpSocket = (server) => {
     const onlineUsers = new Map();
     const declinedUsers = new Map();
     const disconnect = (socket) => {
-        console.log(`Client Disconnected: ${socket.id}`);
+        // console.log(`Client Disconnected: ${socket.id}`);
         for (const [userId, socketId] of onlineUsers.entries()) {
             if (socketId.socketId === socket.id) {
                 onlineUsers.delete(userId);
@@ -30,14 +30,16 @@ const setUpSocket = (server) => {
         }
     };
     const sendMessage = async (message) => {
-        console.log("Message: ", message);
+        // console.log("Message: ", message);
         const senderSocketId = onlineUsers.get(message.sender.toString());
         const recipientSocketId = onlineUsers.get(message.recipient.toString());
-        console.log("Sender: " + senderSocketId + " Receiver: " + recipientSocketId);
+        // console.log(
+        //   "Sender: " + senderSocketId + " Receiver: " + recipientSocketId
+        // );
         let createdMessage = null;
         try {
             createdMessage = await Message.create(message);
-            console.log("CREATED MESSAGE: ", createdMessage);
+            // console.log("CREATED MESSAGE: ", createdMessage);
         }
         catch (error) {
             console.log("Failed to create message db: ", error);
@@ -75,7 +77,6 @@ const setUpSocket = (server) => {
         const updatedChannelChat = await Channel.findByIdAndUpdate(channelId, {
             $push: { messages: createdMessage._id },
         }, { new: true });
-        console.log("Updated chat: ", updatedChannelChat);
         const channel = await Channel.findById(channelId).populate("members");
         if (channel) {
             const finalData = { ...messageData?.toObject(), channelId: channel._id };
@@ -94,7 +95,6 @@ const setUpSocket = (server) => {
         }
     };
     const findMatch = async (user) => {
-        console.log("sender: " + user.sender + " selectedInterest: " + user.selectedInterest);
         const senderSocketId = onlineUsers?.get(user?.sender)?.socketId;
         // Get the list of users who have declined calls from this sender
         const declinedUserIds = declinedUsers.get(user.sender) || new Set();
@@ -118,7 +118,6 @@ const setUpSocket = (server) => {
         const senderSocketId = onlineUsers.get(senderId.toString())?.socketId;
         const receiverSocketId = onlineUsers.get(receiverId.toString())?.socketId;
         const user = await User.findById(senderId).select("name username image");
-        console.log("CALLER: ", user);
         const caller = {
             _id: user._id,
             name: user.name,
@@ -130,27 +129,22 @@ const setUpSocket = (server) => {
             from: caller,
             callId: `1v1-${senderId}-${receiverId}`,
         });
-        console.log(caller);
     };
     const handleAcceptCall = async ({ sender, receiver, }) => {
-        console.log("SENDER: " + sender + " RECEIVER: " + receiver);
         if (sender && receiver) {
             const senderSocketId = onlineUsers.get(sender.toString())?.socketId;
             const receiverSocketId = onlineUsers.get(receiver.toString())?.socketId;
-            console.log("Call Accepted");
             const callId = `1v1-${sender.toString()}-${receiver.toString()}`;
             io.to([senderSocketId, receiverSocketId]).emit("acceptedCall", callId);
         }
     };
     const handleDeclineCall = ({ senderId, receiverId, }) => {
-        console.log("DECLINE CALL CALLED: " + senderId + " " + receiverId),
-            io.to(onlineUsers.get(senderId)?.socketId).emit("callDeclined");
+        io.to(onlineUsers.get(senderId)?.socketId).emit("callDeclined");
         // Store the user who declined the call
         if (!declinedUsers.has(senderId)) {
             declinedUsers.set(senderId, new Set());
         }
         declinedUsers.get(senderId)?.add(receiverId);
-        console.log("LEAVE");
     };
     io.on("connection", (socket) => {
         const query = socket.handshake.query;
@@ -158,12 +152,10 @@ const setUpSocket = (server) => {
         const interests = query.interests;
         if (userId) {
             onlineUsers.set(userId, { socketId: socket.id, interests });
-            console.log(`User connected: ${userId} with socket ID: ${socket.id} - interests: ${interests}`);
         }
         else {
             console.log("User ID not provided during connection.");
         }
-        console.log("Connection Builded");
         socket.on("sendMessage", sendMessage);
         socket.on("sendChannelMessage", sendChannelMessage);
         socket.on("findMatch", findMatch);

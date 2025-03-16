@@ -157,7 +157,7 @@ const CreateWorkshopModal = ({ id }: { id: string }) => {
         communityId: id,
       };
 
-      console.log("WORKSHOP DATA: ", workshopData);
+      // console.log("WORKSHOP DATA: ", workshopData);
 
       const response = await apiClient.post(
         `${CREATE_WORKSHOP}`,

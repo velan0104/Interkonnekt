@@ -93,7 +93,7 @@ const MiddleSection = () => {
       });
       if (response.status === 200 && response.data) {
         setCommunityPosts(response.data.posts);
-        console.log("COMMUNITIES POST: ", response.data.posts);
+        // console.log("COMMUNITIES POST: ", response.data.posts);
       }
     } catch (error) {
       console.log(error);
@@ -136,7 +136,7 @@ const MiddleSection = () => {
             </div>
           )}
           <button
-            className=" fixed bottom-10 bg-purple-700 text-white rounded-3xl px-5 py-3 flex items-center gap-2"
+            className=" fixed bottom-10 bg-theme text-white rounded-3xl px-5 py-3 flex items-center gap-2"
             onClick={() => setOpenModal(true)}
           >
             <span className="font-bold text-2xl"> + </span> Create

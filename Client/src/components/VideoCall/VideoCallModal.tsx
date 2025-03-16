@@ -78,9 +78,9 @@ export function VideoCallModal({ open, onOpenChange }: VideoCallModalProps) {
 
   const handleSearch = async () => {
     dispatch(setIsSearching(true));
-    console.log("Building connection...");
-    console.log("SELECTED CATEGORY: ", selectedCategory);
-    console.log("SOCKET: ", socket);
+    // console.log("Building connection...");
+    // console.log("SELECTED CATEGORY: ", selectedCategory);
+    // console.log("SOCKET: ", socket);
     socket?.emit("findMatch", {
       sender: session?.user?.id,
       selectedInterest: selectedCategory,

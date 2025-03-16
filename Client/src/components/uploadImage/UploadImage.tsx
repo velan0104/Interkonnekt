@@ -15,7 +15,7 @@ interface UploadImagesProps {
   const Router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  console.log("email in upload image: ",session?.user?.email)
+  // console.log("email in upload image: ",session?.user?.email)
     return (
 <CldUploadWidget 
   uploadPreset="interkonnekt_uploads" 
@@ -24,8 +24,8 @@ interface UploadImagesProps {
     alert("Upload failed. Check the console for details.");
   }}
   onSuccess={async ({ event, info }) => {
-    console.log("Upload event:", event);
-    console.log("Upload info:", info);
+    // console.log("Upload event:", event);
+    // console.log("Upload info:", info);
 
     if (event === "success") {
       setLoading(true);

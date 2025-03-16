@@ -295,7 +295,7 @@ export default function SidebarDemo() {
   };
 
   const handleAcceptCall = () => {
-    console.log("call accepted");
+    // console.log("call accepted");
     socket?.emit("acceptCall", {
       sender: session?.user?.id,
       receiver: caller?._id,
@@ -304,7 +304,7 @@ export default function SidebarDemo() {
   };
 
   const handleDeclineCall = () => {
-    console.log("CALLER: " + caller?._id);
+    // console.log("CALLER: " + caller?._id);
     const senderId = caller?._id;
     const receiverId = session?.user?.id;
     socket?.emit("declineCall", { senderId, receiverId });

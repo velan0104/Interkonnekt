@@ -9,9 +9,9 @@ export async function POST(req: NextRequest) {
  
     const { postId, userId,content } = await req.json();
 
-    console.log("postId at comment route: ",postId)
-      console.log("userId at comment route: ",userId)
-      console.log("comment at comment route: ",content)
+    // console.log("postId at comment route: ",postId)
+      // console.log("userId at comment route: ",userId)
+      // console.log("comment at comment route: ",content)
       if (!postId || !userId) {
         return NextResponse.json({ error: "Invalid input" }, { status: 400 });
       }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         _id: comment._id.toString(),
         createdAt: comment.createdAt ? comment.createdAt.toISOString() : new Date().toISOString(),
       }));
-      console.log("formatted at like route: ",formattedComments)
+      // console.log("formatted at like route: ",formattedComments)
       
       return NextResponse.json({ comments: formattedComments }, { status: 200 });
       

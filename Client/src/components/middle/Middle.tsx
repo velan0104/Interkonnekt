@@ -76,10 +76,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   const [image, setImage] = useState("");
   const [vote, setVote] = useState<boolean>(false);
 
-  console.log("posts at middle: ", posts);
   useEffect(() => {
-    console.log("userId at middle: ",userId)
-    console.log("sessionId: ",session)
     if(userId || session){
     if(session){
       dispatch(fetchPosts({ userId:  undefined, sessionUserId: session?.user?.id }));
@@ -380,7 +377,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   if (postStatus == "loading") return <SkeletonLoader />;
   if (postStatus === "failed") return <p>Error: {error}</p>;
   const handleVote = async (postId: string, option: any, userId: string) => {
-    console.log("handle vote called");
+    // console.log("handle vote called");
     setVote(true);
     const hasVoted = option.votes && option.votes.includes(userId);
 
@@ -409,7 +406,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     // setPosts(updatedPoll);
 
     try {
-      console.log("calling vote");
+      // console.log("calling vote");
       // Send request to update vote in the database
       const response = await fetch("/api/vote", {
         method: "POST",

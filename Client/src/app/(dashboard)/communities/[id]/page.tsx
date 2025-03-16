@@ -52,7 +52,7 @@ const page = () => {
       });
       if (response.status === 200 && response.data) {
         dispatch(setSelectedCommunity(response.data.community));
-        console.log("COMMUNITY INFO: ", response.data.community);
+        // console.log("COMMUNITY INFO: ", response.data.community);
       }
     } catch (error) {
       console.log(error);
@@ -66,7 +66,7 @@ const page = () => {
       });
       if (response.status === 200 && response.data) {
         setCommunityPosts(response.data.posts);
-        console.log(response.data.posts);
+        // console.log(response.data.posts);
       }
     } catch (error) {
       console.log(error);
@@ -107,7 +107,9 @@ const page = () => {
           className="text-white bg-gray-800"
           style={{ borderRadius: "5px" }}
         >
-          <MenubarItem>Profile</MenubarItem>
+          <MenubarItem onSelect={() => router.push(`${id}/community-info`)}>
+            Profile
+          </MenubarItem>
           <MenubarItem onSelect={() => router.push(`${id}/workshops`)}>
             {" "}
             Workshops{" "}

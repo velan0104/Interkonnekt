@@ -88,7 +88,7 @@ export default function WorkshopList() {
         }
       );
       if (response.status === 200 && response.data) {
-        console.log("WORKSHOPS DATA: ", response.data);
+        // console.log("WORKSHOPS DATA: ", response.data);
         setCurrentUserWorkshops(response.data.hostedUpcomingWorkshops);
         setFutureWorkshops(response.data.communityUpcomingWorkshops);
         setPastWorkshops(response.data.completedWorkshops);
@@ -142,7 +142,7 @@ export default function WorkshopList() {
   // }, []);
 
   const startWorkshop = (workshopId: Types.ObjectId | string) => {
-    console.log(`Starting workshop: ${workshopId}`);
+    // console.log(`Starting workshop: ${workshopId}`);
     // In a real app, you would navigate to the meeting or update the workshop status
 
     alert(`Workshop ${workshopId} started! `);

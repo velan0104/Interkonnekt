@@ -10,7 +10,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({ userId, 
     headers: {'Content-Type': 'application/json'}
   });
   const data = await response.json();
-  console.log("Slice called:",data.posts)
+  // console.log("Slice called:",data.posts)
   return data.posts;
 });
 

@@ -47,7 +47,7 @@ export default function Navbar() {
           body: JSON.stringify({ userId: session?.user?.id }),
         });
         const data = await response.json();
-        console.log("data in navbar: ", data);
+        // console.log("data in navbar: ", data);
         if (data) {
           setUsername(data.username);
           setProfileImage(data.image);
@@ -59,7 +59,6 @@ export default function Navbar() {
     fetchUnameInterest();
   }, [session, pathname]);
 
-  console.log("profile image at navbar: ", profileImage);
 
   return (
     <>

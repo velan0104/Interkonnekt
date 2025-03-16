@@ -17,11 +17,11 @@ const page = () => {
         const res = await apiClient.get(`${GET_POST_WITH_COMMENTS}/${id}`, {
           withCredentials: true,
         });
-        console.log("RES: ", res);
+        // console.log("RES: ", res);
         if (res.status === 200 && res.data) {
           setPostData(res.data.data);
         }
-        console.log("POST DATA: ", postData);
+        // console.log("POST DATA: ", postData);
       } catch (error) {
         console.log(error);
       }

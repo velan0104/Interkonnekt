@@ -6,7 +6,7 @@ export async function DELETE(req: NextRequest) {
   try {
     // Parse the request body to get the post_id
     const { postId } = await req.json();
-    console.log("postId at delete post: ",postId)
+    // console.log("postId at delete post: ",postId)
 
     if (!postId) {
       return NextResponse.json(

@@ -30,13 +30,13 @@ const initialState: ActivitiesState = {
 };
 
 export const fetchActivities = createAsyncThunk("activities/fetchActivities", async ({ userId }: { userId: string }) => {
-  console.log("userid at fetch: ",userId)
+  // console.log("userid at fetch: ",userId)
   const response = await fetch("/api/getActivities",{
     method: "POST",
     body: JSON.stringify({userId}),
     headers: {"Content-Type":"application/json"}
   });
-  console.log("response at fetch: ", response)
+  // console.log("response at fetch: ", response)
   if (!response.ok) {
     throw new Error("Failed to fetch activities");
   }

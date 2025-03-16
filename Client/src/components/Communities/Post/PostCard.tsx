@@ -115,7 +115,7 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
   };
 
   const fetchWorkshop = async () => {
-    console.log("WORKSHOP ID: ", post.workshopId);
+    // console.log("WORKSHOP ID: ", post.workshopId);
     if (post.workshopId) {
       const res = await apiClient.get(
         `${GET_WORKSHOP_BY_ID}/${post.workshopId}`,
@@ -124,7 +124,7 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
         }
       );
       const data = res.data.data;
-      console.log("WORKSHOP DETAILS: ", data);
+      // console.log("WORKSHOP DETAILS: ", data);
       setWorkshop(data);
     }
   };

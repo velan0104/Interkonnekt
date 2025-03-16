@@ -136,15 +136,12 @@ export const getCommunityWorkshops = handleRequest(async (req, res) => {
 
   const currentDate = new Date();
 
-  // Fetch upcoming workshops hosted by the user
   const hostedUpcomingWorkshops = await Workshop.find({
     host: userId,
     // startTime: { $gte: currentDate }, // Upcoming workshops
     // isStarted: false,
     isCompleted: false,
   }).populate("host", "name");
-
-  console.log("host: ", hostedUpcomingWorkshops);
 
   // Fetch upcoming workshops in the community (direct DB filtering)
   const communityUpcomingWorkshops = await CommunityPost.find({
@@ -153,14 +150,11 @@ export const getCommunityWorkshops = handleRequest(async (req, res) => {
   })
     .populate({
       path: "workshopId",
-      match: { isCompleted: false }, // Directly filter in DB
-      populate: { path: "host", select: "name" }, // Populate host inside workshop
+      match: { isCompleted: false },
+      populate: { path: "host", select: "name" },
     })
     .then((posts) => posts.map((post) => post.workshopId).filter(Boolean)); // Remove null values4
 
-  console.log(communityUpcomingWorkshops);
-
-  // Fetch completed workshops in the community
   const completedWorkshops = await CommunityPost.find({
     community: communityId,
     isWorkshop: true,
@@ -171,8 +165,6 @@ export const getCommunityWorkshops = handleRequest(async (req, res) => {
       populate: { path: "host", select: "name" },
     })
     .then((posts) => posts.map((post) => post.workshopId).filter(Boolean));
-
-  console.log("COMPLETED WORKSHOP: ", completedWorkshops);
 
   res.status(200).json({
     hostedUpcomingWorkshops,

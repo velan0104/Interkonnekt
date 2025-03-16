@@ -36,7 +36,6 @@ export function CreatePostModal({ id }: { id: string }) {
     category: "",
     community: id,
   });
-  console.log("POSTDATA: ", postData);
 
   const [pollData, setPollData] = useState<Poll>({
     question: "",
@@ -57,7 +56,6 @@ export function CreatePostModal({ id }: { id: string }) {
     if (!files) return;
 
     const uploadedMediaUrls: string[] = [];
-    console.log("1. Files: ", files);
 
     for (const file of Array.from(files)) {
       const formData = new FormData();
@@ -128,21 +126,19 @@ export function CreatePostModal({ id }: { id: string }) {
             ...postData,
           };
 
-    console.log(finalData);
+    // console.log(finalData);
 
     try {
       const response = await apiClient.post(`${CREATE_POST}`, finalData, {
         withCredentials: true,
       });
 
-      console.log("RESPONSE: ", response);
+      // console.log("RESPONSE: ", response);
 
       if (response.status === 201) {
         setIsOpen(false);
-        console.log("Post created successfully!");
         toast({ title: "Post created successfully!" });
       } else {
-        console.log("Failed to create post");
         toast({ title: "Failed to create post" });
       }
     } catch (error) {

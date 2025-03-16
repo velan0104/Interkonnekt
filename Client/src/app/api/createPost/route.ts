@@ -8,12 +8,12 @@ export async function POST(req:NextRequest){
     
         const body = await req.json();
         const {user_id,newUsername,name,profileImage, content, image, poll } = body; 
-        console.log("poll at createPost: ",poll) 
-        console.log("username at createPost: ",newUsername) 
+        // console.log("poll at createPost: ",poll) 
+        // console.log("username at createPost: ",newUsername) 
 
         try{
             const post = await Posts.create({user_id,newUsername,name,profileImage,content,image,poll})
-            console.log("post uploaded successfully")
+            // console.log("post uploaded successfully")
             await post.save();
             return NextResponse.json({message: "Post uploaded successfully"}, {status: 201})
         }catch(error){

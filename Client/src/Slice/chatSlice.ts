@@ -105,7 +105,7 @@ const chatSlice = createSlice({
       state.selectedChatMessages = [];
     },
     addMessage(state, action: PayloadAction<IMessage>) {
-      console.log("Hello from Add messages");
+      // console.log("Hello from Add messages");
       const message = action.payload;
       const { selectedChatType } = state;
 
@@ -118,7 +118,7 @@ const chatSlice = createSlice({
         sender:
           selectedChatType === "channel" ? message.sender : message.sender,
       });
-      console.log("Updated chat messages: ", setSelectedChatMessages);
+      // console.log("Updated chat messages: ", setSelectedChatMessages);
     },
     addChannelInChannelList(state, action: PayloadAction<IMessage>) {
       const message = action.payload;

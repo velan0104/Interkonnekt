@@ -38,7 +38,6 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
                 provider: data.token.provider,
             };
             req.user = user;
-            console.log("USER", user);
             return next();
         }
         else {

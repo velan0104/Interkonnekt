@@ -5,7 +5,7 @@ import User from "@/models/user";
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
-console.log("secret key: ",SECRET_KEY);
+// console.log("secret key: ",SECRET_KEY);
 
 export async function POST(req: NextRequest) {
   try {

@@ -21,6 +21,5 @@ export const tokenProvider = async () => {
     user_id: session.user.id,
     validity_in_seconds: validity,
   });
-  console.log("TOKEN: ", token);
   return token;
 };

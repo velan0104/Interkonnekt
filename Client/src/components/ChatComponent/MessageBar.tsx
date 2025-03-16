@@ -111,8 +111,8 @@ const MessageBar = () => {
 
   const handleSendMessage = async () => {
     if (selectedChatType === "contact" && message.length > 0) {
-      console.log(socket);
-      console.log("HANDLE SEND MESSAGE");
+      // console.log(socket);
+      // console.log("HANDLE SEND MESSAGE");
       socket?.emit("sendMessage", {
         sender: session?.user?.id,
         content: message,
@@ -177,7 +177,7 @@ const MessageBar = () => {
         </div>
       </div>
       <button
-        className=" bg-[#8417ff] rounded-full flex items-center justify-center p-5 focus:border-none focus:outline-none foucs:text-white  hover:bg-[#741bda] hover:text-white duration-100 transition-all"
+        className=" bg-theme rounded-full flex items-center justify-center p-5 focus:border-none focus:outline-none foucs:text-white  hover:bg-[#741bda] hover:text-white duration-100 transition-all"
         onClick={handleSendMessage}
       >
         <Send className=" text-2xl" />

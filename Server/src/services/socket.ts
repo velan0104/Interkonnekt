@@ -38,7 +38,7 @@ const setUpSocket = (server: any) => {
 
   const declinedUsers = new Map<string, Set<string>>();
   const disconnect = (socket: Socket) => {
-    console.log(`Client Disconnected: ${socket.id}`);
+    // console.log(`Client Disconnected: ${socket.id}`);
     for (const [userId, socketId] of onlineUsers.entries()) {
       if (socketId.socketId === socket.id) {
         onlineUsers.delete(userId);
@@ -49,16 +49,16 @@ const setUpSocket = (server: any) => {
   };
 
   const sendMessage = async (message: IMessage) => {
-    console.log("Message: ", message);
+    // console.log("Message: ", message);
     const senderSocketId = onlineUsers.get(message.sender.toString());
     const recipientSocketId = onlineUsers.get(message.recipient.toString());
-    console.log(
-      "Sender: " + senderSocketId + " Receiver: " + recipientSocketId
-    );
+    // console.log(
+    //   "Sender: " + senderSocketId + " Receiver: " + recipientSocketId
+    // );
     let createdMessage = null;
     try {
       createdMessage = await Message.create(message);
-      console.log("CREATED MESSAGE: ", createdMessage);
+      // console.log("CREATED MESSAGE: ", createdMessage);
     } catch (error) {
       console.log("Failed to create message db: ", error);
     }
@@ -108,7 +108,6 @@ const setUpSocket = (server: any) => {
       { new: true }
     );
 
-    console.log("Updated chat: ", updatedChannelChat);
     const channel = await Channel.findById(channelId).populate("members");
     if (channel) {
       const finalData = { ...messageData?.toObject(), channelId: channel._id };
@@ -138,9 +137,6 @@ const setUpSocket = (server: any) => {
     sender: string;
     selectedInterest: string;
   }) => {
-    console.log(
-      "sender: " + user.sender + " selectedInterest: " + user.selectedInterest
-    );
     const senderSocketId = onlineUsers?.get(user?.sender)?.socketId;
 
     // Get the list of users who have declined calls from this sender
@@ -186,7 +182,6 @@ const setUpSocket = (server: any) => {
     const receiverSocketId = onlineUsers.get(receiverId.toString())?.socketId;
 
     const user = await User.findById(senderId).select("name username image");
-    console.log("CALLER: ", user);
     const caller = {
       _id: user._id,
       name: user.name,
@@ -199,7 +194,6 @@ const setUpSocket = (server: any) => {
       from: caller,
       callId: `1v1-${senderId}-${receiverId}`,
     });
-    console.log(caller);
   };
 
   const handleAcceptCall = async ({
@@ -209,11 +203,9 @@ const setUpSocket = (server: any) => {
     sender: Types.ObjectId | string;
     receiver: Types.ObjectId | string;
   }) => {
-    console.log("SENDER: " + sender + " RECEIVER: " + receiver);
     if (sender && receiver) {
       const senderSocketId = onlineUsers.get(sender.toString())?.socketId;
       const receiverSocketId = onlineUsers.get(receiver.toString())?.socketId;
-      console.log("Call Accepted");
 
       const callId = `1v1-${sender.toString()}-${receiver.toString()}`;
       io.to([senderSocketId!, receiverSocketId!]).emit("acceptedCall", callId);
@@ -227,7 +219,6 @@ const setUpSocket = (server: any) => {
     senderId: string;
     receiverId: string;
   }) => {
-    console.log("DECLINE CALL CALLED: " + senderId + " " + receiverId),
       io.to(onlineUsers.get(senderId!)?.socketId!).emit("callDeclined");
     // Store the user who declined the call
 
@@ -235,7 +226,6 @@ const setUpSocket = (server: any) => {
       declinedUsers.set(senderId, new Set());
     }
     declinedUsers.get(senderId)?.add(receiverId);
-    console.log("LEAVE");
   };
 
   io.on("connection", (socket) => {
@@ -245,15 +235,9 @@ const setUpSocket = (server: any) => {
 
     if (userId) {
       onlineUsers.set(userId, { socketId: socket.id, interests });
-      console.log(
-        `User connected: ${userId} with socket ID: ${socket.id} - interests: ${interests}`
-      );
     } else {
       console.log("User ID not provided during connection.");
     }
-
-    console.log("Connection Builded");
-
     socket.on("sendMessage", sendMessage);
     socket.on("sendChannelMessage", sendChannelMessage);
     socket.on("findMatch", findMatch);

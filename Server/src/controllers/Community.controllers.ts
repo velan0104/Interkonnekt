@@ -13,7 +13,6 @@ export const createCommunity = async (
 ): Promise<void> => {
   try {
     const { name, bio, members, banner, category, profilePic } = req.body;
-    console.log("USER TYPE: ", typeof req.user?.id);
     const userCommunityCount = await Community.find({
       admin: req.user?.id,
     });
@@ -91,7 +90,6 @@ export const userCommunity = handleRequest(async (req, res) => {
 
 export const exploreCommunity = handleRequest(
   async (req, res): Promise<void> => {
-    console.log("REQUEST: ", req.user);
     const userInterest = req.user?.interest;
 
     if (!userInterest || userInterest.length === 0) {
@@ -110,7 +108,6 @@ export const exploreCommunity = handleRequest(
 
 export const communityFeed = handleRequest(async (req, res) => {
   const userId = req.user?.id;
-  console.log("USER TYPE: ", typeof userId);
   const communityPost = await Community.find({
     $or: [{ admin: userId }, { members: { $in: [userId] } }],
   });
@@ -169,8 +166,6 @@ export const createPost = handleRequest(
       return;
     }
 
-    console.log("2");
-
     let response = null;
 
     if (poll) {
@@ -204,8 +199,6 @@ export const createPost = handleRequest(
       });
     }
 
-    console.log("3");
-
     if (!response) {
       throw { status: 500, message: "Internal server error" };
     }
@@ -232,7 +225,6 @@ export const getCommunityPosts = handleRequest(async (req, res) => {
 
 export const getAllPosts = handleRequest(async (req, res) => {
   const userId = req.user?.id;
-  console.log("USER TYPE: " + typeof userId + " ID: " + userId);
 
   const userCommunities = await Community.find({
     $or: [{ members: userId }, { admin: userId }],
@@ -317,8 +309,6 @@ export const addComment = handleRequest(async (req, res) => {
 
 export const getPostWithComments = handleRequest(async (req, res) => {
   const { id } = req.params;
-  console.log(req.params);
-  console.log(id);
 
   if (!id) {
     res.status(400).json({ message: "ID not found" });
@@ -330,7 +320,6 @@ export const getPostWithComments = handleRequest(async (req, res) => {
   if (!postData) {
     throw { status: 400, message: "Post not found" };
   }
-  console.log(postData);
 
   res.status(200).json({ data: postData });
 });

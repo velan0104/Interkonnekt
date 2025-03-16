@@ -137,7 +137,7 @@ const MessageContainer = () => {
           }
         },
       });
-      console.log("DOWNLOAD FILE: ", response);
+      // console.log("DOWNLOAD FILE: ", response);
 
       const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -176,8 +176,8 @@ const MessageContainer = () => {
         <div
           className={`${
             message.sender._id !== selectedChatData?._id
-              ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+              ? "bg-[#8417ff]/5 text-theme/90 border-theme/50"
+              : "bg-[#2a2b33]/5 text-white/80 border-theme/50"
           } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
         >
           {message.content}
@@ -187,8 +187,8 @@ const MessageContainer = () => {
         <div
           className={`${
             message.sender !== selectedChatData?._id
-              ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-              : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+              ? "bg-[#8417ff]/5 text-theme/90 border-theme/50"
+              : "bg-[#2a2b33]/5 text-white/80 border-theme/50"
           } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
         >
           {checkImage(message?.fileUrl) ? (
