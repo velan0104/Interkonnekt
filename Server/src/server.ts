@@ -7,6 +7,7 @@ import setUpSocket from "./services/socket.js";
 import messageRoute from "./routes/Message.route.js";
 import contactRoute from "./routes/Contact.route.js";
 import communityRoute from "./routes/Community.route.js";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -35,3 +36,4 @@ const server = app.listen(PORT, () =>
 );
 
 setUpSocket(server);
+console.log("mongoose : ",mongoose.modelNames())

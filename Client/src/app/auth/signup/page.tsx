@@ -6,7 +6,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
@@ -103,7 +103,7 @@ export default function SignupForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session, status } = useSession();
-
+const pathname = usePathname()
   const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
@@ -171,6 +171,8 @@ export default function SignupForm() {
     { value: "sports", label: "Sports" },
     { value: "music", label: "Music" },
   ];
+
+ 
 
   const userId = session?.user?.id;
 
@@ -449,6 +451,7 @@ export default function SignupForm() {
           {isSigningIn ? "Signing in with Google..." : "Sign up with Google"}
         </Button>
       </motion.div>
+      
     </div>
   );
 }

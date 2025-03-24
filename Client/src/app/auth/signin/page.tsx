@@ -82,7 +82,11 @@ export default function SignInPage() {
         });
         router.push("/main"); // Redirect to main page or dashboard
       } else {
-        toast({ title: "Signup failed", description: response?.error || "Error occurred." });
+        toast({
+          title: "⚠️ Sign-In Failed",
+          description: "Oops! Something went wrong. Please try again.",
+          className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+        });
       }
     } catch (err) {
       console.error("Signup Error", err);
