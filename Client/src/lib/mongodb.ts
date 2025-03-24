@@ -33,7 +33,7 @@ async function dbConnect() {
 
   try {
     cached.conn = await cached.promise;
-    console.log("connection established");
+    // console.log("connection established");
     return cached.conn;
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);

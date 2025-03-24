@@ -6,10 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   
-console.log("search all api called");
+// console.log("search all api called");
  
     const { searchTerm } = await req.json();
-console.log("query at search all: ",searchTerm)
+// console.log("query at search all: ",searchTerm)
     try {
         await dbConnect();
       // Return all results if `query` exists and has at least 1 character
@@ -21,9 +21,9 @@ console.log("query at search all: ",searchTerm)
             ],
           }
         : {};
-console.log("search criteria at search all: ",searchCriteria)
+// console.log("search criteria at search all: ",searchCriteria)
       const results = await User.find(searchCriteria).limit(50);
-      console.log("results at search all: ",results)
+      // console.log("results at search all: ",results)
 return NextResponse.json({ message: results || "No results found" },{status:200});
       
     } catch (error) {

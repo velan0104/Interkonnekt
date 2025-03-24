@@ -40,7 +40,6 @@ export function CallModal({
   const { data: session } = useSession();
 
   const handleDeclineCall = () => {
-    console.log("CALLER: " + caller._id);
     const senderId = caller._id;
     const receiverId = session?.user?.id;
     socket?.emit("declineCall", { senderId, receiverId });

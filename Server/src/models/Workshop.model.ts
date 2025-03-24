@@ -12,6 +12,7 @@ interface IWorkshop {
   bannerImage: string;
   maxParticipants?: number;
   isCompleted: boolean;
+  isStarted: boolean;
 }
 
 const WorkshopSchema = new Schema<IWorkshop>(
@@ -27,6 +28,7 @@ const WorkshopSchema = new Schema<IWorkshop>(
     bannerImage: { type: String, required: true },
     maxParticipants: { type: Number },
     isCompleted: { type: Boolean, default: false },
+    isStarted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

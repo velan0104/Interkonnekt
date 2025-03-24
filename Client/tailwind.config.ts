@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
+import { transform } from "next/dist/build/swc/generated-native";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
@@ -64,6 +65,16 @@ export default {
       },
       screens: {
         custom: "1020px",
+      },
+      keyframes: {
+        "border-spin": {
+          "100%": {
+            transform: "rotate(-360deg)",
+          },
+        },
+      },
+      animation: {
+        "border-spin": "border-spin 7s linear infinite",
       },
     },
   },

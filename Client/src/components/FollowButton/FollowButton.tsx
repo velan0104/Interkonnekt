@@ -24,7 +24,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ currentUserId, targetUserId
   useEffect(() => {
     setIsFollowing(following.includes(targetUserId));
   }, [following]);
-  console.log("following: ", following);
+  // console.log("following: ", following);
   
   useEffect(() => {
     const fetchData = async () => {

@@ -11,11 +11,11 @@ export async function POST(req: NextRequest) {
    
 console.log("api called");
     const { id, interest, email ,profileImage, username} = await req.json();
-    console.log("profileImage at insert: ",profileImage)
-    console.log("id at insert: ",id)
-    console.log("interest at insert: ",interest)
-    console.log("email at insertsss: ",email)
-    console.log("username at insert: ",username)
+    // console.log("profileImage at insert: ",profileImage)
+    // console.log("id at insert: ",id)
+    // console.log("interest at insert: ",interest)
+    // console.log("email at insertsss: ",email)
+    // console.log("username at insert: ",username)
 
     
    
@@ -57,8 +57,8 @@ if (!profileImage) {
     const existingUsername = await User.findOne({ $or: [{ email }, { id }] });
     const existingUser2 = await Posts.find({user_id: id});
     const existingUser3 = await Activity.find({id: id});
-    console.log("existing user2: ",existingUser2)
-    console.log("existing user: ",existingUsername)
+    // console.log("existing user2: ",existingUser2)
+    // console.log("existing user: ",existingUsername)
     // if (!existingUsername) {
     //   return NextResponse.json(
     //     { message: "Username does not exists" },

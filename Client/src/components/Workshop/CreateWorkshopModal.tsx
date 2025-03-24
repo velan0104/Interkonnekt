@@ -25,6 +25,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import apiClient from "@/lib/api-client";
+import { CREATE_WORKSHOP } from "@/lib/constant";
 
 const CATEGORIES = [
   "Technology",
@@ -36,7 +39,7 @@ const CATEGORIES = [
   "Other",
 ];
 
-const CreateWorkshopModal = () => {
+const CreateWorkshopModal = ({ id }: { id: string }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -89,6 +92,32 @@ const CreateWorkshopModal = () => {
     reader.readAsDataURL(file);
   };
 
+  const uploadToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string
+    );
+    formData.append(
+      "cloud_name",
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string
+    );
+
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, // Replace with your Cloudinary cloud name
+        formData
+      );
+
+      const data = await response.data;
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Upload Error.", error);
+      return null;
+    }
+  };
+
   const handleRemoveImage = () => {
     setBannerImage(null);
     setImagePreview(null);
@@ -114,40 +143,36 @@ const CreateWorkshopModal = () => {
       }
 
       // Here you would upload the image to Cloudinary and get the URL
-      let bannerImageUrl = "";
-
+      let bannerImageUrl: string | null = "";
       if (bannerImage) {
-        // In a real implementation, you would upload to Cloudinary here
-        // For example:
-        // const formData = new FormData();
-        // formData.append('file', bannerImage);
-        // formData.append('upload_preset', 'your_preset');
-        // const response = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
-        //   method: 'POST',
-        //   body: formData
-        // });
-        // const data = await response.json();
-        // bannerImageUrl = data.secure_url;
-
-        // For demo purposes, we'll just simulate a successful upload
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        bannerImageUrl =
-          "https://res.cloudinary.com/demo/image/upload/sample.jpg";
+        bannerImageUrl = await uploadToCloudinary(bannerImage);
+      } else {
+        bannerImageUrl = null;
       }
 
       // Prepare the final data to send to the backend
       const workshopData = {
         ...formData,
         bannerImage: bannerImageUrl,
+        communityId: id,
       };
 
-      // Here you would typically send the data to your API
-      // const response = await apiClient.post(CREATE_COMMUNITY, workshopData);
+      // console.log("WORKSHOP DATA: ", workshopData);
 
-      // For demo purposes, we'll just simulate a successful submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await apiClient.post(
+        `${CREATE_WORKSHOP}`,
+        workshopData,
+        {
+          withCredentials: true,
+        }
+      );
 
-      // Reset form and close modal on success
+      if (response.status === 201 && response.data) {
+        setOpen(false);
+      } else {
+        alert("Unable to create workshop");
+      }
+
       setFormData({
         title: "",
         description: "",

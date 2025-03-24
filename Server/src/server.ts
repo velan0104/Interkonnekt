@@ -7,7 +7,7 @@ import setUpSocket from "./services/socket.js";
 import messageRoute from "./routes/Message.route.js";
 import contactRoute from "./routes/Contact.route.js";
 import communityRoute from "./routes/Community.route.js";
-import mongoose from "mongoose";
+import workshopRoute from "./routes/Workshop.route.js";
 
 dotenv.config();
 
@@ -30,6 +30,7 @@ app.use(express.json());
 app.use("/api/message", messageRoute);
 app.use("/api/contacts", contactRoute);
 app.use("/api/community", communityRoute);
+app.use("/api/workshop", workshopRoute);
 
 const server = app.listen(PORT, () =>
   console.log(`Server started on PORT: ${PORT}`)

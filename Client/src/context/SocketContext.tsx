@@ -51,7 +51,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     callId: string;
   } | null>(null);
   const router = useRouter();
-  console.log("Socket Context Provider initialized");
+  // console.log("Socket Context Provider initialized");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -100,23 +100,23 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       }) => {
         // alert("Call from " + from + " with callID: " + callId);
         // setIncomingCall({ from, callId });
-        console.log("CALL INCOMING...." + from._id);
+        // console.log("CALL INCOMING...." + from._id);
         dispatch(setCaller(from));
         dispatch(setOpenCallModal(true));
       };
       2;
 
       const handleMatchedUser = (matchedUser: MatchedUserState) => {
-        console.log("RANDOM USER: ", matchedUser);
+        // console.log("RANDOM USER: ", matchedUser);
         dispatch(setMatchedUser(matchedUser));
         dispatch(setIsSearching(false));
       };
 
       const acceptedCall = (callId: string) => {
         // socket?.current?.emit("acceptCall", incomingCall?.callId);
-        console.log("CALLID: ", callId);
+        // console.log("CALLID: ", callId);
         setIncomingCall(null);
-        router.push(`/call/${callId}`);
+        // router.push(`/call/${callId}`);
         dispatch(setOpenCallModal(false));
         dispatch(setOpenVideoChatModal(false));
         dispatch(setCallStatus("idle"));
@@ -138,7 +138,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       };
 
       const handleCallDeclined = () => {
-        console.log("CALL DECLINED");
+        // console.log("CALL DECLINED");
         dispatch(setIsSearching(false));
         dispatch(setCallStatus("declined"));
         dispatch(setMatchedUser(null));

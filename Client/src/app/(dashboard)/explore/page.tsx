@@ -27,7 +27,7 @@ const MainPage: FC = () => {
         if (!response.ok) {
           const errorData = await response.json();
           router.push("/auth/signin");
-          console.log("Error:", errorData.error);
+          // console.log("Error:", errorData.error);
           return;
         }
 

@@ -111,60 +111,63 @@ const ContactList: React.FC<ContactListProps> = ({
           <div className="text-3xl text-white"> No Messages </div>
         </div>
       )}
-      {contacts.length > 0 &&
-        contacts.map((contact) => (
-          <div
-            key={`${
-              typeof contact._id === "string"
-                ? contact._id
-                : contact._id.toString
-            }`}
-            className={`pl-10 py-2 transition-all duration-300 cursor-pointer bg-gray-900 ${
-              selectedChatData && selectedChatData._id === contact._id
-                ? "bg-[#8417ff] hover:bg-[#8417ff]"
-                : "hover:bg-purple-600"
-            }`}
-            onClick={() => handleClick(contact)}
-          >
-            <div className="flex gap-5 items-center justify-start text-neutral-300">
-              {!isChannel && (
-                <Avatar className="h-10 w-10 rounded-full overflow-hidden">
-                  {contact.image ? (
-                    <AvatarImage
-                      src={contact.image}
-                      alt="profile"
-                      className="object-cover w-full h-full bg-black"
-                    />
-                  ) : (
-                    <div
-                      className={`${
-                        selectedChatData && selectedChatData._id === contact._id
-                          ? "bg-[#ffffff22] border border-white"
-                          : "bg-[#FF0000]"
-                      } uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full`}
-                    >
-                      {contact.name?.charAt(0)}
-                    </div>
-                  )}
-                </Avatar>
-              )}
-              {isChannel && (
-                <Avatar className="h-10 w-10 rounded-full overflow-hidden">
-                  {contact.image && contact.image.includes(".svg") ? (
-                    <AvatarImage src={contact.image} />
-                  ) : (
-                    <AvatarImage src={contact.image} />
-                  )}
-                </Avatar>
-              )}
-              {isChannel ? (
-                <span>{contact.name}</span>
-              ) : (
-                <span> {contact.username} </span>
-              )}
+      <div className="flex flex-col gap-2 py-3">
+        {contacts.length > 0 &&
+          contacts.map((contact) => (
+            <div
+              key={`${
+                typeof contact._id === "string"
+                  ? contact._id
+                  : contact._id.toString
+              }`}
+              className={`pl-10 py-2 transition-all duration-300 cursor-pointer bg-gray-900 rounded-xl ${
+                selectedChatData && selectedChatData._id === contact._id
+                  ? "bg-theme/90 hover:bg-theme/80"
+                  : "hover:bg-theme/80"
+              }`}
+              onClick={() => handleClick(contact)}
+            >
+              <div className="flex gap-5 items-center justify-start text-neutral-300">
+                {!isChannel && (
+                  <Avatar className="h-10 w-10 rounded-full overflow-hidden">
+                    {contact.image ? (
+                      <AvatarImage
+                        src={contact.image}
+                        alt="profile"
+                        className="object-cover w-full h-full bg-black"
+                      />
+                    ) : (
+                      <div
+                        className={`${
+                          selectedChatData &&
+                          selectedChatData._id === contact._id
+                            ? "bg-[#ffffff22] border border-white"
+                            : "bg-[#FF0000]"
+                        } uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full`}
+                      >
+                        {contact.name?.charAt(0)}
+                      </div>
+                    )}
+                  </Avatar>
+                )}
+                {isChannel && (
+                  <Avatar className="h-10 w-10 rounded-full overflow-hidden">
+                    {contact.image && contact.image.includes(".svg") ? (
+                      <AvatarImage src={contact.image} />
+                    ) : (
+                      <AvatarImage src={contact.image} />
+                    )}
+                  </Avatar>
+                )}
+                {isChannel ? (
+                  <span>{contact.name}</span>
+                ) : (
+                  <span> {contact.username} </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
       {openNewContactModal && (
         <Dialog
           open={openNewContactModal}

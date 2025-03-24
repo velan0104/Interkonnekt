@@ -12,6 +12,7 @@ import { ICommunityPost } from "@/models/CommunityPost.model";
 import { CommunityPost } from "@/seeders/seeders";
 import { setSelectedCommunity } from "@/Slice/communitySlice";
 import { CommunityPostProps, ExtendedSession, IMembers } from "@/types";
+import { EllipsisVertical } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
@@ -19,6 +20,15 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { boolean } from "zod";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 
 const page = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,7 +52,7 @@ const page = () => {
       });
       if (response.status === 200 && response.data) {
         dispatch(setSelectedCommunity(response.data.community));
-        console.log("COMMUNITY INFO: ", response.data.community);
+        // console.log("COMMUNITY INFO: ", response.data.community);
       }
     } catch (error) {
       console.log(error);
@@ -56,7 +66,7 @@ const page = () => {
       });
       if (response.status === 200 && response.data) {
         setCommunityPosts(response.data.posts);
-        console.log(response.data.posts);
+        // console.log(response.data.posts);
       }
     } catch (error) {
       console.log(error);
@@ -84,12 +94,37 @@ const page = () => {
     setIsMember(isUserMember);
   }, [selectedCommunity]);
 
+  const Options = () => (
+    <Menubar className="border-none">
+      <MenubarMenu>
+        <MenubarTrigger
+          className="bg-gray-800 text-white border-none"
+          style={{ borderRadius: "5px" }}
+        >
+          <EllipsisVertical size={24} className="text-white" />
+        </MenubarTrigger>
+        <MenubarContent
+          className="text-white bg-gray-800"
+          style={{ borderRadius: "5px" }}
+        >
+          <MenubarItem onSelect={() => router.push(`${id}/community-info`)}>
+            Profile
+          </MenubarItem>
+          <MenubarItem onSelect={() => router.push(`${id}/workshops`)}>
+            {" "}
+            Workshops{" "}
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
+  );
+
   if (!selectedCommunity) return <h1> Loading... </h1>;
   return (
     <div className=" h-[89vh] overflow-y-scroll">
       <header
         className="h-auto bg-gray-800 relative cursor-pointer"
-        onClick={() => router.push(`${id}/community-info`)}
+        // onClick={() => router.push(`${id}/community-info`)}
       >
         <CldImage
           src={selectedCommunity.banner}
@@ -108,20 +143,28 @@ const page = () => {
           />
         </div>
         <div className=" bg-slate-700 px-5 py-3">
-          <div className="flex items-center gap-10">
-            <div>
-              <h1 className="text-xl font-bold"> {selectedCommunity.name} </h1>
-              <h3 className="text-lg font-light"> {selectedCommunity.bio}</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-10">
+              <div>
+                <h1 className="text-xl font-bold">
+                  {" "}
+                  {selectedCommunity.name}{" "}
+                </h1>
+                <h3 className="text-lg font-light"> {selectedCommunity.bio}</h3>
+              </div>
+              <Button
+                variant={"ghost"}
+                className={`bg-theme rounded-xl text-white ${
+                  isMember ? "hidden" : "block"
+                }`}
+              >
+                {" "}
+                Join{" "}
+              </Button>
             </div>
-            <Button
-              variant={"ghost"}
-              className={`bg-theme rounded-xl text-white ${
-                isMember ? "hidden" : "block"
-              }`}
-            >
-              {" "}
-              Join{" "}
-            </Button>
+            <div>
+              <Options />
+            </div>
           </div>
           <div className="flex relative items-center bg-black">
             {selectedCommunity.members.map((member, idx) => {
@@ -145,16 +188,12 @@ const page = () => {
         <CreatePostModal id={id} />
       </button>
       <button className=" fixed bottom-10 right-10 bg-green-500 text-white rounded-xl">
-        <CreateWorkshopModal />
+        <CreateWorkshopModal id={id} />
       </button>
       <section className=" my-3">
-        {communityPosts?.map((post, index) => {
-          return post.isWorkshop ? (
-            <WorkshopPost post={post} key={index} />
-          ) : (
-            <PostCard post={post} key={index} />
-          );
-        })}
+        {communityPosts?.map((post, index) => (
+          <PostCard post={post} key={index} />
+        ))}
       </section>
     </div>
   );

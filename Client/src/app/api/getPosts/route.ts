@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     if (bodyText) {
       const body = JSON.parse(bodyText);
       userId = body.userId || null;
-      console.log("userId ai getposts: ",userId)
+      // console.log("userId ai getposts: ",userId)
     }
 
     
@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
 
       
       const sessionUserId = bodyText ? JSON.parse(bodyText).sessionUserId : null;
-console.log("sessionId at getpost: ",sessionUserId)
+// console.log("sessionId at getpost: ",sessionUserId)
       if (sessionUserId) {
         
         const user = await User.findById(sessionUserId).select("interest").lean();
-        console.log("user at session: ",user)
+        // console.log("user at session: ",user)
         if (user && user.interest?.length > 0) {
          
           const usersWithSimilarInterests = await User.find({
@@ -44,21 +44,21 @@ console.log("sessionId at getpost: ",sessionUserId)
             .lean();
       
           const userIds = usersWithSimilarInterests.map((u) => u._id);
-          console.log("Users with similar interests:", userIds);
+          // console.log("Users with similar interests:", userIds);
       
           
           const interestPosts = await Posts.find({ user_id: { $in: userIds } }).lean();
-          console.log("Interest-based posts:", interestPosts);
+          // console.log("Interest-based posts:", interestPosts);
 
            
     const sessionUserPosts = await Posts.find({ user_id: sessionUserId }).lean();
-    console.log("Session user posts:", sessionUserPosts);
+    // console.log("Session user posts:", sessionUserPosts);
       
          
           const remainingPosts = await Posts.find({
             user_id: { $nin: [...userIds, sessionUserId] },
           }).lean();
-          console.log("Remaining posts:", remainingPosts);
+          // console.log("Remaining posts:", remainingPosts);
       
           
           posts = [...interestPosts, ...remainingPosts, ...sessionUserPosts];

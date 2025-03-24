@@ -137,7 +137,7 @@ export default function CreateForm() {
         const response = await apiClient.get(GET_USER_MUTUAL, {
           withCredentials: true,
         });
-        console.log("USER MUTUALS: ", response.data);
+        // console.log("USER MUTUALS: ", response.data);
         if (response.status === 200 && response.data) {
           setOptions(response.data.members);
         }
@@ -326,7 +326,6 @@ export default function CreateForm() {
                 onChange={(selected) => {
                   setSelectedOptions(selected);
                   field.onChange(selected);
-                  console.log(field);
                 }}
                 placeholder="Search by name or username..."
               />
@@ -339,7 +338,7 @@ export default function CreateForm() {
         </div>
         <Button
           title="create"
-          className="bg-indigo-800 rounded-2xl text-white mx-auto hover:bg-indigo-600 "
+          className="bg-theme rounded-2xl text-white mx-auto hover:bg-theme/80 "
           type="submit"
         >
           {" "}

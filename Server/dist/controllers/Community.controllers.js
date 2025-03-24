@@ -120,7 +120,6 @@ export const createPost = handleRequest(async (req, res) => {
         res.status(400).json({ message: "Post cannot be empty." });
         return;
     }
-    console.log("2");
     let response = null;
     if (poll) {
         const pollToSubmit = {
@@ -149,7 +148,6 @@ export const createPost = handleRequest(async (req, res) => {
             media,
         });
     }
-    console.log("3");
     if (!response) {
         throw { status: 500, message: "Internal server error" };
     }
@@ -228,4 +226,16 @@ export const addComment = handleRequest(async (req, res) => {
         message: "Comment added successfully",
         comment: newComment,
     });
+});
+export const getPostWithComments = handleRequest(async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        res.status(400).json({ message: "ID not found" });
+        return;
+    }
+    const postData = await CommunityPost.findById(id).populate("comments");
+    if (!postData) {
+        throw { status: 400, message: "Post not found" };
+    }
+    res.status(200).json({ data: postData });
 });

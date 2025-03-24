@@ -108,9 +108,6 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
       }
 
-      console.log("Hello from jwt USER: ", user);
-      console.log("Hello from jwt TOKEN: ", token);
-
       if (user) {
         const cookie = serialize("auth_token", JSON.stringify(token), {
           httpOnly: true,
@@ -121,8 +118,6 @@ export const authOptions: NextAuthOptions = {
         });
 
         globalThis.myResponse?.setHeader("set-cookie", cookie);
-        console.log(globalThis.myResponse);
-        console.log("Cookies: ", cookie);
       }
 
       //console.log("JWT token:", token);
@@ -137,7 +132,6 @@ export const authOptions: NextAuthOptions = {
         await dbConnect();
         // const collection = db.collection("users");
         const existingUser = await User.findOne({ email: user.email });
-        console.log("existing user: ", existingUser);
         //   const newUser = new User({
         //     name,
         //   username,
@@ -164,9 +158,7 @@ export const authOptions: NextAuthOptions = {
             createdAt: new Date(),
           });
           await newUser.save();
-          console.log("data inserted successfully: ", existingUser);
         } else {
-          console.log("user already exists");
           if (account?.provider === "google") {
             existingUser.image = existingUser.image;
             existingUser.provider = account.provider;
@@ -175,7 +167,6 @@ export const authOptions: NextAuthOptions = {
             // existingUser.id = existingUser.id;
             existingUser.username = existingUser.username;
             await existingUser.save();
-            console.log("Updated existing user with Google data.");
           }
         }
 
@@ -188,8 +179,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       const existingUser = await User.findOne({
         email: token.email,
-      });
-      // console.log("existing user in session: ",existingUser)
+      });;
       existingUser.id = existingUser._id;
       await existingUser.save();
 

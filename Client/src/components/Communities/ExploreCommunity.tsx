@@ -10,8 +10,10 @@ import { setCommunitySuggestion } from "@/Slice/communitySlice";
 import axios from "axios";
 import { Types } from "mongoose";
 import { IMembers } from "@/types";
+import { useRouter } from "next/navigation";
 
 interface Community {
+  _id: Types.ObjectId;
   name: string;
   bio: string;
   admin: Types.ObjectId;
@@ -22,9 +24,13 @@ interface Community {
 }
 
 const CommunityCard = ({ item }: { item: Community }) => {
+  const router = useRouter();
   let count = 0;
   return (
-    <div className="rounded-2xl bg-gray-800 m-4 relative">
+    <div
+      className="rounded-2xl bg-gray-800 m-4 relative cursor-pointer"
+      onClick={() => router.push(`/communities/${item._id}`)}
+    >
       <div className="h-32 rounded-2xl ">
         <CldImage
           src={item.banner}

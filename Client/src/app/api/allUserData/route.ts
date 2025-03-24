@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
      
     
       // Fetch all users from the database
-      console.log("fetching all users")
+      // console.log("fetching all users")
       const allUsers = await User.find();
 
       // Return all users

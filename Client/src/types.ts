@@ -115,6 +115,7 @@ export interface CommunityPostProps {
   createdAt: Date;
   isPinned: boolean;
   isWorkshop: boolean;
+  workshopId?: Types.ObjectId;
   likes: Types.ObjectId[];
   media?: string[];
   title?: string;
@@ -135,6 +136,21 @@ export interface MatchedUserState {
   name: string;
   username?: string;
   image?: string;
+}
+
+export interface IWorkshop {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  host: Types.ObjectId;
+  participants?: Types.ObjectId[];
+  startTime: Date;
+  category: string;
+  bannerImage: string;
+  isCompleted: boolean;
+  isStarted?: boolean;
+  maxParticipants?: number;
+  createdAt: Date;
 }
 
 export interface CallerState {

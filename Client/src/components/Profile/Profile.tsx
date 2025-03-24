@@ -68,8 +68,6 @@ export default function Profile() {
   const statsRef = useRef(null);
   const [followed,setFollowed] = useState<boolean>(false);
   const mainContentRef = useRef(null);
-  const {toast} = useToast();
-console.log("posts at profile: ",posts)
   const fetchUserData = async (userId: string) => {
     //const sessionData = await getSession();
     if (!session) return;
@@ -109,8 +107,8 @@ console.log("posts at profile: ",posts)
     }
   };
 
-  console.log("profileimage at profile: ",profileImage)
-  console.log("cloudinary at profile: ",cloudinaryImage)
+  // console.log("profileimage at profile: ", profileImage);
+  // console.log("cloudinary at profile: ", cloudinaryImage);
 
   const fetchUnameInterest = async (userId: string) => {
     if (!userId || userId == "") return;
@@ -139,8 +137,8 @@ console.log("posts at profile: ",posts)
     if (!params.get("userId") && !session?.user?.id) return;
 
     if (params.get("userId") === session?.user?.id) {
-      console.log("userId at profile2: ", params.get("userId"));
-      console.log("username at profile2: ", username);
+      // console.log("userId at profile2: ", params.get("userId"));
+      // console.log("username at profile2: ", username);
       setIsSignedInUser(true);
       fetchUserData(params.get("userId"));
     } else {
@@ -252,7 +250,7 @@ console.log("posts at profile: ",posts)
             await fetchForModal(item.userId);
           }
         });
-        console.log("userDetails at modal: ", userDetails);
+        // console.log("userDetails at modal: ", userDetails);
       }
     }, [isOpen, data, userDetails]);
 
@@ -311,7 +309,7 @@ console.log("posts at profile: ",posts)
           <div className="space-y-4">
             {data.map((item, index) => {
               const userDetail = userDetails[item.userId];
-              console.log("userDetail at modal: ", userDetail);
+              // console.log("userDetail at modal: ", userDetail);
 
               return (
                 <div

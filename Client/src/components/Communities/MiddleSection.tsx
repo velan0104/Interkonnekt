@@ -19,6 +19,8 @@ import CreateForm from "./CreateForm";
 import { Types } from "mongoose";
 import { CommunityPostProps } from "@/types";
 import { PostCard } from "./Post/PostCard";
+import Lottie from "react-lottie-player";
+import communityJson from "../animation/lottie-community.json";
 
 interface CardProps {
   _id: Types.ObjectId;
@@ -52,6 +54,15 @@ const Card = ({ title, image, bio, _id }: CardProps) => {
   );
 };
 
+const CommunityAnimation = () => (
+  <Lottie
+    loop
+    animationData={communityJson}
+    play
+    style={{ width: 250, height: 250, borderRadius: "100%" }}
+  />
+);
+
 const MiddleSection = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [communityPosts, setCommunityPosts] = useState<CommunityPostProps[]>(
@@ -82,7 +93,7 @@ const MiddleSection = () => {
       });
       if (response.status === 200 && response.data) {
         setCommunityPosts(response.data.posts);
-        console.log("COMMUNITIES POST: ", response.data.posts);
+        // console.log("COMMUNITIES POST: ", response.data.posts);
       }
     } catch (error) {
       console.log(error);
@@ -115,11 +126,17 @@ const MiddleSection = () => {
           ))}
         </div>
         <div className=" my-3">
-          {communityPosts.map((post, index) => (
-            <PostCard post={post} key={post.createdAt.toLocaleString()} />
-          ))}
+          {communityPosts.length > 0 ? (
+            communityPosts.map((post, index) => (
+              <PostCard post={post} key={post.createdAt.toLocaleString()} />
+            ))
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CommunityAnimation />
+            </div>
+          )}
           <button
-            className=" fixed bottom-10 bg-purple-700 text-white rounded-3xl px-5 py-3 flex items-center gap-2"
+            className=" fixed bottom-10 bg-theme text-white rounded-3xl px-5 py-3 flex items-center gap-2"
             onClick={() => setOpenModal(true)}
           >
             <span className="font-bold text-2xl"> + </span> Create

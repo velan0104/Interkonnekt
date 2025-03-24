@@ -23,9 +23,13 @@ export const LIKE_COMMUNITY_POST = `${COMMUNITY_ROUTE}/likePost`;
 export const ADD_COMMUNITY_POST_COMMENT = `${COMMUNITY_ROUTE}/addComment`;
 export const GET_POST_WITH_COMMENTS = `${COMMUNITY_ROUTE}/getPostWithComments`;
 
-const WORKSHOP_ROUTE = `api/workshop`;
+const WORKSHOP_ROUTE = `/api/workshop`;
 
 export const CREATE_WORKSHOP = `${WORKSHOP_ROUTE}/createWorkshop`;
 export const UPDATE_WORKSHOP_POST = `${WORKSHOP_ROUTE}/upateWorkshopPost`;
 export const ON_WORKSHOP_COMPLETION = `${WORKSHOP_ROUTE}/workshopCompletion`;
 export const GET_WORKSHOP_BY_ID = `${WORKSHOP_ROUTE}/getWorkshopPost`;
+export const GET_WORKSHOP_FOR_COMMUNITY = `${WORKSHOP_ROUTE}/community`;
+export const START_WORKSHOP = `${WORKSHOP_ROUTE}/start`;
+export const GET_MEETINGLINK = `${WORKSHOP_ROUTE}/meetingLink`;
+export const ADD_PARTICIPANT_WORKSHOP = `${WORKSHOP_ROUTE}/addParticipant`;
