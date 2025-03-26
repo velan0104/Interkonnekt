@@ -8,7 +8,7 @@ import { AppDispatch } from "@/app/Store/store";
 import UploadImages from "@/components/uploadImage/UploadImage";
 import { CldImage } from "next-cloudinary";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Edit, Edit2, LogOut } from "lucide-react";
+import { Edit, Edit2, LogOut, Check, X } from "lucide-react";
 import { FaUserAlt } from "react-icons/fa";
 import { sign } from "crypto";
 import FollowButton from "../FollowButton/FollowButton";
@@ -19,6 +19,8 @@ import { fetchPosts } from "@/Slice/postsSlice";
 import PostFeed from "../middle/Middle";
 import Posts from "@/models/post";
 import { Button } from "../ui/moving-border";
+import { useToast } from "@/hooks/use-toast";
+
 
 interface UserProfile {
   name: string;
@@ -61,10 +63,10 @@ export default function Profile() {
     useState<string>();
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
-  const posts = useSelector((state: RootState) => (state.posts as any).posts);
+ const posts = useSelector((state: RootState) => (state.posts as any).posts);
   const profileRef = useRef(null);
   const statsRef = useRef(null);
-  const [followed, setFollowed] = useState<boolean>(false);
+  const [followed,setFollowed] = useState<boolean>(false);
   const mainContentRef = useRef(null);
   const fetchUserData = async (userId: string) => {
     //const sessionData = await getSession();
@@ -82,9 +84,10 @@ export default function Profile() {
       setCreatedAt2(data.createdAt);
       setEmail(data.email);
       setProfileImage(data.image);
-
+      
       setFollowers(data.followers);
       setFollowing(data.following);
+      
     }
 
     if (session) {
@@ -121,6 +124,8 @@ export default function Profile() {
       setProfileImage(data.image);
       setFollowers(data.followers);
       setFollowing(data.following);
+     
+      
     }
   };
   const params = useSearchParams();
@@ -133,12 +138,13 @@ export default function Profile() {
       fetchUserData(params.get("userId"));
     } else {
       if (params.get("userId") || session?.user?.provider == "google") {
+        
         fetchUnameInterest(params.get("userId") || session?.user?.id);
         setIsSignedInUser(false);
         // Fetch other user data logic here
       }
     }
-  }, [params, session, pathname, FollowButton]);
+  }, [params, session, pathname,FollowButton]);
 
   const saveUsername = async () => {
     if (username.trim()) {
@@ -150,8 +156,17 @@ export default function Profile() {
       if (response.ok) {
         setUser((prev) => (prev ? { ...prev, username } : null));
         setEditingUsername(false);
+        toast({
+          title: "✅ Username Updated",
+          description: `Your username has been changed to "${username}".`,
+          className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+        });
       } else {
-        alert("Failed to update username.");
+        toast({
+          title: "❌ Update Failed",
+          description: "There was an issue updating your username. Please try again.",
+          className: "bg-gray-900 text-red-500 border border-red-500 shadow-lg",
+        });
       }
     }
   };
@@ -166,8 +181,17 @@ export default function Profile() {
       if (response.ok) {
         setUser((prev) => (prev ? { ...prev, interest } : null));
         setEditingInterest(false);
+        toast({
+          title: "✅ Interests Updated",
+          description: "Your interests have been successfully updated.",
+          className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+        });
       } else {
-        alert("Failed to update interest.");
+        toast({
+          title: "❌ Update Failed",
+          description: "There was an issue updating your interests. Please try again.",
+          className: "bg-gray-900 text-red-500 border border-red-500 shadow-lg",
+        });
       }
     }
   };
@@ -202,16 +226,22 @@ export default function Profile() {
     title: string;
     data: { userId: string }[];
   }) {
+    
     if (!isOpen) return null;
 
     const [userDetails, setUserDetails] = useState<
       Record<string, { username: string; name: string; image: string }>
     >({});
 
+    
+
     useEffect(() => {
       if (isOpen) {
+       
+
         data.forEach(async (item) => {
           if (!userDetails[item.userId]) {
+           
             await fetchForModal(item.userId);
           }
         });
@@ -243,6 +273,9 @@ export default function Profile() {
       }
     };
 
+   
+    
+
     return (
       <div className="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
         <div className="bg-gray-900 rounded-lg shadow-xl p-6 w-full max-w-md ">
@@ -257,12 +290,12 @@ export default function Profile() {
                 <span className="ml-10 text-lg">No {title}...</span>
               </div>
             ) : (
-              <h2 className="text-xl font-bold text-blue-600">{title}</h2>
+              <h2 className="text-xl font-bold text-green-600">{title}</h2>
             )}
 
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-blue-600 focus:outline-none"
+              className="text-gray-400 hover:text-green-600 focus:outline-none"
             >
               ✕
             </button>
@@ -279,50 +312,14 @@ export default function Profile() {
                   }}
                   className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow hover:bg-gray-700"
                 >
-                  {/* {!userDetail?.image ? (
-                   <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                   alt={userDetail?.name}
-                   width={40}
-                   height={40}
-                   className="rounded-full"
-                   />
-                ) : (
-                 
-                 
-                  userDetail.image.includes(
-                    "https://lh3.googleusercontent.com"
-                  ) ? (
-                    <img
-                      src={
-                        userDetail?.image ||
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                      }
-                      alt={userDetail.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <CldImage
-                    src={userDetail?.image || cloudinaryImageAtModal || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                    alt={userDetail?.name}
-                    width={40}
-                    height={60}
-                    className="rounded-full w-14 h-14"
-                  />
-                  )
-                )
-                  } */}
+              
                   <Image
-                    src={
-                      userDetail?.image ||
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                    }
-                    alt="Profile Image"
-                    width={80}
-                    height={60}
-                    className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
-                  />
+                              src={ userDetail?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                              alt="Profile Image"
+                              width={80}
+                              height={60}
+                              className="w-14 h-14 object-cover rounded-full border-2 border-green-500 shadow-lg shadow-green-600/50"
+                            />
                   <div>
                     <p className="text-sm font-medium text-gray-300">
                       {userDetail?.name || "Unknown User"}
@@ -340,46 +337,92 @@ export default function Profile() {
     );
   }
 
+  
+
+  const ProfileSkeleton = () => {
+    return (
+      
+      <div className="bg-gray-900 text-white w-full overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] animate-pulse">
+      {/* Profile Header Skeleton */}
+      <div className="py-10 px-6 flex flex-col items-center md:flex-row md:justify-between rounded-xl border-2 border-green-400">
+        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-8">
+          {/* Profile Image Skeleton */}
+          <div className="relative">
+            <div className="w-32 h-32 md:w-44 md:h-44 rounded-full bg-gray-700"></div>
+          </div>
+
+          {/* User Info Skeleton */}
+          <div className="flex-1 space-y-4">
+            <div className="h-8 w-40 bg-gray-700 rounded"></div>
+            <div className="h-6 w-64 bg-gray-700 rounded"></div>
+            <div className="h-6 w-48 bg-gray-700 rounded"></div>
+            <div className="h-6 w-32 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Skeleton */}
+      <div className="py-10 bg-gray-900">
+        <div className="container mx-auto grid grid-cols-3 gap-8 px-3">
+          {[1, 2, 3].map((_, index) => (
+            <div key={index} className="bg-gray-800 p-6 rounded-xl text-center">
+              <div className="h-8 w-20 bg-gray-700 rounded mx-auto"></div>
+              <div className="h-4 w-24 bg-gray-600 rounded mx-auto mt-2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Posts Skeleton */}
+      <div className="container mx-auto px-6">
+        <h2 className="text-3xl font-semibold mb-4">Your Posts</h2>
+        <div className="bg-gray-800 rounded-lg shadow-md p-6">
+          {[1, 2, 3].map((_, index) => (
+            <div key={index} className="h-16 bg-gray-700 rounded mb-4"></div>
+          ))}
+        </div>
+      </div>
+    </div>
+    );
+  }
   if (!session) {
-    return <p>Loading Profile Page...</p>;
+    return <ProfileSkeleton />;
   }
 
   return (
     <>
-      <div className="bg-gray-900 absolute text-white w-full  overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[30.5rem] 2xl:max-w-[40.5rem] left-0 xl:left-[24rem] 2xl:left-[28rem] ">
+    {
+      !email && !username.email ? <ProfileSkeleton /> :
+    
+      <div className="bg-gray-900 absolute text-white w-full sm:overflow-x-hidden  overflow-y-auto max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[30.5rem] 2xl:max-w-[40.5rem] left-0 xl:left-[24rem] 2xl:left-[28rem] ">
         {/* Profile Header */}
         <div className=" py-10 px-6 flex flex-col items-center md:flex-row md:justify-between  rounded-xl border-2 border-green-400">
+         
           <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-8 ">
             {/* Profile Image */}
             <div className="relative">
               <div className="w-32 h-32  md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                {!profileImage ? (
-                  <img
-                    src={
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                    }
-                    alt={username}
-                    className="w-full h-full rounded-full border border-gray-700 object-cover"
-                  />
-                ) : profileImage &&
-                  profileImage.includes("https://lh3.googleusercontent.com") ? (
-                  <img
-                    src={profileImage}
-                    alt={username}
-                    className="w-full h-full rounded-full  border border-gray-700 object-cover"
-                  />
-                ) : (
-                  <CldImage
-                    src={
-                      profileImage ||
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                    }
-                    alt={username}
-                    width={128}
-                    height={128}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                )}
+                {!profileImage ?
+                                      <img
+                                      src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                      alt={username}
+                                      className="w-full h-full rounded-full border border-gray-700 object-cover"
+                                    /> : 
+                                    ( profileImage && profileImage.includes("https://lh3.googleusercontent.com") ? 
+                                      <img
+                                      src={profileImage }
+                                      alt={username}
+                                      className="w-full h-full rounded-full  border border-gray-700 object-cover"
+                                    /> :
+                                    <CldImage
+                                    src={profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                                    alt={username}
+                                    width={128}
+                                    height={128}
+                                     className="w-full h-full object-cover rounded-full"
+                                    />
+                                    )
+                                      }
               </div>
               {signedInUser && (
                 <div
@@ -394,43 +437,47 @@ export default function Profile() {
 
             {/* User Information */}
             <div className="flex-1 space-y-6">
-              <span className="text-3xl md:text-4xl font-bold">
+              {/* <span className="text-3xl md:text-4xl font-bold">
                 {username || user?.username || "No Username Set"}
-              </span>
+              </span> */}
               {editingUsername ? (
-                <div className="flex flex-col items-center gap-2 w-full mt-3">
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="border rounded px-4 py-2 bg-gray-700 text-white w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-                    autoFocus
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={saveUsername}
-                      className="px-4 py-2 text-sm text-[#53c97d] bg-gray-700 rounded hover:bg-green-600 hover:text-white"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditingUsername(false)}
-                      className="px-4 py-2 text-sm text-gray-400 bg-gray-700 rounded hover:bg-gray-600"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                signedInUser && (
-                  <button
-                    onClick={() => setEditingUsername(true)}
-                    className="text-blue-300 hover:text-green-500 ml-2"
-                  >
-                    <Edit2 size={20} />
-                  </button>
-                )
-              )}
+  <div className="relative flex items-center gap-2 border border-gray-700 rounded-lg px-3 py-1.5 bg-gray-800 text-white transition-all focus-within:ring-2 focus-within:ring-green-500">
+    <input
+      type="text"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="bg-transparent w-40 focus:outline-none"
+      autoFocus
+    />
+    <div className="flex ml-[4rem] gap-6">
+      <button
+        onClick={saveUsername}
+        className="text-green-400 hover:text-green-500 transition"
+      >
+        <Check size={18} />
+      </button>
+      <button
+        onClick={() => setEditingUsername(false)}
+        className="text-red-400 hover:text-red-500 transition"
+      >
+        <X size={18} />
+      </button>
+    </div>
+  </div>
+) : (
+  signedInUser && (
+    <div className="flex items-center gap-2">
+      <span className="text-xl font-bold">{username || "No Username"}</span>
+      <button
+        onClick={() => setEditingUsername(true)}
+        className="text-gray-400 hover:text-green-400 transition"
+      >
+        <Edit2 size={18} />
+      </button>
+    </div>
+  )
+)}
+
 
               <p className="text-lg text-gray-200">
                 Email: {email || user?.email || "Not Provided"}
@@ -501,10 +548,11 @@ export default function Profile() {
               )}
               {!signedInUser && (
                 <div onClick={() => setFollowed(true)}>
-                  <FollowButton
-                    currentUserId={session.user?.id}
-                    targetUserId={params.get("userId") || ""}
-                  />
+                <FollowButton
+                  currentUserId={session.user?.id}
+                  targetUserId={params.get("userId") || ""}
+                  
+                />
                 </div>
               )}
             </div>
@@ -518,6 +566,7 @@ export default function Profile() {
               onClick={() => setShowFollowerModal(true)}
               className="bg-gray-800 p-6 rounded-xl shadow-md text-center hover:shadow-lg transition cursor-pointer"
             >
+
               <h2 className="text-2xl font-bold">{followers?.length}</h2>
               <p className="text-gray-400 mr-2 sm:mr-0">Followers</p>
             </div>
@@ -563,6 +612,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
+}
     </>
   );
 }

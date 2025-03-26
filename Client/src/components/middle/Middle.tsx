@@ -32,7 +32,7 @@ type ModalState = {
 };
 
 const SkeletonLoader: React.FC = () => (
-  <div className="space-y-6 bg-gray-800">
+  <div className="space-y-6 relative right-24 sm:right-0  bg-gray-800">
     {[...Array(3)].map((_, index) => (
       <div
         key={index}
@@ -78,22 +78,16 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
 
   useEffect(() => {
     if (userId || session) {
-      if (session) {
-        dispatch(
-          fetchPosts({ userId: undefined, sessionUserId: session?.user?.id })
-        );
-      } else if (userId) {
+      if (userId && pathname == "/profile") {
         dispatch(fetchPosts({ userId: userId, sessionUserId: undefined }));
       } else {
         dispatch(
-          fetchPosts({
-            userId: userId || undefined,
-            sessionUserId: session?.user?.id || undefined,
-          })
+          fetchPosts({ userId: undefined, sessionUserId: session?.user?.id })
         );
       }
     }
   }, [pathname, dispatch, vote, session]);
+  // console.log("sessionId2: ",session)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [commentsModal, setCommentsModal] = useState<ModalState>({
     isOpen: false,
@@ -326,7 +320,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
               type="text"
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-green-500 focus:outline-none transition-all"
               placeholder="Write a comment..."
             />
             <motion.button
@@ -458,7 +452,7 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                     delay: index * 0.1,
                     ease: "easeOut",
                   }}
-                  className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 "
+                  className="bg-gray-800/60 backdrop-blur-xl rounded-xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between">
@@ -500,13 +494,12 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                         <Image
                           src={
                             post.profileImage ||
-                            session?.user?.image ||
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
                           }
                           alt="Profile Image"
                           width={80}
                           height={60}
-                          className="w-16 h-16 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                          className="w-16 h-16 object-cover rounded-full border-2 border-green-500 shadow-lg shadow-green-600/50"
                         />
                       </motion.div>
 

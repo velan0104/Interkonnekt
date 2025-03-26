@@ -130,12 +130,12 @@ export default function SidebarDemo() {
         " rounded-xl flex flex-col   dark:bg-gray-900 h-[89vh] w-full max-w-5xl mx-auto  dark:border-gray-700 overflow-hidden shadow-lg"
       )}
     >
-      <div className="xl:hidden fixed bottom-0 left-0 w-full bg-black dark:bg-gray-900 shadow-lg flex justify-around py-3 border-t border-gray-300 dark:border-gray-700 z-50">
+      <div className="xl:hidden fixed bottom-0 left-0 w-full bg-gray-900 dark:bg-gray-900 shadow-lg flex justify-around py-3 border-t border-gray-300 dark:border-gray-700 z-50">
         {links.map((link, idx) => (
           <Link
             key={idx}
             href={link.href}
-            className="flex flex-col items-center text-gray-700 dark:text-gray-300 hover:text-[#53c97d] transition-colors"
+            className="flex flex-col items-center text-green-700 dark:text-gray-300 hover:text-[#53c97d] transition-colors"
           >
             {link.icon}
             <span className="text-xs">{link.label}</span>
@@ -143,9 +143,9 @@ export default function SidebarDemo() {
         ))}
       </div>
 
-      <aside className="hidden fixed md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm">
+      <aside className="hidden fixed md:flex flex-col h-[89vh] w-96 bg-gray-900 text-white p-5 shadow-lg  backdrop-blur-sm ">
         {/* Profile Section */}
-        <div className="flex items-center gap-4 p-4 rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 shadow-md mb-8">
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-gray-800 to-gray-700 shadow-md mb-8">
           <Image
             src={
               profileImage ||

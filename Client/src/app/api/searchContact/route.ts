@@ -13,7 +13,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
   const regex = new RegExp(sanitizedSearchTerm, "i");
   const response = await User.find({
     $and: [
-      { _id: { $ne: user?._id } }, // Replace "userId" with the actual ID
+      { _id: { $ne: user?._id } }, 
       {
         $or: [{ name: regex }, { username: regex }],
       },

@@ -41,9 +41,19 @@ export default function SignInPage() {
     try {
       
       await signIn("google", { callbackUrl: `/main` });
+      toast({
+        title: "🚀 Google Sign-In Successful!",
+        description: "Welcome back! Redirecting you now...",
+        className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+      });
+      
     } catch (err) {
       console.error("Error during Google SignIn", err);
-      
+      toast({
+        title: "⚠️ Google Sign-In Failed",
+        description: "Oops! Something went wrong. Please try again.",
+        className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+      });
     } finally {
       setIsSigningIn(false);
     }
@@ -65,14 +75,26 @@ export default function SignInPage() {
       });
 
       if (response?.ok) {
-        toast({ title: "Signup successful!", description: "Welcome!" });
+        toast({
+          title: "🚀 Sign-In Successful!",
+          description: "Welcome back! Redirecting you now...",
+          className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+        });
         router.push("/main"); // Redirect to main page or dashboard
       } else {
-        toast({ title: "Signup failed", description: response?.error || "Error occurred." });
+        toast({
+          title: "⚠️ Sign-In Failed",
+          description: "Oops! Something went wrong. Please try again.",
+          className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+        });
       }
     } catch (err) {
       console.error("Signup Error", err);
-      toast({ title: "Error", description: "Something went wrong during signup." });
+      toast({
+        title: "⚠️ Sign-In Failed",
+        description: "Oops! Something went wrong. Please try again.",
+        className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+      });
     } finally {
       setIsSubmitting(false);
     }

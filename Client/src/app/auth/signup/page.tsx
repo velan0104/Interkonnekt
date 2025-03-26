@@ -6,7 +6,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
@@ -103,7 +103,7 @@ export default function SignupForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session, status } = useSession();
-
+const pathname = usePathname()
   const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
@@ -172,14 +172,26 @@ export default function SignupForm() {
     { value: "music", label: "Music" },
   ];
 
+ 
+
   const userId = session?.user?.id;
 
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
     try {
       await signIn("google", { callbackUrl: `/main` });
+      toast({
+        title: "🚀 Google Sign-Up Successful!",
+        description: "Welcome! Redirecting you now...",
+        className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+      });
     } catch (err) {
       console.error("Error during Google SignIn", err);
+      toast({
+        title: "⚠️ Google Sign-Up Failed",
+        description: "Oops! Something went wrong. Please try again.",
+        className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+      });
     } finally {
       setIsSigningIn(false);
     }
@@ -195,14 +207,26 @@ export default function SignupForm() {
       });
 
       if (response.ok) {
-        toast({ title: "Signup successful!", description: "Welcome!" });
+        toast({
+          title: "🚀 Sign-Up Successful!",
+          description: "Welcome! Redirecting you now...",
+          className: "bg-gray-900 text-[#53c97d] border border-[#53c97d] shadow-lg",
+        });
         router.push("/auth/signin");
       } else {
         const error = await response.json();
-        toast({ title: "Signup failed", description: error.message });
+        toast({
+          title: "⚠️ Sign-Up Failed",
+          description: "Oops! Something went wrong. Please try again.",
+          className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+        });
       }
     } catch (err) {
-      toast({ title: "Error", description: "Something went wrong." });
+      toast({
+        title: "⚠️ Sign-Up Failed",
+        description: "Oops! Something went wrong. Please try again.",
+        className: "bg-gray-900 text-red-400 border border-red-500 shadow-lg",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -427,6 +451,7 @@ export default function SignupForm() {
           {isSigningIn ? "Signing in with Google..." : "Sign up with Google"}
         </Button>
       </motion.div>
+      
     </div>
   );
 }

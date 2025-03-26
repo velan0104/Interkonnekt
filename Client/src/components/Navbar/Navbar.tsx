@@ -11,10 +11,10 @@ import {
   Heart,
   UserPlus2,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import PostModal from "../PostModal/PostModal";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -23,6 +23,7 @@ import { AppDispatch, RootState } from "@/app/Store/store";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session } = useSession();
   const [username, setUsername] = useState("");
@@ -103,34 +104,7 @@ export default function Navbar() {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 <div className="sm:w-10 sm:h-10 w-8 h-8 rounded-full overflow-hidden border-1 border-[#53c97d] shadow-md shadow-[#53c97d]/50">
-                  {/* {!profileImage ? (
-                    <img
-                      src={
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                      }
-                      alt={username}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : profileImage.includes(
-                      "https://lh3.googleusercontent.com"
-                    ) ? (
-                    <img
-                      src={profileImage}
-                      alt={username}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <CldImage
-                      src={
-                        profileImage ||
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
-                      }
-                      alt={username}
-                      width={40}
-                      height={40}
-                      className="w-full h-full object-cover"
-                    />
-                  )} */}
+                  
                   <Image
                     src={
                       profileImage ||
@@ -140,7 +114,7 @@ export default function Navbar() {
                     alt="Profile Image"
                     width={80}
                     height={60}
-                    className="w-10 h-110 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                    className="w-10 h-110 object-cover rounded-full border-2 border-green-500 shadow-lg shadow-green-600/50"
                   />
                 </div>
                 <ChevronDown className="h-4 w-4 text-gray-400" />
@@ -154,7 +128,7 @@ export default function Navbar() {
                     exit={{ opacity: 0, y: -10 }}
                     className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700"
                   >
-                    <button className="flex items-center space-x-3 px-4 py-2 text-gray-200 hover:bg-gray-700 w-full">
+                    <button className="flex items-center space-x-3 px-4 py-2 text-gray-200 hover:bg-gray-700 w-full" onClick={() => router.push(`/profile/?userId=${session?.user?.id}`)}>
                       <User className="h-5 w-5" />
                       <span>Profile</span>
                     </button>

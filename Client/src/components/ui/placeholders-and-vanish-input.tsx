@@ -201,7 +201,7 @@ export function PlaceholdersAndVanishInput({
         value={value}
         type="text"
         className={cn(
-          "w-full relative text-sm sm:text-base z-50 border-none text-white bg-transparent placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-600 h-full rounded-full focus:outline-none  pl-4 sm:pl-10 pr-20",
+          "w-full relative text-sm sm:text-base z-50 border-none text-white bg-transparent placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#53c97d] h-full rounded-full focus:outline-none  pl-4 sm:pl-10 pr-20",
           animating && "text-transparent dark:text-transparent"
         )}
       />
@@ -209,7 +209,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
-        className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 disabled:bg-gray-700 flex items-center justify-center"
+        className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full bg-[#53c97d] hover:bg-[#53c97d] transition-all duration-300 disabled:bg-gray-700 flex items-center justify-center"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
