@@ -217,7 +217,7 @@ const RightSide: FC = () => {
                     alt="Profile Image"
                     width={80}
                     height={60}
-                    className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                    className="w-14 h-14 object-cover rounded-full border-2 border-green-500 shadow-lg shadow-green-600/50"
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white">
@@ -271,11 +271,11 @@ const RightSide: FC = () => {
                 >
 
                   <Image
-                    src={user.image || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                    src={user.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
                     alt="Profile Image"
                     width={80}
                     height={60}
-                    className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                    className="w-14 h-14 object-cover rounded-full border-2 border-green-500 shadow-lg shadow-green-600/50"
                   />
 
                   {/* User Details */}
@@ -289,7 +289,7 @@ const RightSide: FC = () => {
                 {/* Follow Button */}
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  className=" text-sm font-semibold text-white bg-[#3b82f6] rounded-xl hover:bg-[#2563eb] transition-all duration-300"
+                  className=" text-sm font-semibold text-white bg-[#53c97d] rounded-xl hover:bg-[#53c97d] transition-all duration-300"
                 >
                   <FollowButton currentUserId={session?.user?.id} targetUserId={user.id} />
                 </motion.button>

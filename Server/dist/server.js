@@ -26,4 +26,3 @@ app.use("/api/community", communityRoute);
 app.use("/api/workshop", workshopRoute);
 const server = app.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`));
 setUpSocket(server);
-console.log("mongoose : ", mongoose.modelNames());

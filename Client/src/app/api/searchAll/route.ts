@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 // console.log("query at search all: ",searchTerm)
     try {
         await dbConnect();
-      // Return all results if `query` exists and has at least 1 character
+      
       const searchCriteria = searchTerm
         ? {
             $or: [

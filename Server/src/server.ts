@@ -37,4 +37,3 @@ const server = app.listen(PORT, () =>
 );
 
 setUpSocket(server);
-console.log("mongoose : ",mongoose.modelNames())
