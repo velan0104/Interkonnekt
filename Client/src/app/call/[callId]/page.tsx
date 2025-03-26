@@ -45,7 +45,7 @@ const CallRoom = () => {
   }
 
   if (!call) {
-    return <div className="text-white"> Loading Call Page... </div>;
+    return <div className="loader"> Loading Call Page... </div>;
   }
 
   return (

@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, username, email, password, interest } = body;
-    // console.log("interest at signup: ", interest);
 
     if (!name || !username || !email || !password || !interest) {
       return NextResponse.json(
@@ -36,8 +35,6 @@ export async function POST(req: Request) {
       password,
       interest,
     });
-
-    // console.log(newUser);
 
     await newUser.save();
 

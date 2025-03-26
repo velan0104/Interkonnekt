@@ -131,6 +131,7 @@ const setUpSocket = (server) => {
         });
     };
     const handleAcceptCall = async ({ sender, receiver, }) => {
+        console.log("CALL ACCEPTED");
         if (sender && receiver) {
             const senderSocketId = onlineUsers.get(sender.toString())?.socketId;
             const receiverSocketId = onlineUsers.get(receiver.toString())?.socketId;

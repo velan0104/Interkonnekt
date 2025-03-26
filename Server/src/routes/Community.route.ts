@@ -2,6 +2,7 @@ import express from "express";
 import { verifyToken } from "../middleware/Auth.middleware.js";
 import {
   addComment,
+  addMember,
   createCommunity,
   createPost,
   exploreCommunity,
@@ -11,6 +12,7 @@ import {
   getMember,
   getPostWithComments,
   likePost,
+  removeMember,
   searchCommunity,
   userCommunity,
 } from "../controllers/Community.controllers.js";
@@ -25,6 +27,8 @@ app.get("/explore", exploreCommunity);
 app.get("/getCommunity", userCommunity);
 app.get("/search", searchCommunity);
 app.get("/getMember", getMember);
+app.post("/add-member", addMember);
+app.delete("/community/:communityId/member/:memberId", removeMember);
 app.post("/createPost", createPost);
 app.get("/getCommunityPosts", getCommunityPosts);
 app.get("/getAllPosts", getAllPosts);

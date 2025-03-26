@@ -81,12 +81,6 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
         withCredentials: true,
       }
     );
-
-    if (res.status === 200) {
-      console.log("Liked successfully");
-    } else {
-      console.log("Failed to like");
-    }
   };
 
   const handleComment = async () => {
@@ -115,7 +109,6 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
   };
 
   const fetchWorkshop = async () => {
-    // console.log("WORKSHOP ID: ", post.workshopId);
     if (post.workshopId) {
       const res = await apiClient.get(
         `${GET_WORKSHOP_BY_ID}/${post.workshopId}`,
@@ -124,7 +117,6 @@ export function PostCard({ post }: { post: CommunityPostProps }) {
         }
       );
       const data = res.data.data;
-      // console.log("WORKSHOP DETAILS: ", data);
       setWorkshop(data);
     }
   };

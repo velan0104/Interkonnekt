@@ -25,8 +25,6 @@ const MeetingSetup = ({
   const isWorkshop = callId?.toString().startsWith("workshop");
   const { data: session } = useSession();
 
-  // console.log("Call object in MeetingSetup:", call); // Log the call object
-
   useEffect(() => {
     if (isMicCamToggledOn) {
       call?.camera.disable();

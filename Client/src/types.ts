@@ -124,7 +124,7 @@ export interface CommunityPostProps {
 
 export interface ExtendedSession {
   user: {
-    _id: string;
+    id: string;
     name?: string | null;
     email?: string | null;
     image?: string | null;

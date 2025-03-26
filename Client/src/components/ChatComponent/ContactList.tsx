@@ -65,7 +65,6 @@ const ContactList: React.FC<ContactListProps> = ({
           { searchTerm, user: user?.user?.id },
           { withCredentials: true }
         );
-        // console.log("SEARCH CONTACTS: ", response);
 
         if (response.status === 200 && response.data.message) {
           setSearchedContacts(response.data.message);

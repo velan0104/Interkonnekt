@@ -47,7 +47,6 @@ export default function Navbar() {
           body: JSON.stringify({ userId: session?.user?.id }),
         });
         const data = await response.json();
-        // console.log("data in navbar: ", data);
         if (data) {
           setUsername(data.username);
           setProfileImage(data.image);
@@ -58,7 +57,6 @@ export default function Navbar() {
     };
     fetchUnameInterest();
   }, [session, pathname]);
-
 
   return (
     <>
@@ -89,8 +87,6 @@ export default function Navbar() {
                 {activities.length}
               </span>
             </button>
-
-
 
             {/* Messages */}
             {/* <button className="p-2 sm:hidden relative rounded-full hover:bg-gray-700 transition-colors">
@@ -136,7 +132,11 @@ export default function Navbar() {
                     />
                   )} */}
                   <Image
-                    src={profileImage || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                    src={
+                      profileImage ||
+                      session?.user?.image ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
                     alt="Profile Image"
                     width={80}
                     height={60}
@@ -179,8 +179,11 @@ export default function Navbar() {
       </nav>
       <AnimatePresence>
         <section
-          className={`space-y-4 overflow-hidden h-full flex flex-col flex-grow transition-all duration-300  ${isRecentActivitiesOpen ? "max-h-[400px] opacity-100 " : "max-h-0 opacity-0 pointer-events-none"
-            }`}
+          className={`space-y-4 overflow-hidden h-full flex flex-col flex-grow transition-all duration-300  ${
+            isRecentActivitiesOpen
+              ? "max-h-[400px] opacity-100 "
+              : "max-h-0 opacity-0 pointer-events-none"
+          }`}
         >
           <h2 className="bg-gray-900 w-full h-[2rem] text-lg font-semibold text-[#53c97d] sticky top-0 z-10">
             Recent Activities
@@ -197,24 +200,49 @@ export default function Navbar() {
                     transition={{ delay: index * 0.1 }}
                     className="flex items-center space-x-3 p-2 mt-2 rounded-md hover:bg-gray-700 transition ease-in-out duration-300"
                   >
-                    {activity.user.avatar.includes("https://lh3.googleusercontent.com") ? (
-                      <img src={activity.user.avatar} alt={activity.user.name} className="w-10 h-10 rounded-full border border-gray-700" />
+                    {activity.user.avatar.includes(
+                      "https://lh3.googleusercontent.com"
+                    ) ? (
+                      <img
+                        src={activity.user.avatar}
+                        alt={activity.user.name}
+                        className="w-10 h-10 rounded-full border border-gray-700"
+                      />
                     ) : (
-                      <CldImage src={activity.user.avatar} width={50} height={50} alt={activity.user.name} className="rounded-full w-12 h-12" />
+                      <CldImage
+                        src={activity.user.avatar}
+                        width={50}
+                        height={50}
+                        alt={activity.user.name}
+                        className="rounded-full w-12 h-12"
+                      />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-white">
-                        <span className="font-medium">{activity.user.name}</span> {activity.text}
+                        <span className="font-medium">
+                          {activity.user.name}
+                        </span>{" "}
+                        {activity.text}
                       </p>
-                      <p className="text-xs text-gray-400">{activity.timestamp}</p>
+                      <p className="text-xs text-gray-400">
+                        {activity.timestamp}
+                      </p>
                     </div>
-                    {activity.type === "like" && <Heart className="w-5 h-5 text-red-500" />}
-                    {activity.type === "follow" && <UserPlus2 className="w-5 h-5 text-green-500" />}
-                    {activity.type === "comment" && <MessageSquare className="w-5 h-5 text-purple-500" />}
+                    {activity.type === "like" && (
+                      <Heart className="w-5 h-5 text-red-500" />
+                    )}
+                    {activity.type === "follow" && (
+                      <UserPlus2 className="w-5 h-5 text-green-500" />
+                    )}
+                    {activity.type === "comment" && (
+                      <MessageSquare className="w-5 h-5 text-purple-500" />
+                    )}
                   </motion.div>
                 ))
             ) : (
-              <p className="text-gray-400 mt-8 text-sm text-center">No recent activities</p>
+              <p className="text-gray-400 mt-8 text-sm text-center">
+                No recent activities
+              </p>
             )}
           </div>
         </section>

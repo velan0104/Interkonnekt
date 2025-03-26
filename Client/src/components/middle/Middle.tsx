@@ -77,20 +77,23 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   const [vote, setVote] = useState<boolean>(false);
 
   useEffect(() => {
-    if(userId || session){
-    if(session){
-      dispatch(fetchPosts({ userId:  undefined, sessionUserId: session?.user?.id }));
-    }else if(userId){
-      dispatch(fetchPosts({ userId: userId , sessionUserId: undefined }));
-    }else{
-      dispatch(fetchPosts({ 
-        userId: userId || undefined, 
-        sessionUserId: session?.user?.id || undefined 
-      }));
+    if (userId || session) {
+      if (session) {
+        dispatch(
+          fetchPosts({ userId: undefined, sessionUserId: session?.user?.id })
+        );
+      } else if (userId) {
+        dispatch(fetchPosts({ userId: userId, sessionUserId: undefined }));
+      } else {
+        dispatch(
+          fetchPosts({
+            userId: userId || undefined,
+            sessionUserId: session?.user?.id || undefined,
+          })
+        );
+      }
     }
-  }
-  }, [pathname, dispatch, vote,session]);
- // console.log("sessionId2: ",session)
+  }, [pathname, dispatch, vote, session]);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [commentsModal, setCommentsModal] = useState<ModalState>({
     isOpen: false,
@@ -254,14 +257,12 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     };
 
     return (
-
       <motion.div
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-
         <motion.div
           className="bg-gray-900 bg-opacity-90 backdrop-blur-lg border border-gray-700 rounded-xl p-6 max-w-[500px] w-full shadow-2xl transform transition-all"
           initial={{ y: 60, opacity: 0 }}
@@ -377,7 +378,6 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   if (postStatus == "loading") return <SkeletonLoader />;
   if (postStatus === "failed") return <p>Error: {error}</p>;
   const handleVote = async (postId: string, option: any, userId: string) => {
-    // console.log("handle vote called");
     setVote(true);
     const hasVoted = option.votes && option.votes.includes(userId);
 
@@ -406,8 +406,6 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
     // setPosts(updatedPoll);
 
     try {
-      // console.log("calling vote");
-      // Send request to update vote in the database
       const response = await fetch("/api/vote", {
         method: "POST",
         headers: {
@@ -439,10 +437,11 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
   };
 
   return (
-    <main className={`absolute w-full  max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0  bg-gray-900 overflow-x-hidden px-4 py-6 pb-28 ${pathname.includes("/profile") ? "left-0" : "xl:left-[24rem] 2xl:left-96"
-      }`}>
-
-
+    <main
+      className={`absolute w-full  max-w-[48rem] h-auto min-h-[40rem] sm:max-w-[47rem] md:max-w-[35rem] lg:max-w-[48rem] xl:max-w-[35.5rem] 2xl:max-w-[47.5rem] left-0  bg-gray-900 overflow-x-hidden px-4 py-6 pb-28 ${
+        pathname.includes("/profile") ? "left-0" : "xl:left-[24rem] 2xl:left-96"
+      }`}
+    >
       <div className="container mx-auto space-y-6 h-full overflow-y-auto">
         <Suspense fallback={<SkeletonLoader />}>
           {postStatus === "loading" ? (
@@ -499,7 +498,11 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                           />
                         )} */}
                         <Image
-                          src={post.profileImage || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                          src={
+                            post.profileImage ||
+                            session?.user?.image ||
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                          }
                           alt="Profile Image"
                           width={80}
                           height={60}
@@ -649,20 +652,22 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                     <motion.button
                       whileTap={{ scale: 0.9 }}
                       onClick={() => handleLike(post._id, post.user_id)}
-                      className={`flex items-center gap-2 transition-all duration-300 ${post.likes.some(
-                        (like) => like.userId === session?.user?.id
-                      )
-                          ? "text-red-500"
-                          : "text-[#53c97d]"
-                        }`}
-                    >
-                      <Heart
-                        className={`w-5 h-5 ${post.likes.some(
+                      className={`flex items-center gap-2 transition-all duration-300 ${
+                        post.likes.some(
                           (like) => like.userId === session?.user?.id
                         )
+                          ? "text-red-500"
+                          : "text-[#53c97d]"
+                      }`}
+                    >
+                      <Heart
+                        className={`w-5 h-5 ${
+                          post.likes.some(
+                            (like) => like.userId === session?.user?.id
+                          )
                             ? "fill-current"
                             : ""
-                          }`}
+                        }`}
                       />
                       <span>{post.likeCount || 0}</span>
                     </motion.button>
@@ -696,7 +701,9 @@ const PostFeed: FC<PostFeedProps> = ({ userId }) => {
                 </motion.article>
               ))}
               {posts.length === 0 && (
-                <p className="text-gray-400 text-center py-4">No posts found.</p>
+                <p className="text-gray-400 text-center py-4">
+                  No posts found.
+                </p>
               )}
             </>
           )}

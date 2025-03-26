@@ -34,7 +34,6 @@ const MainPage: FC = () => {
         }
 
         const data = await response.json();
-        // console.log("Token data:", data);
 
         setToken(data.token); // Store the token in state
       } catch (error) {

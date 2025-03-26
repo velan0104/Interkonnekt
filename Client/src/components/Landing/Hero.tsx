@@ -58,9 +58,9 @@ export const Hero = () => {
         backgroundPositionY,
       }}
     >
-      <div className=" h-[100vh] w-[100vw] ">
-        <div className="absolute h-full w-full flex flex-col justify-center items-center z-30">
-          <div className="text-9xl font-bold overflow-hidden ">
+      <div className=" h-screen w-screen ">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[100%] w-[100%] flex flex-col justify-center items-center z-30">
+          <div className="text-3xl md:text-9xl font-bold overflow-hidden ">
             <h1 className="title bg-gradient-to-r from-theme to-[#24f26e] bg-clip-text text-transparent font-sans">
               INTERKONNEKT
             </h1>
@@ -71,7 +71,7 @@ export const Hero = () => {
             delay={150}
             animateBy="words"
             direction="bottom"
-            className="text-4xl mb-8 text-gray-300 "
+            className="text-xl text-center md:text-4xl mb-8 text-gray-300 "
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -85,7 +85,7 @@ export const Hero = () => {
             />
           </motion.div>
         </div>
-        <div className="absolute w-full  h-72 md:h-full">
+        <div className="absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-72 md:h-full">
           <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
       </div>

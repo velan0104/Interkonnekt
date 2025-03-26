@@ -157,8 +157,6 @@ const CreateWorkshopModal = ({ id }: { id: string }) => {
         communityId: id,
       };
 
-      // console.log("WORKSHOP DATA: ", workshopData);
-
       const response = await apiClient.post(
         `${CREATE_WORKSHOP}`,
         workshopData,
@@ -195,8 +193,8 @@ const CreateWorkshopModal = ({ id }: { id: string }) => {
   return (
     <Modal open={open} onOpenChange={setOpen}>
       <ModalTrigger asChild>
-        <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium">
-          Create Workshop
+        <Button className="bg-gradient-to-r bg-theme hover:bg-theme/80  text-white font-medium rounded-full">
+          + Create Workshop
         </Button>
       </ModalTrigger>
       <ModalContent

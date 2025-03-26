@@ -19,8 +19,6 @@ import CreateForm from "./CreateForm";
 import { Types } from "mongoose";
 import { CommunityPostProps } from "@/types";
 import { PostCard } from "./Post/PostCard";
-import Lottie from "react-lottie-player";
-import communityJson from "../animation/lottie-community.json";
 
 interface CardProps {
   _id: Types.ObjectId;
@@ -54,15 +52,6 @@ const Card = ({ title, image, bio, _id }: CardProps) => {
   );
 };
 
-const CommunityAnimation = () => (
-  <Lottie
-    loop
-    animationData={communityJson}
-    play
-    style={{ width: 250, height: 250, borderRadius: "100%" }}
-  />
-);
-
 const MiddleSection = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [communityPosts, setCommunityPosts] = useState<CommunityPostProps[]>(
@@ -72,6 +61,7 @@ const MiddleSection = () => {
     (state: RootState) => state.community.communities
   );
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   const getCommunity = async () => {
     try {
@@ -93,7 +83,6 @@ const MiddleSection = () => {
       });
       if (response.status === 200 && response.data) {
         setCommunityPosts(response.data.posts);
-        // console.log("COMMUNITIES POST: ", response.data.posts);
       }
     } catch (error) {
       console.log(error);
@@ -104,12 +93,62 @@ const MiddleSection = () => {
     if (!communities) {
       getCommunity();
       getAllPosts();
+      setIsLoading(false);
     }
   }, []);
 
+  const SkeletonLoader = () => {
+    return (
+      <div className="space-y-4 absolute top-20 left-96 right-0 p-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className="bg-gray-800 animate-pulse p-4 rounded-xl shadow-lg"
+          >
+            {/* Header Skeleton */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-gray-700 rounded w-32"></div>
+                <div className="h-3 bg-gray-600 rounded w-24 mt-2"></div>
+              </div>
+            </div>
+
+            {/* Content Skeleton */}
+            <div className="mt-4">
+              <div className="h-4 bg-gray-700 rounded w-full"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4 mt-2"></div>
+            </div>
+
+            {/* Media Skeleton */}
+            <div className="mt-4 h-40 bg-gray-700 rounded-xl"></div>
+
+            {/* Poll Skeleton */}
+            <div className="mt-4 space-y-2">
+              <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-700 rounded w-2/3"></div>
+            </div>
+
+            {/* Interaction Buttons Skeleton */}
+            <div className="flex gap-6 mt-4">
+              <div className="h-5 w-16 bg-gray-700 rounded"></div>
+              <div className="h-5 w-16 bg-gray-700 rounded"></div>
+              <div className="h-5 w-16 bg-gray-700 rounded"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // if (isLoading) {
+  //   return <SkeletonLoader />;
+  // }
+
   return (
     <div className=" relative h-[89vh] overflow-y-auto">
-      <h1 className="text-theme text-center text-2xl py-5 font-semibold border-b-2 border-b-white/20">
+      <h1 className="text-theme text-center text-2xl bg-gray-900 py-5 font-semibold border-b-2 border-b-white/20">
         {" "}
         Communities
       </h1>
@@ -132,7 +171,7 @@ const MiddleSection = () => {
             ))
           ) : (
             <div className="flex justify-center items-center h-full">
-              <CommunityAnimation />
+              Joined Community
             </div>
           )}
           <button

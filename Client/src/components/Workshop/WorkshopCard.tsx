@@ -49,11 +49,9 @@ export default function WorkshopCard({
     // }, 1000);
   };
 
-
   const handleStartWorkshop = () => {
     if (onStartWorkshop) {
       onStartWorkshop(workshop._id.toString());
-      // console.log("CALLID: ", callID);
     }
     router.push(`/call/${callID}`);
   };
@@ -79,7 +77,6 @@ export default function WorkshopCard({
 
   // Example usage
   const meetingTime = "2025-03-06T14:30:00.000Z";
-  // console.log(getTimeLeft(meetingTime));
 
   const hasStarted = new Date() >= new Date(workshop.startTime);
 

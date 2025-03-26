@@ -1,18 +1,26 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Posts, { IPost } from '@/models/post';
-import { RootState } from '@/app/Store/store';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import Posts, { IPost } from "@/models/post";
+import { RootState } from "@/app/Store/store";
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({ userId, sessionUserId }: { userId?: string; sessionUserId?: string }) => {
-  const response = await fetch('/api/getPosts',{
-    method: 'POST',
-    body: JSON.stringify({ userId, sessionUserId }),
-    headers: {'Content-Type': 'application/json'}
-  });
-  const data = await response.json();
-  // console.log("Slice called:",data.posts)
-  return data.posts;
-});
+export const fetchPosts = createAsyncThunk(
+  "posts/fetchPosts",
+  async ({
+    userId,
+    sessionUserId,
+  }: {
+    userId?: string;
+    sessionUserId?: string;
+  }) => {
+    const response = await fetch("/api/getPosts", {
+      method: "POST",
+      body: JSON.stringify({ userId, sessionUserId }),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await response.json();
+    return data.posts;
+  }
+);
 
 // export const fetchPosts = createAsyncThunk(
 //   'posts/fetchPosts',
@@ -31,35 +39,44 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async ({ userId, 
 //     }
 
 //     const response = await axios.get(url);
-//     console.log('Slice called:', response.data.posts);
 //     return response.data.posts;
 //   }
 // );
 
-
-export const toggleLikeAsync = createAsyncThunk('posts/toggleLike', async ({ postId, userId }: { postId: string, userId: string }) => {
-  const response = await fetch(`/api/likes`, {
-    method: 'POST',
-    body: JSON.stringify({ postId, userId }),
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const data = await response.json();
-  return {
-    ...data,
-    likes: data.likes.map((like: { userId: string }) => ({
-      userId: like.userId,
-    })),
-  };
-});
-
+export const toggleLikeAsync = createAsyncThunk(
+  "posts/toggleLike",
+  async ({ postId, userId }: { postId: string; userId: string }) => {
+    const response = await fetch(`/api/likes`, {
+      method: "POST",
+      body: JSON.stringify({ postId, userId }),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await response.json();
+    return {
+      ...data,
+      likes: data.likes.map((like: { userId: string }) => ({
+        userId: like.userId,
+      })),
+    };
+  }
+);
 
 export const addCommentAsync = createAsyncThunk(
-  'posts/addCommentAsync',
-  async ({ postId, userId, content }: { postId: string; userId: string; content: string }) => {
-    const response = await fetch('/api/comments', {
-      method: 'POST', 
-    body:   JSON.stringify({postId, userId, content}),
-    headers: { 'Content-Type': 'application/json' } });
+  "posts/addCommentAsync",
+  async ({
+    postId,
+    userId,
+    content,
+  }: {
+    postId: string;
+    userId: string;
+    content: string;
+  }) => {
+    const response = await fetch("/api/comments", {
+      method: "POST",
+      body: JSON.stringify({ postId, userId, content }),
+      headers: { "Content-Type": "application/json" },
+    });
 
     const data = await response.json();
     return {
@@ -68,11 +85,8 @@ export const addCommentAsync = createAsyncThunk(
         userId: comment.userId,
       })),
     };
-   
   }
 );
-
-
 
 // interface Post {
 //   id: string;
@@ -83,32 +97,32 @@ export const addCommentAsync = createAsyncThunk(
 
 interface PostsState {
   posts: IPost[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: PostsState = {
   posts: [],
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
 const postsSlice = createSlice({
-  name: 'posts',
+  name: "posts",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.posts = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.status = 'failed';
-       // state.error = action.error.message;
+        state.status = "failed";
+        // state.error = action.error.message;
       })
       .addCase(toggleLikeAsync.fulfilled, (state, action) => {
         const updatedPost: IPost = action.payload;
@@ -129,7 +143,7 @@ const postsSlice = createSlice({
         if (index !== -1) {
           state.posts[index] = {
             ...state.posts[index],
-            comments: updatedPost.comments.map(comment => ({
+            comments: updatedPost.comments.map((comment) => ({
               ...comment,
               post_id: comment.post_id,
               userId: comment.userId,
@@ -139,10 +153,7 @@ const postsSlice = createSlice({
           };
         }
       });
-      
-      
   },
 });
-
 
 export default postsSlice.reducer;

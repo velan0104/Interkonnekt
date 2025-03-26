@@ -8,9 +8,9 @@ interface User {
 }
 
 export interface Activity {
-  likedById: string,
+  likedById: string;
   id?: string;
-post_id?: string;
+  post_id?: string;
   type: "like" | "comment" | "follow" | "unfollow";
   user: User;
   text?: string;
@@ -29,28 +29,29 @@ const initialState: ActivitiesState = {
   error: null,
 };
 
-export const fetchActivities = createAsyncThunk("activities/fetchActivities", async ({ userId }: { userId: string }) => {
-  // console.log("userid at fetch: ",userId)
-  const response = await fetch("/api/getActivities",{
-    method: "POST",
-    body: JSON.stringify({userId}),
-    headers: {"Content-Type":"application/json"}
-  });
-  // console.log("response at fetch: ", response)
-  if (!response.ok) {
-    throw new Error("Failed to fetch activities");
+export const fetchActivities = createAsyncThunk(
+  "activities/fetchActivities",
+  async ({ userId }: { userId: string }) => {
+    const response = await fetch("/api/getActivities", {
+      method: "POST",
+      body: JSON.stringify({ userId }),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch activities");
+    }
+    const data = await response.json();
+    return data.activities as Activity[];
   }
-  const data = await response.json();
-  return data.activities as Activity[];
-});
+);
 
-export const addActivity = createAsyncThunk("activities/addActivity", async (activity: Activity) => {
-  console.log("add activity called")
-  const response = await axios.post("/api/addActivity", activity);
-  return response.data as Activity;
-});
-
-
+export const addActivity = createAsyncThunk(
+  "activities/addActivity",
+  async (activity: Activity) => {
+    const response = await axios.post("/api/addActivity", activity);
+    return response.data as Activity;
+  }
+);
 
 const activitiesSlice = createSlice({
   name: "activities",
@@ -71,18 +72,23 @@ const activitiesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchActivities.fulfilled, (state, action: PayloadAction<Activity[]>) => {
-        state.activities = action.payload;
-        state.loading = false;
-      })
+      .addCase(
+        fetchActivities.fulfilled,
+        (state, action: PayloadAction<Activity[]>) => {
+          state.activities = action.payload;
+          state.loading = false;
+        }
+      )
       .addCase(fetchActivities.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch activities";
       })
-      .addCase(addActivity.fulfilled, (state, action: PayloadAction<Activity>) => {
-        state.activities = [action.payload, ...state.activities];
-
-      });
+      .addCase(
+        addActivity.fulfilled,
+        (state, action: PayloadAction<Activity>) => {
+          state.activities = [action.payload, ...state.activities];
+        }
+      );
   },
 });
 

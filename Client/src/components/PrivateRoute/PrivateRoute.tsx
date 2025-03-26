@@ -18,10 +18,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   //   return <p>Loading...</p>; // Show a loading indicator while checking the session
   // }
 
-  if (status === "authenticated") {
-    console.log("Authenticated user:", session?.user);
-  }
-
   return <>{children}</>;
 };
 

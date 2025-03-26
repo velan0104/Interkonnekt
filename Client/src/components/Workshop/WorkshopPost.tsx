@@ -14,8 +14,6 @@ const WorkshopPost = ({ post }: { post: any }) => {
   const [workshop, setWorkshop] = useState<any | null>(null);
 
   useEffect(() => {
-    // console.log(`WORKSHOP ENDPOINT: ${GET_WORKSHOP_BY_ID}/${post.workshopId}`);
-    // console.log("TYPE: ", typeof post.workshopId);
     const fetchWorkshop = async () => {
       const res = await apiClient.get(
         `${GET_WORKSHOP_BY_ID}/${post.workshopId}`,

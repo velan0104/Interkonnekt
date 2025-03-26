@@ -10,63 +10,6 @@ import apiClient from "@/lib/api-client";
 import { IWorkshop } from "@/types";
 import { Types } from "mongoose";
 
-// Mock workshop data - replace with actual API calls
-const mockWorkshops = [
-  {
-    _id: "1",
-    title: "Introduction to React",
-    description: "Learn the basics of React and build your first component.",
-    host: { _id: "user1", name: "John Doe" },
-    participants: [],
-    startTime: new Date(Date.now() + 10 * 60000), // 10 minutes from now
-    category: "Programming",
-    bannerImage:
-      "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    maxParticipants: 20,
-    isCompleted: false,
-  },
-  {
-    _id: "2",
-    title: "Advanced TypeScript",
-    description: "Deep dive into TypeScript features and best practices.",
-    host: { _id: "user1", name: "John Doe" },
-    participants: [],
-    startTime: new Date(Date.now() + 24 * 60 * 60000), // 1 day from now
-    category: "Programming",
-    bannerImage:
-      "https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    maxParticipants: 15,
-    isCompleted: false,
-  },
-  {
-    _id: "3",
-    title: "UI/UX Design Principles",
-    description: "Learn the fundamentals of UI/UX design.",
-    host: { _id: "user2", name: "Jane Smith" },
-    participants: [],
-    startTime: new Date(Date.now() + 3 * 24 * 60 * 60000), // 3 days from now
-    category: "Design",
-    bannerImage:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    maxParticipants: 25,
-    isCompleted: false,
-  },
-  {
-    _id: "4",
-    title: "Node.js Fundamentals",
-    description: "Introduction to server-side JavaScript with Node.js.",
-    host: { _id: "user3", name: "Alex Johnson" },
-    participants: [],
-    startTime: new Date(Date.now() - 2 * 24 * 60 * 60000), // 2 days ago
-    endTime: new Date(Date.now() - 2 * 24 * 60 * 60000 + 2 * 60 * 60000), // 2 hours duration
-    category: "Programming",
-    bannerImage:
-      "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    maxParticipants: 30,
-    isCompleted: true,
-  },
-];
-
 export default function WorkshopList() {
   const [currentUserWorkshops, setCurrentUserWorkshops] = useState<IWorkshop[]>(
     []
@@ -88,7 +31,6 @@ export default function WorkshopList() {
         }
       );
       if (response.status === 200 && response.data) {
-        // console.log("WORKSHOPS DATA: ", response.data);
         setCurrentUserWorkshops(response.data.hostedUpcomingWorkshops);
         setFutureWorkshops(response.data.communityUpcomingWorkshops);
         setPastWorkshops(response.data.completedWorkshops);
@@ -100,51 +42,7 @@ export default function WorkshopList() {
     getWorkshops();
   }, []);
 
-  // useEffect(() => {
-  //   // Simulate API call
-  //   const fetchWorkshops = () => {
-  //     setLoading(true);
-
-  //     // In a real app, you would fetch from your API
-  //     setTimeout(() => {
-  //       const now = new Date();
-
-  //       // Filter workshops hosted by current user that are happening now or soon
-  //       const userWorkshops = mockWorkshops.filter(
-  //         (workshop) =>
-  //           workshop.host._id === currentUserId &&
-  //           workshop.startTime > now &&
-  //           workshop.startTime <= new Date(now.getTime() + 24 * 60 * 60000) && // Next 24 hours
-  //           !workshop.isCompleted
-  //       );
-
-  //       // Filter future workshops not hosted by current user
-  //       const future = mockWorkshops.filter(
-  //         (workshop) =>
-  //           workshop.startTime > now &&
-  //           !workshop.isCompleted &&
-  //           !userWorkshops.includes(workshop)
-  //       );
-
-  //       // Filter past workshops
-  //       const past = mockWorkshops.filter(
-  //         (workshop) => workshop.isCompleted || workshop.startTime < now
-  //       );
-
-  //       setCurrentUserWorkshops(userWorkshops);
-  //       setFutureWorkshops(future);
-  //       setPastWorkshops(past);
-  //       setLoading(false);
-  //     }, 1000);
-  //   };
-
-  //   fetchWorkshops();
-  // }, []);
-
   const startWorkshop = (workshopId: Types.ObjectId | string) => {
-    // console.log(`Starting workshop: ${workshopId}`);
-    // In a real app, you would navigate to the meeting or update the workshop status
-
     alert(`Workshop ${workshopId} started! `);
   };
 

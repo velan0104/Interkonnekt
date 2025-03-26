@@ -10,12 +10,13 @@ export const GET_CHAT_MESSAGES = `${MESSAGE_ROUTE}/getMessages`;
 const CONTACTS_ROUTE = `api/contacts`;
 export const GET_CONTACT = `${CONTACTS_ROUTE}/getContacts`;
 
-const COMMUNITY_ROUTE = `api/community`;
+export const COMMUNITY_ROUTE = `api/community`;
 export const CREATE_COMMUNITY = `${COMMUNITY_ROUTE}/create`;
 export const GET_COMMUNITY_INFO = `${COMMUNITY_ROUTE}/info`;
 export const GET_COMMUNITY = `${COMMUNITY_ROUTE}/explore`;
 export const GET_USER_COMMUNITY = `${COMMUNITY_ROUTE}/getCommunity`;
 export const GET_USER_MUTUAL = `${COMMUNITY_ROUTE}/getMember`;
+export const ADD_COMMUNITY_MEMBER = `${COMMUNITY_ROUTE}/add-member`;
 export const CREATE_POST = `${COMMUNITY_ROUTE}/createPost`;
 export const GET_COMMUNITY_POSTS = `${COMMUNITY_ROUTE}/getCommunityPosts`;
 export const GET_ALL_COMMUNITY_POSTS = `${COMMUNITY_ROUTE}/getAllPosts`;

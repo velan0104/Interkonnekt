@@ -27,12 +27,10 @@ const MainPage: FC = () => {
         if (!response.ok) {
           const errorData = await response.json();
           router.push("/auth/signin");
-          // console.log("Error:", errorData.error);
           return;
         }
 
         const data = await response.json();
-        // console.log("Token data:", data);
 
         setToken(data.token); // Store the token in state
       } catch (error) {

@@ -35,7 +35,6 @@ const MeetingRoom = () => {
   const url = callId?.toString().split("-");
   const hostId = url![2];
   const workshopId = url![1];
-  // console.log("SESSION ID: " + session?.user?.id + " host: " + hostId);
 
   const isHost = session?.user?.id === hostId;
 
@@ -111,7 +110,7 @@ const MeetingRoom = () => {
             <Users />
           </div>
         </button>
-        {isHost && (
+        {isHost && callId?.toString().startsWith("workshop") && (
           <Button
             onClick={() => handleEndCall()}
             className="bg-yellow-500 rounded-xl"

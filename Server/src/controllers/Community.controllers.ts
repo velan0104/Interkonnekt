@@ -69,10 +69,9 @@ export const getCommunityInfo = handleRequest(async (req, res) => {
     return;
   }
 
-  const community = await Community.findById(id).populate(
-    "members",
-    "image username name"
-  );
+  const community = await Community.findById(id)
+    .populate("members", "image username name")
+    .populate("admin", "image username name");
   res.status(200).json({ community });
   return;
 });
@@ -97,9 +96,15 @@ export const exploreCommunity = handleRequest(
       return;
     }
 
-    const communities = await Community.find({
+    let communities = await Community.find({
       category: { $in: userInterest },
     }).populate("members", "image name username");
+
+    if (communities.length === 0) {
+      communities = await Community.find()
+        .limit(5)
+        .populate("members", "image name username");
+    }
 
     res.status(200).json({ communities });
     return;
@@ -150,6 +155,53 @@ export const getMember = handleRequest(async (req, res) => {
   }
 
   res.status(200).json({ members: user });
+});
+
+export const addMember = handleRequest(async (req, res) => {
+  const userId = req.user?.id;
+  const { communityId } = req.body;
+
+  if (!communityId || !userId) {
+    res.status(400).json({ message: "communityId and userId are required" });
+    return;
+  }
+
+  const community = await Community.findById(communityId);
+
+  if (!community) {
+    res.status(404).json({ message: "Community not found" });
+    return;
+  }
+
+  if (!community.members.includes(new Types.ObjectId(userId))) {
+    community.members.push(new Types.ObjectId(userId));
+    await community.save();
+    res.status(200).json({ message: "User added to community", community });
+    return;
+  } else {
+    res
+      .status(400)
+      .json({ message: "User is already a member of this community" });
+    return;
+  }
+});
+
+export const removeMember = handleRequest(async (req, res) => {
+  const { communityId, memberId } = req.params;
+
+  const updatedCommunity = await Community.findByIdAndUpdate(
+    communityId,
+    { $pull: { members: memberId } },
+    { new: true }
+  );
+
+  if (!updatedCommunity) {
+    res.status(404).json({ message: "Community not found" });
+    return;
+  }
+
+  res.json({ message: "Member removed successfully", updatedCommunity });
+  return;
 });
 
 export const createPost = handleRequest(

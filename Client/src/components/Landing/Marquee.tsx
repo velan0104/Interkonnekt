@@ -16,7 +16,7 @@ export const Marquee = () => {
               {" "}
               Enhance Your Network{" "}
             </h2>
-            <h3 className="font-semibold">
+            <h3 className="font-semibold mx-5">
               {" "}
               Connect with People of different skillset and grow you network.
             </h3>
@@ -30,7 +30,7 @@ export const Marquee = () => {
                 duration: 30,
                 ease: "linear",
               }}
-              className="flex flex-none gap-14 pr-14 -translate-x-1/2"
+              className="flex flex-none gap-6 md:gap-14 pr-14 -translate-x-1/2"
             >
               {[
                 "Coding",
@@ -46,7 +46,7 @@ export const Marquee = () => {
               ].map((logo, idx) => (
                 <div
                   key={idx}
-                  className="bg-theme text-lg text-black px-10 py-4 rounded-full"
+                  className="bg-theme text-base md:text-lg text-black px-5 py-2 md:px-10 md:py-4 rounded-full"
                 >
                   {logo}
                 </div>

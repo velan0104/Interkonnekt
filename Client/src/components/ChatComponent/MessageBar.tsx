@@ -111,8 +111,6 @@ const MessageBar = () => {
 
   const handleSendMessage = async () => {
     if (selectedChatType === "contact" && message.length > 0) {
-      // console.log(socket);
-      // console.log("HANDLE SEND MESSAGE");
       socket?.emit("sendMessage", {
         sender: session?.user?.id,
         content: message,
@@ -120,11 +118,6 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
-
-      // socket?.emit("findMatch", {
-      //   sender: session?.user.id,
-      //   selectedInterest: "technology",
-      // });
     } else if (selectedChatType === "channel" && message.length > 0) {
       socket?.emit("sendChannelMessage", {
         sender: session?.user?.id,

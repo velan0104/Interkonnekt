@@ -8,26 +8,20 @@ import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
 
 interface Credentials {
-  //name: string;
   emailOrUsername: string;
   password: string;
-  // interest: string;
-  // image?: string;
 }
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
-        // name: { label: "Name", type: "text", placeholder: "Your full name" },
         emailOrUsername: {
           label: "Email or Username",
           type: "text",
           placeholder: "Enter email or username",
         },
         password: { label: "Password", type: "password" },
-        // interest?: { label: "Interest", type: "text", placeholder: "Your interest" },
-        //image: { label: "Image URL", type: "text", placeholder: "Profile image URL (optional)" },
       },
       authorize: async (credentials) => {
         if (!credentials) {
@@ -38,7 +32,6 @@ export const authOptions: NextAuthOptions = {
 
         const { emailOrUsername, password } = credentials as Credentials;
         await dbConnect();
-        //Check if the user already exists
         const existingUser = await User.findOne({
           $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
         });
@@ -55,7 +48,6 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordValid) {
           throw new Error("Invalid password.");
         }
-        console.log("Existing User: ", existingUser);
 
         // If credentials are valid, return the user object
         return {
@@ -91,11 +83,6 @@ export const authOptions: NextAuthOptions = {
       //   token.provider = account.provider;
       // }
 
-      //console.log("token at custom: ",token)
-
-      // console.log("user at custom: ",user);
-      // console.log("account at custom: ",account)
-
       if (user && account) {
         // Save user ID and email to token
         token.id = user?.id;
@@ -120,14 +107,10 @@ export const authOptions: NextAuthOptions = {
         globalThis.myResponse?.setHeader("set-cookie", cookie);
       }
 
-      //console.log("JWT token:", token);
       return token;
     },
 
     async signIn({ user, account, profile }) {
-      // console.log("User profile:", profile); // View Google profile data
-      // console.log("user: ",user);
-      // console.log("account: ",account)
       try {
         await dbConnect();
         // const collection = db.collection("users");
@@ -179,7 +162,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       const existingUser = await User.findOne({
         email: token.email,
-      });;
+      });
       existingUser.id = existingUser._id;
       await existingUser.save();
 
@@ -200,10 +183,8 @@ export const authOptions: NextAuthOptions = {
         image?: string;
         provider?: string;
       };
-      //  console.log("Session Token:", session);
       await dbConnect();
 
-      // console.log("Id in session updated: ", token.id);
       return session;
     },
   },

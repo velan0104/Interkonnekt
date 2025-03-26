@@ -59,7 +59,6 @@ const RightSide: FC = () => {
 
   useEffect(() => {
     if (params === "/messages") {
-      console.log(session?.user);
       return;
     }
 
@@ -98,53 +97,49 @@ const RightSide: FC = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       if (!session?.user?.id) return;
-  
+
       try {
         const response = await fetch("/api/allUserData", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });
-  
+
         const data = await response.json();
-  
+
         if (!data.users) return;
-  
+
         const sessionUserId = session.user.id;
-  
+
         // Fetch session user details with interests
         const sessionUser = data.users.find((u) => u.id === sessionUserId);
         const sessionUserInterests = sessionUser?.interest || [];
-  
+
         // Separate users with similar interests first
-        const usersWithSameInterests = data.users
-          .filter(
-            (user) =>
-              user.id !== sessionUserId &&
-              user.interest &&
-              sessionUserInterests.some((interest) =>
-                user.interest.includes(interest)
-              )
-          );
-  
+        const usersWithSameInterests = data.users.filter(
+          (user) =>
+            user.id !== sessionUserId &&
+            user.interest &&
+            sessionUserInterests.some((interest) =>
+              user.interest.includes(interest)
+            )
+        );
+
         // Get remaining users without shared interests
         const otherUsers = data.users.filter(
           (user) =>
             user.id !== sessionUserId &&
             !usersWithSameInterests.some((u) => u.id === user.id)
         );
-  
+
         // Merge lists: prioritized interest-based users first
         setUserData([...usersWithSameInterests, ...otherUsers]);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
-  
+
     fetchAllUsers();
   }, [params, session]);
-  
-
-  // console.log("User images in Suggested Users:", userData.map(u => u.image));
 
   if (params === "/messages") {
     return (
@@ -163,17 +158,17 @@ const RightSide: FC = () => {
   }
 
   return (
-    <aside className="hidden fixed top-22 right-0 w-full h-[89%] md:w-[24rem] lg:h-[42rem] custom:h-[37rem] 2xl:h-[41rem] 
+    <aside
+      className="hidden fixed top-22 right-0 w-full h-[89%] md:w-[24rem] lg:h-[42rem] custom:h-[37rem] 2xl:h-[41rem] 
   md:grid grid-rows-2 gap-6 p-4 border-l border-gray-800 bg-gray-900 shadow-xl overflow-y-hidden 
-  sm:flex flex-col md:flex-row lg:flex-col">
-
+  sm:flex flex-col md:flex-row lg:flex-col"
+    >
       {/* Recent Activities */}
       <section className="space-y-4 overflow-hidden flex flex-col flex-grow">
         <h2 className="bg-gray-900 w-full h-[2rem] text-lg font-semibold text-[#53c97d] sticky top-0 z-10">
           Recent Activities
         </h2>
         <div className="bg-gray-800 rounded-xl p-3 max-h-[400px] flex-grow overflow-y-auto shadow-lg">
-
           {activities.length > 0 ? (
             activities
               .filter((activity) => activity.id === session?.user?.id)
@@ -185,7 +180,6 @@ const RightSide: FC = () => {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-start space-x-3 p-2 mt-5 rounded-md hover:bg-[#3b82f6]/10 transition duration-300"
                 >
-
                   {/* {!activity.user.avatar ? (
                                         <img
                                           src={
@@ -213,7 +207,11 @@ const RightSide: FC = () => {
                                         />
                                       )} */}
                   <Image
-                    src={activity.user.avatar || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
+                    src={
+                      activity.user.avatar ||
+                      session?.user?.image ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                    }
                     alt="Profile Image"
                     width={80}
                     height={60}
@@ -253,52 +251,59 @@ const RightSide: FC = () => {
           Suggested Users
         </h2>
         <div className="bg-gray-800 rounded-xl p-5 max-h-[400px] flex-grow overflow-y-auto shadow-2xl">
-
-          {userData && userData
-            .filter((user) => user.id !== session?.user?.id)
-            .map((user, index) => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between space-x-4 p-4 rounded-xl cursor-pointer hover:bg-[#3b82f6]/10 transition duration-300"
-              >
-                {/* User Info */}
-                <div
-                  className="flex items-center space-x-4 flex-1"
-                  onClick={() => router.push(`/profile/?userId=${user.id}`)}
+          {userData &&
+            userData
+              .filter((user) => user.id !== session?.user?.id)
+              .map((user, index) => (
+                <motion.div
+                  key={user.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between space-x-4 p-4 rounded-xl cursor-pointer hover:bg-[#3b82f6]/10 transition duration-300"
                 >
+                  {/* User Info */}
+                  <div
+                    className="flex items-center space-x-4 flex-1"
+                    onClick={() => router.push(`/profile/?userId=${user.id}`)}
+                  >
+                    <Image
+                      src={
+                        user.image ||
+                        session?.user?.image ||
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"
+                      }
+                      alt="Profile Image"
+                      width={80}
+                      height={60}
+                      className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
+                    />
 
-                  <Image
-                    src={user.image || session?.user?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm59k-5YeirfW5MOf8SJiGIEJ6yTYRlnCs7SV93Y2__6FrKPWnE3FXgGDWhXAjsCe8_18&usqp=CAU"}
-                    alt="Profile Image"
-                    width={80}
-                    height={60}
-                    className="w-14 h-14 object-cover rounded-full border-2 border-blue-500 shadow-lg shadow-blue-600/50"
-                  />
-
-                  {/* User Details */}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white text-lg">{user?.name}</p>
-                    <p className="text-xs text-gray-400">@{user?.username}</p>
-                    <p className="text-sm text-gray-500 truncate">{user.interest}</p>
+                    {/* User Details */}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-white text-lg">
+                        {user?.name}
+                      </p>
+                      <p className="text-xs text-gray-400">@{user?.username}</p>
+                      <p className="text-sm text-gray-500 truncate">
+                        {user.interest}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Follow Button */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className=" text-sm font-semibold text-white bg-[#3b82f6] rounded-xl hover:bg-[#2563eb] transition-all duration-300"
-                >
-                  <FollowButton currentUserId={session?.user?.id} targetUserId={user.id} />
-                </motion.button>
-              </motion.div>
-            ))}
+                  {/* Follow Button */}
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    className=" text-sm font-semibold text-white bg-[#3b82f6] rounded-xl hover:bg-[#2563eb] transition-all duration-300"
+                  >
+                    <FollowButton
+                      currentUserId={session?.user?.id}
+                      targetUserId={user.id}
+                    />
+                  </motion.button>
+                </motion.div>
+              ))}
         </div>
-
-
-
       </section>
     </aside>
   );

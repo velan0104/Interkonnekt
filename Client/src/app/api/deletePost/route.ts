@@ -6,7 +6,6 @@ export async function DELETE(req: NextRequest) {
   try {
     // Parse the request body to get the post_id
     const { postId } = await req.json();
-    // console.log("postId at delete post: ",postId)
 
     if (!postId) {
       return NextResponse.json(
@@ -32,7 +31,7 @@ export async function DELETE(req: NextRequest) {
       { message: "Post deleted successfully", deletedPost },
       { status: 200 }
     );
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error deleting post:", error);
     return NextResponse.json(
       { message: "Failed to delete post", error: error.message },

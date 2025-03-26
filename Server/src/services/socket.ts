@@ -203,6 +203,7 @@ const setUpSocket = (server: any) => {
     sender: Types.ObjectId | string;
     receiver: Types.ObjectId | string;
   }) => {
+    console.log("CALL ACCEPTED");
     if (sender && receiver) {
       const senderSocketId = onlineUsers.get(sender.toString())?.socketId;
       const receiverSocketId = onlineUsers.get(receiver.toString())?.socketId;
@@ -219,7 +220,7 @@ const setUpSocket = (server: any) => {
     senderId: string;
     receiverId: string;
   }) => {
-      io.to(onlineUsers.get(senderId!)?.socketId!).emit("callDeclined");
+    io.to(onlineUsers.get(senderId!)?.socketId!).emit("callDeclined");
     // Store the user who declined the call
 
     if (!declinedUsers.has(senderId)) {

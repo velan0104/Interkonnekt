@@ -104,9 +104,6 @@ export default function Profile() {
     }
   };
 
-  // console.log("profileimage at profile: ", profileImage);
-  // console.log("cloudinary at profile: ", cloudinaryImage);
-
   const fetchUnameInterest = async (userId: string) => {
     if (!userId || userId == "") return;
     if (!session || !pathname) return;
@@ -132,8 +129,6 @@ export default function Profile() {
     if (!params.get("userId") && !session?.user?.id) return;
 
     if (params.get("userId") === session?.user?.id) {
-      // console.log("userId at profile2: ", params.get("userId"));
-      // console.log("username at profile2: ", username);
       setIsSignedInUser(true);
       fetchUserData(params.get("userId"));
     } else {
@@ -220,7 +215,6 @@ export default function Profile() {
             await fetchForModal(item.userId);
           }
         });
-        // console.log("userDetails at modal: ", userDetails);
       }
     }, [isOpen, data, userDetails]);
 
@@ -276,7 +270,6 @@ export default function Profile() {
           <div className="space-y-4">
             {data.map((item, index) => {
               const userDetail = userDetails[item.userId];
-              // console.log("userDetail at modal: ", userDetail);
 
               return (
                 <div

@@ -37,7 +37,7 @@ const Features: cardProps[] = [
 export const Feature = () => {
   return (
     <div className=" max-w-[1320px] mx-auto min-h-screen">
-      <h1 className="text-theme font-semibold italic text-5xl py-8">
+      <h1 className="text-theme font-semibold italic text-4xl text-center md:text-left md:text-5xl py-8">
         {" "}
         What Special ?
       </h1>
@@ -66,8 +66,8 @@ const CardComponent = ({ img, Icon, title, description, isOdd }: cardProps) => (
     className="grid grid-cols-1 md:grid-cols-2 w-full   text-white items-center content-center gapy-5"
   >
     <div
-      className={`card-wrapper h-[500px] w-[500px] ${
-        isOdd ? "order-2" : "order-1"
+      className={`card-wrapper h-[300px] w-[300px] mx-auto md:mx-0 md:h-[500px] md:w-[500px] ${
+        isOdd ? "md:order-2" : "md:order-1"
       }`}
     >
       <div className="card-content flex items-center justify-center text-xs h-[400px] w-[400px]">
@@ -81,8 +81,8 @@ const CardComponent = ({ img, Icon, title, description, isOdd }: cardProps) => (
       </div>
     </div>
     <div
-      className={`flex flex-col gap-4 max-w-[70%] ${
-        isOdd ? "order-1" : "order-2"
+      className={`flex flex-col gap-4 max-w-[70%] mx-auto md:mx-0 py-5 md:py-0  ${
+        isOdd ? "md:order-1" : "md:order-2"
       }`}
     >
       <div className="relative">

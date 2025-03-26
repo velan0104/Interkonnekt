@@ -126,14 +126,10 @@ export function CreatePostModal({ id }: { id: string }) {
             ...postData,
           };
 
-    // console.log(finalData);
-
     try {
       const response = await apiClient.post(`${CREATE_POST}`, finalData, {
         withCredentials: true,
       });
-
-      // console.log("RESPONSE: ", response);
 
       if (response.status === 201) {
         setIsOpen(false);

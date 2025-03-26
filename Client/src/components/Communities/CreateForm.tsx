@@ -137,7 +137,6 @@ export default function CreateForm() {
         const response = await apiClient.get(GET_USER_MUTUAL, {
           withCredentials: true,
         });
-        // console.log("USER MUTUALS: ", response.data);
         if (response.status === 200 && response.data) {
           setOptions(response.data.members);
         }

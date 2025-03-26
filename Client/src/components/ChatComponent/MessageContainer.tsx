@@ -101,12 +101,10 @@ const MessageContainer = () => {
 
   const RenderMessages = () => {
     let lastDate: string | null = null;
-    // console.log(selectChatMessages[selectChatMessages.length - 1]);
     return selectedChatMessages.map((message, index) => {
       const messageDate = moment(message.timestamp).format("YYYY-MM-DD");
       const showDate = messageDate !== lastDate;
       lastDate = messageDate;
-      // console.log("Selected Chat Messages: ", selectedChatMessages);
       return (
         <div key={index}>
           {showDate && (
@@ -115,7 +113,6 @@ const MessageContainer = () => {
             </div>
           )}
           {selectedChatType === "contact" && renderDMMessages(message)}
-          {/* // {selectedChatType === "channel" && renderChannelMessages(message)} */}
         </div>
       );
     });
@@ -137,7 +134,6 @@ const MessageContainer = () => {
           }
         },
       });
-      // console.log("DOWNLOAD FILE: ", response);
 
       const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -149,8 +145,6 @@ const MessageContainer = () => {
       fileName
         ? link.setAttribute("download", fileName)
         : link.setAttribute("download", Date.now().toLocaleString());
-
-      console.log("Filename: ", fileName);
 
       document.body.appendChild(link);
       link.click();
